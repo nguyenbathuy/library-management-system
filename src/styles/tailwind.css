@@ -1,0 +1,8 @@
+@import 'tailwindcss' source(none);
+@source '../**/*.{js,ts,jsx,tsx}';
+
+@theme {
+  --color-gray-950: #030712;
+}
+
+@import 'tw-animate-css';
