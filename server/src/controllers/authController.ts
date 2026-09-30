@@ -39,7 +39,17 @@ export const login = async (req: Request, res: Response) => {
         { expiresIn: '1h' }
     );
 
-    res.json({ token, user: { id: user.id, email: user.email, name: user.name, role: user.role } });
+    res.json({
+        token,
+        user: {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            role: user.role,
+            membershipTier: user.membershipTier,
+            isBlacklisted: user.isBlacklisted
+        }
+    });
 };
 
 export const getMe = async (req: AuthRequest, res: Response) => {
@@ -47,7 +57,15 @@ export const getMe = async (req: AuthRequest, res: Response) => {
 
     const user = await prisma.user.findUnique({
         where: { id: req.user.userId },
-        select: { id: true, email: true, name: true, role: true }
+        select: {
+            id: true,
+            email: true,
+            name: true,
+            role: true,
+            membershipTier: true,
+            isBlacklisted: true,
+            createdAt: true
+        }
     });
 
     if (!user) return res.status(404).json({ error: 'User not found' });
@@ -56,7 +74,15 @@ export const getMe = async (req: AuthRequest, res: Response) => {
 
 export const getAllUsers = async (req: AuthRequest, res: Response) => {
     const users = await prisma.user.findMany({
-        select: { id: true, email: true, name: true, role: true, createdAt: true }
+        select: {
+            id: true,
+            email: true,
+            name: true,
+            role: true,
+            membershipTier: true,
+            isBlacklisted: true,
+            createdAt: true
+        }
     });
     res.json(users);
 };

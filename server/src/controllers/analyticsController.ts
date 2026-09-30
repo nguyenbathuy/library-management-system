@@ -84,33 +84,47 @@ export const getTopBooks = async (req: AuthRequest, res: Response) => {
     try {
         const limit = parseInt(req.query.limit as string) || 5;
 
-        const topBooks = await prisma.loan.groupBy({
-            by: ['bookId'],
-            _count: {
-                bookId: true
-            },
-            orderBy: {
-                _count: {
-                    bookId: 'desc'
+        // Fetch loans with related BookItem and Book
+        const loans = await prisma.loan.findMany({
+            include: {
+                bookItem: {
+                    include: {
+                        book: {
+                            include: {
+                                author: true,
+                                category: true
+                            }
+                        }
+                    }
                 }
-            },
-            take: limit
+            }
         });
 
-        // Fetch book details
-        const booksWithDetails = await Promise.all(
-            topBooks.map(async (item) => {
-                const book = await prisma.book.findUnique({
-                    where: { id: item.bookId }
-                });
-                return {
-                    ...book,
-                    borrowCount: item._count.bookId
-                };
-            })
-        );
+        // Count loans per Book
+        const bookCountMap = new Map<number, { book: any; borrowCount: number }>();
+        for (const loan of loans) {
+            const book = loan.bookItem?.book;
+            if (book) {
+                const existing = bookCountMap.get(book.id) || { book, borrowCount: 0 };
+                existing.borrowCount += 1;
+                bookCountMap.set(book.id, existing);
+            }
+        }
 
-        res.json(booksWithDetails);
+        const sorted = Array.from(bookCountMap.values())
+            .sort((a, b) => b.borrowCount - a.borrowCount)
+            .slice(0, limit)
+            .map(item => ({
+                id: item.book.id,
+                title: item.book.title,
+                isbn: item.book.isbn,
+                author: item.book.author?.name || '',
+                category: item.book.category?.name || '',
+                coverImage: item.book.coverImage,
+                borrowCount: item.borrowCount
+            }));
+
+        res.json(sorted);
     } catch (error) {
         console.error('Error fetching top books:', error);
         res.status(500).json({ error: 'Không thể tải sách phổ biến' });
@@ -134,9 +148,13 @@ export const getRecentActivity = async (req: AuthRequest, res: Response) => {
                         email: true
                     }
                 },
-                book: {
-                    select: {
-                        title: true
+                bookItem: {
+                    include: {
+                        book: {
+                            select: {
+                                title: true
+                            }
+                        }
                     }
                 }
             }
@@ -144,8 +162,8 @@ export const getRecentActivity = async (req: AuthRequest, res: Response) => {
 
         const activities = recentLoans.map(loan => ({
             id: loan.id,
-            userName: loan.user.name,
-            bookTitle: loan.book.title,
+            userName: loan.user?.name || 'Độc giả',
+            bookTitle: loan.bookItem?.book?.title || 'Sách',
             action: loan.returnDate ? 'returned' : 'borrowed',
             date: loan.returnDate || loan.borrowDate,
             borrowDate: loan.borrowDate,
