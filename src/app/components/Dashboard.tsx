@@ -1,6 +1,9 @@
-import { BarChart3, Users, BookOpen, AlertCircle, TrendingUp } from 'lucide-react';
+import { BarChart3, Users, BookOpen, AlertCircle, TrendingUp, Download } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { client } from '../api/client';
+import { useRef, useState } from 'react';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 import {
   BarChart,
   Bar,
@@ -12,7 +15,6 @@ import {
 } from 'recharts';
 
 interface DashboardStats {
-  totalBooks: number;
   activeUsers: number;
   totalBorrowed: number;
   overdueBooks: number;
@@ -38,6 +40,37 @@ interface RecentActivity {
 }
 
 export function Dashboard() {
+  const chartRef = useRef<HTMLDivElement>(null);
+  const [isExporting, setIsExporting] = useState(false);
+
+  const handleExportPDF = async () => {
+    if (!chartRef.current) return;
+    try {
+      setIsExporting(true);
+      const canvas = await html2canvas(chartRef.current, {
+        scale: 2,
+        backgroundColor: '#ffffff'
+      });
+      
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('l', 'mm', 'a4');
+      
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      
+      pdf.setFontSize(16);
+      pdf.text('Báo Cáo Thống Kê Thư Viện', 14, 15);
+      
+      pdf.addImage(imgData, 'PNG', 14, 25, pdfWidth - 28, pdfHeight - 28);
+      pdf.save('bao-cao-thu-vien.pdf');
+    } catch (error) {
+      console.error('Error exporting PDF:', error);
+      alert('Có lỗi xảy ra khi xuất báo cáo PDF');
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
   // Fetch stats
   const { data: stats } = useQuery<DashboardStats>({
     queryKey: ['analytics-stats'],
@@ -81,14 +114,24 @@ export function Dashboard() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
-          <BarChart3 className="text-blue-600" />
-          Bảng điều khiển
-        </h2>
-        <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
-          Chào mừng trở lại! Dưới đây là tình hình hoạt động của thư viện hôm nay.
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
+            <BarChart3 className="text-blue-600" />
+            Bảng điều khiển
+          </h2>
+          <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
+            Chào mừng trở lại! Dưới đây là tình hình hoạt động của thư viện hôm nay.
+          </p>
+        </div>
+        <button
+          onClick={handleExportPDF}
+          disabled={isExporting}
+          className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white rounded-lg transition-colors shadow-sm"
+        >
+          <Download size={18} />
+          {isExporting ? 'Đang xuất...' : 'Xuất báo cáo PDF'}
+        </button>
       </div>
 
       {/* Stats Cards */}
@@ -146,7 +189,7 @@ export function Dashboard() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6" ref={chartRef}>
         {/* Chart Section */}
         <div className="lg:col-span-2 bg-white dark:bg-gray-900 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
           <div className="flex items-center justify-between mb-6">
