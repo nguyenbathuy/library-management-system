@@ -222,3 +222,207 @@ export const getAllLoans = async (req: AuthRequest, res: Response) => {
         res.status(500).json({ error: 'Không thể tải danh sách mượn toàn hệ thống' });
     }
 };
+
+// =============================================
+// Barcode Lookup – find BookItem by barcode
+// =============================================
+export const lookupBarcode = async (req: AuthRequest, res: Response) => {
+    try {
+        const barcode = String(req.params.barcode || '').trim();
+        if (!barcode) return res.status(400).json({ error: 'Thiếu mã vạch' });
+
+        const bookItem = await prisma.bookItem.findUnique({
+            where: { barcode },
+            include: {
+                book: {
+                    include: { author: true, category: true, publisher: true }
+                },
+                loans: {
+                    where: { returnDate: null },
+                    include: {
+                        user: { select: { id: true, name: true, email: true } }
+                    },
+                    orderBy: { borrowDate: 'desc' },
+                    take: 1
+                }
+            }
+        });
+
+        if (!bookItem) {
+            return res.status(404).json({ error: `Không tìm thấy cuốn sách với mã vạch "${barcode}"` });
+        }
+
+        const activeLoan = bookItem.loans[0] || null;
+
+        res.json({
+            bookItem: {
+                id: bookItem.id,
+                barcode: bookItem.barcode,
+                location: bookItem.location,
+                status: bookItem.status,
+            },
+            book: {
+                id: bookItem.book.id,
+                title: bookItem.book.title,
+                isbn: bookItem.book.isbn,
+                author: bookItem.book.author?.name || '',
+                category: bookItem.book.category?.name || '',
+                publisher: bookItem.book.publisher?.name || '',
+                coverImage: bookItem.book.coverImage,
+            },
+            activeLoan: activeLoan ? {
+                id: activeLoan.id,
+                borrowDate: activeLoan.borrowDate,
+                dueDate: activeLoan.dueDate,
+                status: activeLoan.status,
+                user: activeLoan.user
+            } : null
+        });
+    } catch (error) {
+        console.error('Error looking up barcode:', error);
+        res.status(500).json({ error: 'Lỗi tra cứu mã vạch' });
+    }
+};
+
+// =============================================
+// Borrow by Barcode – scan barcode + specify borrower
+// =============================================
+export const borrowByBarcode = async (req: AuthRequest, res: Response) => {
+    try {
+        if (req.user?.role !== 'ADMIN') {
+            return res.status(403).json({ error: 'Chỉ thủ thư mới có quyền tạo phiếu mượn' });
+        }
+
+        const { barcode, userId } = req.body;
+        if (!barcode || !userId) {
+            return res.status(400).json({ error: 'Thiếu mã vạch hoặc mã độc giả' });
+        }
+
+        const bookItem = await prisma.bookItem.findUnique({
+            where: { barcode: String(barcode).trim() },
+            include: { book: true }
+        });
+
+        if (!bookItem) {
+            return res.status(404).json({ error: `Không tìm thấy cuốn sách với mã vạch "${barcode}"` });
+        }
+
+        if (bookItem.status !== 'AVAILABLE') {
+            return res.status(400).json({
+                error: `Cuốn sách này đang ở trạng thái "${bookItem.status}", không thể cho mượn`
+            });
+        }
+
+        // Check user exists
+        const borrower = await prisma.user.findUnique({ where: { id: Number(userId) } });
+        if (!borrower) {
+            return res.status(404).json({ error: 'Không tìm thấy độc giả' });
+        }
+        if (borrower.isBlacklisted) {
+            return res.status(403).json({ error: 'Độc giả này đã bị chặn mượn sách' });
+        }
+
+        const dueDate = new Date();
+        dueDate.setDate(dueDate.getDate() + 14);
+
+        const [createdLoan] = await prisma.$transaction([
+            prisma.loan.create({
+                data: {
+                    userId: Number(userId),
+                    bookItemId: bookItem.id,
+                    borrowDate: new Date(),
+                    dueDate,
+                    status: 'BORROWING'
+                },
+                include: {
+                    bookItem: {
+                        include: {
+                            book: { include: { author: true, category: true } }
+                        }
+                    },
+                    user: true
+                }
+            }),
+            prisma.bookItem.update({
+                where: { id: bookItem.id },
+                data: { status: 'BORROWED' }
+            })
+        ]);
+
+        res.json({
+            message: `Cho mượn thành công: "${bookItem.book.title}" → ${borrower.name}`,
+            loan: formatLoanResponse(createdLoan)
+        });
+    } catch (error) {
+        console.error('Error borrowing by barcode:', error);
+        res.status(500).json({ error: 'Không thể tạo phiếu mượn' });
+    }
+};
+
+// =============================================
+// Return by Barcode – scan barcode → auto return
+// =============================================
+export const returnByBarcode = async (req: AuthRequest, res: Response) => {
+    try {
+        if (req.user?.role !== 'ADMIN') {
+            return res.status(403).json({ error: 'Chỉ thủ thư mới có quyền thu hồi sách' });
+        }
+
+        const { barcode } = req.body;
+        if (!barcode) {
+            return res.status(400).json({ error: 'Thiếu mã vạch' });
+        }
+
+        const bookItem = await prisma.bookItem.findUnique({
+            where: { barcode: String(barcode).trim() },
+            include: { book: true }
+        });
+
+        if (!bookItem) {
+            return res.status(404).json({ error: `Không tìm thấy cuốn sách với mã vạch "${barcode}"` });
+        }
+
+        // Find the active loan for this physical copy
+        const activeLoan = await prisma.loan.findFirst({
+            where: {
+                bookItemId: bookItem.id,
+                returnDate: null
+            },
+            include: { user: true }
+        });
+
+        if (!activeLoan) {
+            return res.status(400).json({ error: 'Cuốn sách này hiện không có phiếu mượn nào đang hoạt động' });
+        }
+
+        const [updatedLoan] = await prisma.$transaction([
+            prisma.loan.update({
+                where: { id: activeLoan.id },
+                data: {
+                    returnDate: new Date(),
+                    status: 'RETURNED'
+                },
+                include: {
+                    bookItem: {
+                        include: {
+                            book: { include: { author: true, category: true } }
+                        }
+                    },
+                    user: true
+                }
+            }),
+            prisma.bookItem.update({
+                where: { id: bookItem.id },
+                data: { status: 'AVAILABLE' }
+            })
+        ]);
+
+        res.json({
+            message: `Thu hồi thành công: "${bookItem.book.title}" từ ${activeLoan.user.name}`,
+            loan: formatLoanResponse(updatedLoan)
+        });
+    } catch (error) {
+        console.error('Error returning by barcode:', error);
+        res.status(500).json({ error: 'Không thể thu hồi sách' });
+    }
+};
