@@ -22,13 +22,13 @@ app.use('/api/loans', loanRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/reservations', reservationRoutes);
 
-app.get('/', (req, res) => {
-    res.send('Library API is running');
+app.get('/', (_req, res) => {
+  res.send('Library API is running');
 });
 
 // Khởi chạy tác vụ Cron ngầm (chạy vào 08:00 sáng mỗi ngày)
 startReminderCron();
 
 app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Server is running on http://localhost:${PORT}`);
 });

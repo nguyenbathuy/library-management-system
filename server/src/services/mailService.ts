@@ -8,67 +8,67 @@ let cachedTransporter: Transporter | null = null;
  * hoặc tự động tạo Ethereal Email giả lập để test an toàn.
  */
 export const getTransporter = async (): Promise<Transporter> => {
-    if (cachedTransporter) return cachedTransporter;
+  if (cachedTransporter) return cachedTransporter;
 
-    if (process.env.SMTP_USER && process.env.SMTP_PASS) {
-        console.log('[MailService] Sử dụng cấu hình SMTP từ biến môi trường (.env)');
-        cachedTransporter = nodemailer.createTransport({
-            service: process.env.SMTP_SERVICE || 'gmail',
-            host: process.env.SMTP_HOST,
-            port: Number(process.env.SMTP_PORT) || 587,
-            secure: process.env.SMTP_SECURE === 'true',
-            auth: {
-                user: process.env.SMTP_USER,
-                pass: process.env.SMTP_PASS,
-            },
-        });
-    } else {
-        console.log('[MailService] Đang kết nối tài khoản Ethereal Email để giả lập gửi thư test...');
-        const testAccount = await nodemailer.createTestAccount();
-        console.log(`[MailService] Tài khoản Ethereal: ${testAccount.user}`);
+  if (process.env.SMTP_USER && process.env.SMTP_PASS) {
+    console.log('[MailService] Sử dụng cấu hình SMTP từ biến môi trường (.env)');
+    cachedTransporter = nodemailer.createTransport({
+      service: process.env.SMTP_SERVICE || 'gmail',
+      host: process.env.SMTP_HOST,
+      port: Number(process.env.SMTP_PORT) || 587,
+      secure: process.env.SMTP_SECURE === 'true',
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    });
+  } else {
+    console.log('[MailService] Đang kết nối tài khoản Ethereal Email để giả lập gửi thư test...');
+    const testAccount = await nodemailer.createTestAccount();
+    console.log(`[MailService] Tài khoản Ethereal: ${testAccount.user}`);
 
-        cachedTransporter = nodemailer.createTransport({
-            host: 'smtp.ethereal.email',
-            port: 587,
-            secure: false,
-            auth: {
-                user: testAccount.user,
-                pass: testAccount.pass,
-            },
-        });
-    }
+    cachedTransporter = nodemailer.createTransport({
+      host: 'smtp.ethereal.email',
+      port: 587,
+      secure: false,
+      auth: {
+        user: testAccount.user,
+        pass: testAccount.pass,
+      },
+    });
+  }
 
-    return cachedTransporter;
+  return cachedTransporter;
 };
 
 export interface EmailResult {
-    success: boolean;
-    to: string;
-    subject: string;
-    previewUrl?: string | false;
-    error?: string;
+  success: boolean;
+  to: string;
+  subject: string;
+  previewUrl?: string | false;
+  error?: string;
 }
 
 /**
  * Gửi email nhắc nhở sách sắp đến hạn (còn 1-2 ngày)
  */
 export const sendDueSoonReminderEmail = async (params: {
-    to: string;
-    userName: string;
-    bookTitle: string;
-    barcode?: string;
-    borrowDate: Date;
-    dueDate: Date;
-    daysLeft: number;
+  to: string;
+  userName: string;
+  bookTitle: string;
+  barcode?: string;
+  borrowDate: Date;
+  dueDate: Date;
+  daysLeft: number;
 }): Promise<EmailResult> => {
-    try {
-        const transporter = await getTransporter();
-        const fromAddress = process.env.SMTP_FROM || '"Thư Viện PKA" <library-noreply@phenikaa-uni.edu.vn>';
+  try {
+    const transporter = await getTransporter();
+    const fromAddress = process.env.SMTP_FROM || '"Thư Viện PKA" <library-noreply@phenikaa-uni.edu.vn>';
 
-        const formattedBorrowDate = new Date(params.borrowDate).toLocaleDateString('vi-VN');
-        const formattedDueDate = new Date(params.dueDate).toLocaleDateString('vi-VN');
+    const formattedBorrowDate = new Date(params.borrowDate).toLocaleDateString('vi-VN');
+    const formattedDueDate = new Date(params.dueDate).toLocaleDateString('vi-VN');
 
-        const html = `
+    const html = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
             <div style="background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); padding: 24px; text-align: center; color: white;">
                 <h1 style="margin: 0; font-size: 22px;">Thư Viện PKA - Thông Báo Mượn Trả Sách</h1>
@@ -100,55 +100,55 @@ export const sendDueSoonReminderEmail = async (params: {
         </div>
         `;
 
-        const info = await transporter.sendMail({
-            from: fromAddress,
-            to: params.to,
-            subject: `[Nhắc nhở] Sách "${params.bookTitle}" sắp đến hạn trả (${params.daysLeft} ngày nữa)`,
-            html,
-        });
+    const info = await transporter.sendMail({
+      from: fromAddress,
+      to: params.to,
+      subject: `[Nhắc nhở] Sách "${params.bookTitle}" sắp đến hạn trả (${params.daysLeft} ngày nữa)`,
+      html,
+    });
 
-        const previewUrl = nodemailer.getTestMessageUrl(info);
-        if (previewUrl) {
-            console.log(`[MailService] 📧 [Sắp đến hạn] Preview Ethereal Email cho ${params.to}: ${previewUrl}`);
-        }
-
-        return {
-            success: true,
-            to: params.to,
-            subject: `[Nhắc nhở] Sách "${params.bookTitle}" sắp đến hạn trả`,
-            previewUrl
-        };
-    } catch (error: any) {
-        console.error(`[MailService] Lỗi gửi email sắp đến hạn cho ${params.to}:`, error);
-        return {
-            success: false,
-            to: params.to,
-            subject: 'Nhắc nhở sắp đến hạn',
-            error: error.message
-        };
+    const previewUrl = nodemailer.getTestMessageUrl(info);
+    if (previewUrl) {
+      console.log(`[MailService] 📧 [Sắp đến hạn] Preview Ethereal Email cho ${params.to}: ${previewUrl}`);
     }
+
+    return {
+      success: true,
+      to: params.to,
+      subject: `[Nhắc nhở] Sách "${params.bookTitle}" sắp đến hạn trả`,
+      previewUrl
+    };
+  } catch (error: any) {
+    console.error(`[MailService] Lỗi gửi email sắp đến hạn cho ${params.to}:`, error);
+    return {
+      success: false,
+      to: params.to,
+      subject: 'Nhắc nhở sắp đến hạn',
+      error: error.message
+    };
+  }
 };
 
 /**
  * Gửi email cảnh báo sách đã QUÁ HẠN mượn
  */
 export const sendOverdueReminderEmail = async (params: {
-    to: string;
-    userName: string;
-    bookTitle: string;
-    barcode?: string;
-    borrowDate: Date;
-    dueDate: Date;
-    overdueDays: number;
+  to: string;
+  userName: string;
+  bookTitle: string;
+  barcode?: string;
+  borrowDate: Date;
+  dueDate: Date;
+  overdueDays: number;
 }): Promise<EmailResult> => {
-    try {
-        const transporter = await getTransporter();
-        const fromAddress = process.env.SMTP_FROM || '"Thư Viện PKA" <library-noreply@phenikaa-uni.edu.vn>';
+  try {
+    const transporter = await getTransporter();
+    const fromAddress = process.env.SMTP_FROM || '"Thư Viện PKA" <library-noreply@phenikaa-uni.edu.vn>';
 
-        const formattedBorrowDate = new Date(params.borrowDate).toLocaleDateString('vi-VN');
-        const formattedDueDate = new Date(params.dueDate).toLocaleDateString('vi-VN');
+    const formattedBorrowDate = new Date(params.borrowDate).toLocaleDateString('vi-VN');
+    const formattedDueDate = new Date(params.dueDate).toLocaleDateString('vi-VN');
 
-        const html = `
+    const html = `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #fecaca; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
             <div style="background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%); padding: 24px; text-align: center; color: white;">
                 <h1 style="margin: 0; font-size: 22px;">⚠️ CẢNH BÁO: SÁCH MƯỢN ĐÃ QUÁ HẠN</h1>
@@ -185,31 +185,31 @@ export const sendOverdueReminderEmail = async (params: {
         </div>
         `;
 
-        const info = await transporter.sendMail({
-            from: fromAddress,
-            to: params.to,
-            subject: `[CẢNH BÁO] Sách "${params.bookTitle}" ĐÃ QUÁ HẠN ${params.overdueDays} ngày`,
-            html,
-        });
+    const info = await transporter.sendMail({
+      from: fromAddress,
+      to: params.to,
+      subject: `[CẢNH BÁO] Sách "${params.bookTitle}" ĐÃ QUÁ HẠN ${params.overdueDays} ngày`,
+      html,
+    });
 
-        const previewUrl = nodemailer.getTestMessageUrl(info);
-        if (previewUrl) {
-            console.log(`[MailService] 🚨 [Quá hạn] Preview Ethereal Email cho ${params.to}: ${previewUrl}`);
-        }
-
-        return {
-            success: true,
-            to: params.to,
-            subject: `[CẢNH BÁO] Sách "${params.bookTitle}" ĐÃ QUÁ HẠN`,
-            previewUrl
-        };
-    } catch (error: any) {
-        console.error(`[MailService] Lỗi gửi email quá hạn cho ${params.to}:`, error);
-        return {
-            success: false,
-            to: params.to,
-            subject: 'Cảnh báo sách quá hạn',
-            error: error.message
-        };
+    const previewUrl = nodemailer.getTestMessageUrl(info);
+    if (previewUrl) {
+      console.log(`[MailService] 🚨 [Quá hạn] Preview Ethereal Email cho ${params.to}: ${previewUrl}`);
     }
+
+    return {
+      success: true,
+      to: params.to,
+      subject: `[CẢNH BÁO] Sách "${params.bookTitle}" ĐÃ QUÁ HẠN`,
+      previewUrl
+    };
+  } catch (error: any) {
+    console.error(`[MailService] Lỗi gửi email quá hạn cho ${params.to}:`, error);
+    return {
+      success: false,
+      to: params.to,
+      subject: 'Cảnh báo sách quá hạn',
+      error: error.message
+    };
+  }
 };

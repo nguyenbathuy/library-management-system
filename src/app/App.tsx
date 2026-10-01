@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { LanguageProvider } from './contexts/LanguageContext';
@@ -11,16 +12,11 @@ import { BorrowedBooks } from './components/BorrowedBooks';
 import { Settings } from './components/Settings';
 import { UserProfile } from './components/UserProfile';
 
-// Placeholder components until we refactor them
-const DashboardWrapper = () => {
+const AdminRoute = ({ children }: { children: ReactNode }) => {
   const { user } = useAuth();
-  if (user?.role !== 'ADMIN') return <Navigate to="/profile" />;
-  return <Dashboard books={[]} borrowedBooks={[]} members={[]} />; // Props will be ignored by new implementation eventually or we fix them next
+  if (user?.role !== 'ADMIN') return <Navigate to="/profile" replace />;
+  return <>{children}</>;
 };
-
-const ProfileWrapper = () => <UserProfile currentUser={null} borrowedBooks={[]} />;
-const BooksWrapper = () => <BooksManagement userRole={null} books={[]} setBooks={() => { }} onBorrow={() => { }} />;
-const BorrowedWrapper = () => <BorrowedBooks userRole={null} borrowedBooks={[]} onReturnBook={() => { }} />;
 
 export default function App() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -33,14 +29,14 @@ export default function App() {
     <ThemeProvider>
       <LanguageProvider>
         <Routes>
-          <Route path="/login" element={!isAuthenticated ? <Login /> : <Navigate to="/" />} />
+          <Route path="/login" element={!isAuthenticated ? <Login /> : <Navigate to="/" replace />} />
 
-          <Route element={isAuthenticated ? <Layout /> : <Navigate to="/login" />}>
-            <Route path="/" element={<DashboardWrapper />} />
-            <Route path="/profile" element={<ProfileWrapper />} />
-            <Route path="/books" element={<BooksWrapper />} />
-            <Route path="/members" element={<MembersManagement />} />
-            <Route path="/borrowed" element={<BorrowedWrapper />} />
+          <Route element={isAuthenticated ? <Layout /> : <Navigate to="/login" replace />}>
+            <Route path="/" element={<AdminRoute><Dashboard /></AdminRoute>} />
+            <Route path="/profile" element={<UserProfile />} />
+            <Route path="/books" element={<BooksManagement />} />
+            <Route path="/members" element={<AdminRoute><MembersManagement /></AdminRoute>} />
+            <Route path="/borrowed" element={<BorrowedBooks />} />
             <Route path="/settings" element={<Settings />} />
           </Route>
         </Routes>

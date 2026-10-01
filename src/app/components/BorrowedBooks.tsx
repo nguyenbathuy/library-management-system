@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import {
   Search, RotateCcw, AlertCircle, CheckCircle, Clock, ScanBarcode,
   BookOpen, User, Loader2, X, ArrowRightLeft, BookmarkPlus,
-  BookMarked, Bell, CheckCircle2, XCircle, Filter, Calendar
+  BookMarked, Bell, CheckCircle2, XCircle, Calendar, Send
 } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -11,6 +11,7 @@ import { Badge } from './ui/badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from './ui/table';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { client } from '../api/client';
+import { useAuth } from '../contexts/AuthContext';
 
 export interface BorrowedBook {
   id: number;
@@ -23,8 +24,7 @@ export interface BorrowedBook {
 }
 
 interface BorrowedBooksProps {
-  userRole: 'ADMIN' | 'USER' | null;
-  // Ignore old props
+  userRole?: 'ADMIN' | 'USER' | null;
   borrowedBooks?: any;
   onReturnBook?: any;
 }
@@ -78,7 +78,9 @@ export interface ReservationItem {
   } | null;
 }
 
-export function BorrowedBooks({ userRole }: BorrowedBooksProps) {
+export function BorrowedBooks({ userRole: propUserRole }: BorrowedBooksProps = {}) {
+  const { user } = useAuth();
+  const userRole = propUserRole || user?.role;
   const [searchParams, setSearchParams] = useSearchParams();
   const tabParam = searchParams.get('tab');
   const [activeTab, setActiveTab] = useState<'loans' | 'reservations'>(
@@ -254,6 +256,21 @@ export function BorrowedBooks({ userRole }: BorrowedBooksProps) {
     }
   });
 
+  // Trigger Email Reminders Mutation
+  const remindersMutation = useMutation({
+    mutationFn: async () => {
+      const { data } = await client.post('/loans/reminders/trigger');
+      return data;
+    },
+    onSuccess: (data) => {
+      alert(data.message || 'Đã hoàn tất quét và gửi email nhắc nhở!');
+      queryClient.invalidateQueries({ queryKey: ['all-loans'] });
+    },
+    onError: (error: any) => {
+      alert(error.response?.data?.error || 'Có lỗi khi gửi email nhắc nhở');
+    }
+  });
+
   // Handle enter key on barcode input
   const handleBarcodeScan = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && barcodeInput.trim()) {
@@ -319,17 +336,31 @@ export function BorrowedBooks({ userRole }: BorrowedBooksProps) {
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Quản lý Lưu thông Thư viện</h2>
           <p className="text-gray-500 dark:text-gray-400">Theo dõi mượn trả, quét mã vạch và danh sách độc giả đặt trước sách.</p>
         </div>
+
+        {userRole === 'ADMIN' && (
+          <Button
+            onClick={() => remindersMutation.mutate()}
+            disabled={remindersMutation.isPending}
+            className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-sm self-start sm:self-auto"
+            title="Quét tìm sách sắp đến hạn (1-2 ngày) và quá hạn để gửi email nhắc nhở độc giả ngay lập tức"
+          >
+            {remindersMutation.isPending ? (
+              <><Loader2 size={16} className="animate-spin" /> Đang quét & gửi email...</>
+            ) : (
+              <><Send size={16} /> Quét & Gửi email nhắc nhở</>
+            )}
+          </Button>
+        )}
       </div>
 
       {/* Tabs Selector */}
       <div className="flex border-b border-gray-200 dark:border-gray-800 gap-2">
         <button
           onClick={() => handleTabChange('loans')}
-          className={`flex items-center gap-2 pb-3 px-4 font-medium text-sm border-b-2 transition-all ${
-            activeTab === 'loans'
+          className={`flex items-center gap-2 pb-3 px-4 font-medium text-sm border-b-2 transition-all ${activeTab === 'loans'
               ? 'border-blue-600 text-blue-600 dark:text-blue-400 font-semibold'
               : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
-          }`}
+            }`}
         >
           <BookMarked size={18} />
           <span>Sách đang cho mượn</span>
@@ -340,11 +371,10 @@ export function BorrowedBooks({ userRole }: BorrowedBooksProps) {
 
         <button
           onClick={() => handleTabChange('reservations')}
-          className={`flex items-center gap-2 pb-3 px-4 font-medium text-sm border-b-2 transition-all ${
-            activeTab === 'reservations'
+          className={`flex items-center gap-2 pb-3 px-4 font-medium text-sm border-b-2 transition-all ${activeTab === 'reservations'
               ? 'border-amber-600 text-amber-600 dark:text-amber-400 font-semibold'
               : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
-          }`}
+            }`}
         >
           <BookmarkPlus size={18} />
           <span>Danh sách Đặt trước</span>
@@ -370,21 +400,19 @@ export function BorrowedBooks({ userRole }: BorrowedBooksProps) {
                 <div className="flex items-center gap-1 bg-white dark:bg-gray-800 rounded-lg p-1 border border-indigo-200 dark:border-indigo-700">
                   <button
                     onClick={() => { setScanMode('borrow'); handleClearScan(); }}
-                    className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
-                      scanMode === 'borrow'
+                    className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${scanMode === 'borrow'
                         ? 'bg-indigo-600 text-white shadow-sm'
                         : 'text-gray-600 dark:text-gray-400 hover:text-indigo-600'
-                    }`}
+                      }`}
                   >
                     Cho mượn
                   </button>
                   <button
                     onClick={() => { setScanMode('return'); handleClearScan(); }}
-                    className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${
-                      scanMode === 'return'
+                    className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all ${scanMode === 'return'
                         ? 'bg-emerald-600 text-white shadow-sm'
                         : 'text-gray-600 dark:text-gray-400 hover:text-emerald-600'
-                    }`}
+                      }`}
                   >
                     Thu hồi
                   </button>
@@ -482,12 +510,12 @@ export function BorrowedBooks({ userRole }: BorrowedBooksProps) {
                             scanResult.bookItem.status === 'AVAILABLE'
                               ? 'bg-green-100 text-green-700 border-green-200'
                               : scanResult.bookItem.status === 'BORROWED'
-                              ? 'bg-orange-100 text-orange-700 border-orange-200'
-                              : 'bg-gray-100 text-gray-700 border-gray-200'
+                                ? 'bg-orange-100 text-orange-700 border-orange-200'
+                                : 'bg-gray-100 text-gray-700 border-gray-200'
                           }>
                             {scanResult.bookItem.status === 'AVAILABLE' ? 'Sẵn sàng' :
-                             scanResult.bookItem.status === 'BORROWED' ? 'Đang mượn' :
-                             scanResult.bookItem.status}
+                              scanResult.bookItem.status === 'BORROWED' ? 'Đang mượn' :
+                                scanResult.bookItem.status}
                           </Badge>
                         </div>
                       </div>
@@ -738,51 +766,46 @@ export function BorrowedBooks({ userRole }: BorrowedBooksProps) {
             <div className="flex items-center gap-1.5 flex-wrap">
               <button
                 onClick={() => setReservationFilter('ALL')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                  reservationFilter === 'ALL'
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${reservationFilter === 'ALL'
                     ? 'bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900'
                     : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200'
-                }`}
+                  }`}
               >
                 Tất cả ({reservations.length})
               </button>
               <button
                 onClick={() => setReservationFilter('WAITING')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                  reservationFilter === 'WAITING'
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${reservationFilter === 'WAITING'
                     ? 'bg-amber-600 text-white'
                     : 'bg-amber-50 dark:bg-amber-950/30 text-amber-700 dark:text-amber-300 hover:bg-amber-100'
-                }`}
+                  }`}
               >
                 Đang chờ ({waitingCount})
               </button>
               <button
                 onClick={() => setReservationFilter('NOTIFIED')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                  reservationFilter === 'NOTIFIED'
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${reservationFilter === 'NOTIFIED'
                     ? 'bg-indigo-600 text-white'
                     : 'bg-indigo-50 dark:bg-indigo-950/30 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-100'
-                }`}
+                  }`}
               >
                 Đã thông báo ({notifiedCount})
               </button>
               <button
                 onClick={() => setReservationFilter('FULFILLED')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                  reservationFilter === 'FULFILLED'
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${reservationFilter === 'FULFILLED'
                     ? 'bg-emerald-600 text-white'
                     : 'bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100'
-                }`}
+                  }`}
               >
                 Hoàn tất ({fulfilledCount})
               </button>
               <button
                 onClick={() => setReservationFilter('CANCELLED')}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                  reservationFilter === 'CANCELLED'
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${reservationFilter === 'CANCELLED'
                     ? 'bg-gray-600 text-white'
                     : 'bg-gray-100 dark:bg-gray-800 text-gray-500 hover:bg-gray-200'
-                }`}
+                  }`}
               >
                 Đã hủy
               </button>

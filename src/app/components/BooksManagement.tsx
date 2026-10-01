@@ -23,13 +23,13 @@ export interface Book {
 }
 
 interface BooksManagementProps {
-  userRole: 'ADMIN' | 'USER' | null;
+  userRole?: 'ADMIN' | 'USER' | null;
   books?: any;
   setBooks?: any;
   onBorrow?: any;
 }
 
-export function BooksManagement({ userRole: propUserRole }: BooksManagementProps) {
+export function BooksManagement({ userRole: propUserRole }: BooksManagementProps = {}) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [showModal, setShowModal] = useState(false);

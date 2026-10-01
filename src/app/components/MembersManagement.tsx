@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import {
-  Search, Plus, Mail, MoreVertical, UserCheck, X, Save,
-  ShieldAlert, ShieldCheck, UserX, Crown, Award, BookOpen, AlertTriangle
+  Search, Plus, Mail, UserCheck, X, Save,
+  ShieldAlert, ShieldCheck, Crown, Award, BookOpen, AlertTriangle
 } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { client } from '../api/client';
@@ -178,31 +178,28 @@ export function MembersManagement() {
         <div className="flex items-center gap-1.5">
           <button
             onClick={() => setStatusFilter('ALL')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-              statusFilter === 'ALL'
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${statusFilter === 'ALL'
                 ? 'bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900'
                 : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200'
-            }`}
+              }`}
           >
             Tất cả ({members.length})
           </button>
           <button
             onClick={() => setStatusFilter('ACTIVE')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-              statusFilter === 'ACTIVE'
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${statusFilter === 'ACTIVE'
                 ? 'bg-green-600 text-white'
                 : 'bg-green-50 dark:bg-green-950/30 text-green-700 dark:text-green-300 hover:bg-green-100'
-            }`}
+              }`}
           >
             Hoạt động ({activeCount})
           </button>
           <button
             onClick={() => setStatusFilter('BLACKLISTED')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-              statusFilter === 'BLACKLISTED'
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${statusFilter === 'BLACKLISTED'
                 ? 'bg-red-600 text-white'
                 : 'bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-300 hover:bg-red-100'
-            }`}
+              }`}
           >
             Blacklist ({blacklistedCount})
           </button>
@@ -218,21 +215,19 @@ export function MembersManagement() {
           return (
             <div
               key={member.id}
-              className={`bg-white dark:bg-gray-900 rounded-xl border p-5 transition-all shadow-sm hover:shadow-md flex flex-col justify-between ${
-                member.isBlacklisted
+              className={`bg-white dark:bg-gray-900 rounded-xl border p-5 transition-all shadow-sm hover:shadow-md flex flex-col justify-between ${member.isBlacklisted
                   ? 'border-red-300 dark:border-red-900/60 bg-red-50/20 dark:bg-red-950/10'
                   : 'border-gray-200 dark:border-gray-800'
-              }`}
+                }`}
             >
               <div>
                 {/* Header: Avatar, Name, Role & Status */}
                 <div className="flex justify-between items-start mb-3">
                   <div className="flex items-center gap-3 min-w-0">
-                    <div className={`w-11 h-11 rounded-full flex items-center justify-center font-bold text-base shrink-0 ${
-                      member.isBlacklisted
+                    <div className={`w-11 h-11 rounded-full flex items-center justify-center font-bold text-base shrink-0 ${member.isBlacklisted
                         ? 'bg-red-100 dark:bg-red-900/40 text-red-600'
                         : 'bg-blue-100 dark:bg-blue-900/30 text-blue-600'
-                    }`}>
+                      }`}>
                       {member.name ? member.name.charAt(0).toUpperCase() : 'U'}
                     </div>
                     <div className="min-w-0">
@@ -240,11 +235,10 @@ export function MembersManagement() {
                         {member.name}
                       </h3>
                       <div className="flex items-center gap-1.5 mt-0.5">
-                        <span className={`text-[11px] font-medium px-2 py-0.5 rounded-full ${
-                          member.role === 'ADMIN'
+                        <span className={`text-[11px] font-medium px-2 py-0.5 rounded-full ${member.role === 'ADMIN'
                             ? 'bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300'
                             : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300'
-                        }`}>
+                          }`}>
                           {member.role === 'ADMIN' ? 'Thủ thư' : 'Độc giả'}
                         </span>
                       </div>
@@ -312,18 +306,16 @@ export function MembersManagement() {
                       type="button"
                       onClick={() => handleToggleBlacklist(member)}
                       disabled={toggleBlacklistMutation.isPending}
-                      className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
-                        member.isBlacklisted ? 'bg-red-600' : 'bg-gray-300 dark:bg-gray-700'
-                      }`}
+                      className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${member.isBlacklisted ? 'bg-red-600' : 'bg-gray-300 dark:bg-gray-700'
+                        }`}
                       role="switch"
                       aria-checked={Boolean(member.isBlacklisted)}
                       title={member.isBlacklisted ? 'Nhấn để gỡ khỏi Blacklist' : 'Nhấn để đưa vào Blacklist'}
                     >
                       <span
                         aria-hidden="true"
-                        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                          member.isBlacklisted ? 'translate-x-5' : 'translate-x-0'
-                        }`}
+                        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${member.isBlacklisted ? 'translate-x-5' : 'translate-x-0'
+                          }`}
                       />
                     </button>
                   </div>

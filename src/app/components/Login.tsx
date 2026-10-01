@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
 import { client } from '../api/client';
 import { useNavigate } from 'react-router-dom';
@@ -17,7 +16,6 @@ export function Login({ }: LoginProps) {
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const { t } = useLanguage();
   const { login } = useAuth();
   const navigate = useNavigate();
 

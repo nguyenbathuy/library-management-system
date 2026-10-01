@@ -1,4 +1,4 @@
-import { Bell, Shield, Palette, Database, Mail, Clock, Globe } from 'lucide-react';
+import { Bell, Shield, Palette, Database, Globe } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
 
@@ -15,7 +15,7 @@ export function Settings() {
 
       {/* Danh sách các mục cài đặt */}
       <div className="space-y-6">
-        
+
         {/* Cài đặt chung */}
         <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
           <div className="flex items-center gap-3 mb-6">
@@ -146,7 +146,7 @@ export function Settings() {
                 {theme === 'light' ? t('common.light') : t('common.dark')}
               </button>
             </div>
-            
+
             <div className="flex items-center justify-between py-3">
               <div className="flex items-center gap-3">
                 <Globe className="w-5 h-5 text-gray-400" />
