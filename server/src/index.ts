@@ -6,6 +6,7 @@ import bookRoutes from './routes/bookRoutes';
 import loanRoutes from './routes/loanRoutes';
 import analyticsRoutes from './routes/analyticsRoutes';
 import reservationRoutes from './routes/reservationRoutes';
+import { startReminderCron } from './jobs/reminderJob';
 
 dotenv.config();
 
@@ -24,6 +25,9 @@ app.use('/api/reservations', reservationRoutes);
 app.get('/', (req, res) => {
     res.send('Library API is running');
 });
+
+// Khởi chạy tác vụ Cron ngầm (chạy vào 08:00 sáng mỗi ngày)
+startReminderCron();
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);

@@ -505,3 +505,26 @@ export const returnByBarcode = async (req: AuthRequest, res: Response) => {
         res.status(500).json({ error: 'Không thể thu hồi sách' });
     }
 };
+
+/**
+ * Thủ thư chủ động kích hoạt quét & gửi email nhắc nhở trả sách ngay lập tức
+ */
+export const triggerReminders = async (req: AuthRequest, res: Response) => {
+    try {
+        if (req.user?.role !== 'ADMIN') {
+            return res.status(403).json({ error: 'Chỉ thủ thư mới có quyền kích hoạt gửi email nhắc nhở' });
+        }
+
+        const { scanAndSendReminders } = await import('../jobs/reminderJob');
+        const report = await scanAndSendReminders();
+
+        res.json({
+            message: `Đã hoàn tất quét và gửi email nhắc nhở: ${report.emailsSent} email thành công (${report.dueSoonCount} sắp đến hạn, ${report.overdueCount} quá hạn).`,
+            report
+        });
+    } catch (error: any) {
+        console.error('Error triggering reminders:', error);
+        res.status(500).json({ error: 'Không thể thực hiện tác vụ gửi email nhắc nhở', details: error.message });
+    }
+};
+

@@ -1,6 +1,10 @@
 import { Router } from 'express';
-import { borrowBook, returnBook, getMyLoans, getAllLoans, lookupBarcode, borrowByBarcode, returnByBarcode } from '../controllers/loanController';
-import { authenticateToken } from '../middleware/auth';
+import {
+    borrowBook, returnBook, getMyLoans, getAllLoans,
+    lookupBarcode, borrowByBarcode, returnByBarcode,
+    triggerReminders
+} from '../controllers/loanController';
+import { authenticateToken, authorizeAdmin } from '../middleware/auth';
 
 const router = Router();
 
@@ -13,5 +17,8 @@ router.get('/all', authenticateToken, getAllLoans);
 router.get('/barcode/:barcode', authenticateToken, lookupBarcode);
 router.post('/borrow-by-barcode', authenticateToken, borrowByBarcode);
 router.post('/return-by-barcode', authenticateToken, returnByBarcode);
+
+// Trigger email reminders on demand (Admin only)
+router.post('/reminders/trigger', authenticateToken, authorizeAdmin, triggerReminders);
 
 export default router;
