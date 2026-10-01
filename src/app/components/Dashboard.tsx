@@ -15,6 +15,7 @@ import {
 } from 'recharts';
 
 interface DashboardStats {
+  totalBooks: number;
   activeUsers: number;
   totalBorrowed: number;
   overdueBooks: number;

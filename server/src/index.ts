@@ -5,6 +5,7 @@ import authRoutes from './routes/authRoutes';
 import bookRoutes from './routes/bookRoutes';
 import loanRoutes from './routes/loanRoutes';
 import analyticsRoutes from './routes/analyticsRoutes';
+import reservationRoutes from './routes/reservationRoutes';
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/books', bookRoutes);
 app.use('/api/loans', loanRoutes);
 app.use('/api/analytics', analyticsRoutes);
+app.use('/api/reservations', reservationRoutes);
 
 app.get('/', (req, res) => {
     res.send('Library API is running');

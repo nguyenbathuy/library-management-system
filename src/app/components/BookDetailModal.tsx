@@ -1,4 +1,4 @@
-import { X, BookOpen, Calendar, FileText, Tag } from 'lucide-react';
+import { X, BookOpen, Calendar, FileText, Tag, BookmarkPlus, Clock, CheckCircle2 } from 'lucide-react';
 import { Book } from './BooksManagement';
 
 interface BookDetailModalProps {
@@ -6,15 +6,23 @@ interface BookDetailModalProps {
     isOpen: boolean;
     onClose: () => void;
     onBorrow?: (bookId: number) => void;
+    onReserve?: (bookId: number) => void;
     userRole?: 'ADMIN' | 'USER' | null;
 }
 
-export function BookDetailModal({ book, isOpen, onClose, onBorrow, userRole }: BookDetailModalProps) {
+export function BookDetailModal({ book, isOpen, onClose, onBorrow, onReserve, userRole }: BookDetailModalProps) {
     if (!isOpen || !book) return null;
 
     const handleBorrow = () => {
         if (onBorrow && book.available > 0) {
             onBorrow(book.id);
+            onClose();
+        }
+    };
+
+    const handleReserve = () => {
+        if (onReserve && book.available === 0) {
+            onReserve(book.id);
             onClose();
         }
     };
@@ -160,6 +168,21 @@ export function BookDetailModal({ book, isOpen, onClose, onBorrow, userRole }: B
                         </div>
                     </div>
 
+                    {/* Out of Stock Notice */}
+                    {book.available === 0 && (
+                        <div className="mt-6 p-4 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/50 rounded-xl flex items-start gap-3">
+                            <Clock className="text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" size={20} />
+                            <div>
+                                <h4 className="text-sm font-semibold text-amber-900 dark:text-amber-200">
+                                    Tất cả bản sao hiện đang được mượn
+                                </h4>
+                                <p className="text-xs text-amber-700 dark:text-amber-400 mt-0.5">
+                                    Độc giả có thể bấm <strong>"Đặt Trước Sách"</strong> bên dưới. Hệ thống sẽ ghi nhận thứ tự ưu tiên và bạn sẽ nhận được sách ngay khi có người trả.
+                                </p>
+                            </div>
+                        </div>
+                    )}
+
                     {/* Action Buttons */}
                     <div className="flex gap-3 mt-6 pt-6 border-t border-gray-200 dark:border-gray-800">
                         <button
@@ -169,13 +192,23 @@ export function BookDetailModal({ book, isOpen, onClose, onBorrow, userRole }: B
                             Đóng
                         </button>
                         {userRole !== 'ADMIN' && (
-                            <button
-                                onClick={handleBorrow}
-                                disabled={book.available === 0}
-                                className="flex-1 px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-lg transition-colors font-medium"
-                            >
-                                {book.available > 0 ? 'Mượn Sách Này' : 'Hết sách'}
-                            </button>
+                            book.available > 0 ? (
+                                <button
+                                    onClick={handleBorrow}
+                                    className="flex-1 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all font-medium flex items-center justify-center gap-2 shadow-sm active:scale-[0.98]"
+                                >
+                                    <BookOpen size={18} />
+                                    Mượn Sách Này
+                                </button>
+                            ) : (
+                                <button
+                                    onClick={handleReserve}
+                                    className="flex-1 px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition-all font-medium flex items-center justify-center gap-2 shadow-sm hover:shadow-md active:scale-[0.98]"
+                                >
+                                    <BookmarkPlus size={18} />
+                                    Đặt Trước Sách
+                                </button>
+                            )
                         )}
                     </div>
                 </div>

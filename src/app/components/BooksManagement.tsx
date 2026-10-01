@@ -160,6 +160,23 @@ export function BooksManagement({ userRole: propUserRole }: BooksManagementProps
     }
   });
 
+  // Reserve Mutation
+  const reserveMutation = useMutation({
+    mutationFn: async (bookId: number) => {
+      const { data } = await client.post('/reservations', { bookId });
+      return data;
+    },
+    onSuccess: (data: any) => {
+      alert(data.message || 'Đặt trước sách thành công!');
+      queryClient.invalidateQueries({ queryKey: ['books'] });
+      queryClient.invalidateQueries({ queryKey: ['all-reservations'] });
+      queryClient.invalidateQueries({ queryKey: ['my-reservations'] });
+    },
+    onError: (error: any) => {
+      alert(error.response?.data?.error || 'Có lỗi khi đặt trước sách');
+    }
+  });
+
   const resetForm = () => {
     setFormData({
       title: '',
@@ -380,16 +397,30 @@ export function BooksManagement({ userRole: propUserRole }: BooksManagementProps
                     </button>
                   </div>
                 ) : (
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      borrowMutation.mutate(book.id);
-                    }}
-                    disabled={book.available === 0 || borrowMutation.isPending}
-                    className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white text-sm font-medium rounded-lg transition-colors"
-                  >
-                    Mượn
-                  </button>
+                  book.available > 0 ? (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        borrowMutation.mutate(book.id);
+                      }}
+                      disabled={borrowMutation.isPending}
+                      className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm"
+                    >
+                      Mượn
+                    </button>
+                  ) : (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        reserveMutation.mutate(book.id);
+                      }}
+                      disabled={reserveMutation.isPending}
+                      className="px-3 py-2 bg-amber-600 hover:bg-amber-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm"
+                      title="Hết sách sẵn có - Bấm để đặt trước"
+                    >
+                      Đặt trước
+                    </button>
+                  )
                 )}
               </div>
             </div>
@@ -659,6 +690,7 @@ export function BooksManagement({ userRole: propUserRole }: BooksManagementProps
         isOpen={showDetailModal}
         onClose={() => setShowDetailModal(false)}
         onBorrow={(bookId) => borrowMutation.mutate(bookId)}
+        onReserve={(bookId) => reserveMutation.mutate(bookId)}
         userRole={userRole}
       />
     </div>
