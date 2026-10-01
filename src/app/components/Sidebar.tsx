@@ -62,7 +62,7 @@ export function Sidebar() {
 
             <NavLink to="/borrowed" className={getLinkClass}>
               <BookMarked size={20} />
-              Quản lý Mượn/Trả
+              Quản lý Mượn / Đặt trước
             </NavLink>
           </>
         )}
