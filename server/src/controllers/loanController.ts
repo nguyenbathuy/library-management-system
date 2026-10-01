@@ -56,12 +56,88 @@ const formatLoanResponse = (loan: any) => {
     };
 };
 
+/**
+ * Kiểm duyệt rủi ro mượn sách:
+ * 1. Chặn mượn nếu User có isBlacklisted == true
+ * 2. Chặn mượn nếu User đang có phiếu mượn quá hạn chưa trả
+ * 3. Giới hạn số lượng sách đang mượn theo hạng thành viên (STANDARD: 5, PREMIUM: 10, LECTURER: 15)
+ */
+export const validateBorrowRisk = async (userId: number): Promise<{ allowed: boolean; error?: string; status?: number }> => {
+    const user = await prisma.user.findUnique({
+        where: { id: userId },
+        include: {
+            loans: {
+                where: { returnDate: null },
+                include: {
+                    bookItem: {
+                        include: { book: true }
+                    }
+                }
+            }
+        }
+    });
+
+    if (!user) {
+        return { allowed: false, error: 'Không tìm thấy thông tin người dùng', status: 404 };
+    }
+
+    // 1. Kiểm tra Blacklist
+    if (user.isBlacklisted) {
+        return {
+            allowed: false,
+            error: 'Tài khoản của bạn đã bị đưa vào danh sách hạn chế (Blacklist). Bạn không thể mượn sách mới, vui lòng liên hệ thủ thư để được mở khóa!',
+            status: 403
+        };
+    }
+
+    // 2. Kiểm tra sách quá hạn chưa trả
+    const now = new Date();
+    const overdueLoans = user.loans.filter(loan => new Date(loan.dueDate) < now);
+    if (overdueLoans.length > 0) {
+        const overdueTitles = overdueLoans
+            .map(l => `"${l.bookItem?.book?.title || 'Sách'}"`)
+            .slice(0, 3)
+            .join(', ');
+        return {
+            allowed: false,
+            error: `Độc giả đang có ${overdueLoans.length} cuốn sách quá hạn chưa hoàn trả (${overdueTitles}${overdueLoans.length > 3 ? '...' : ''}). Lập tức chặn mượn sách mới cho đến khi hoàn trả sách quá hạn!`,
+            status: 400
+        };
+    }
+
+    // 3. Giới hạn số lượng sách đang mượn theo hạng thành viên
+    const currentBorrowCount = user.loans.length;
+    const tier = (user.membershipTier || 'STANDARD').toUpperCase();
+    let maxAllowed = 5; // STANDARD mặc định 5 cuốn
+    if (tier === 'PREMIUM') {
+        maxAllowed = 10; // PREMIUM tối đa 10 cuốn
+    } else if (tier === 'LECTURER') {
+        maxAllowed = 15; // LECTURER tối đa 15 cuốn
+    }
+
+    if (currentBorrowCount >= maxAllowed) {
+        return {
+            allowed: false,
+            error: `Độc giả đã đạt giới hạn mượn tối đa (${currentBorrowCount}/${maxAllowed} cuốn) theo hạng thành viên ${tier}. Vui lòng trả bớt sách trước khi mượn tiếp!`,
+            status: 400
+        };
+    }
+
+    return { allowed: true };
+};
+
 export const borrowBook = async (req: AuthRequest, res: Response) => {
     try {
         const { bookId, bookItemId } = req.body;
         const userId = req.user?.userId;
 
         if (!userId) return res.status(401).json({ error: 'Unauthorized' });
+
+        // --- KIỂM DUYỆT RỦI RO (Blacklist, Quá hạn, Hạn mức gói thành viên) ---
+        const riskCheck = await validateBorrowRisk(userId);
+        if (!riskCheck.allowed) {
+            return res.status(riskCheck.status || 400).json({ error: riskCheck.error });
+        }
 
         // 1. Find an available physical copy (BookItem)
         let item = null;
@@ -313,13 +389,16 @@ export const borrowByBarcode = async (req: AuthRequest, res: Response) => {
             });
         }
 
-        // Check user exists
+        // Check user exists and risk control
         const borrower = await prisma.user.findUnique({ where: { id: Number(userId) } });
         if (!borrower) {
             return res.status(404).json({ error: 'Không tìm thấy độc giả' });
         }
-        if (borrower.isBlacklisted) {
-            return res.status(403).json({ error: 'Độc giả này đã bị chặn mượn sách' });
+
+        // --- KIỂM DUYỆT RỦI RO (Blacklist, Quá hạn, Hạn mức gói thành viên) ---
+        const riskCheck = await validateBorrowRisk(Number(userId));
+        if (!riskCheck.allowed) {
+            return res.status(riskCheck.status || 400).json({ error: riskCheck.error });
         }
 
         const dueDate = new Date();

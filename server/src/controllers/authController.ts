@@ -82,7 +82,55 @@ export const getAllUsers = async (req: AuthRequest, res: Response) => {
             membershipTier: true,
             isBlacklisted: true,
             createdAt: true
-        }
+        },
+        orderBy: { id: 'asc' }
     });
     res.json(users);
 };
+
+export const toggleBlacklist = async (req: AuthRequest, res: Response) => {
+    try {
+        const { id } = req.params;
+        const { isBlacklisted } = req.body;
+
+        const targetUser = await prisma.user.findUnique({
+            where: { id: Number(id) }
+        });
+
+        if (!targetUser) {
+            return res.status(404).json({ error: 'Không tìm thấy người dùng' });
+        }
+
+        // Không cho phép tự đưa chính mình vào danh sách đen
+        if (targetUser.id === req.user?.userId) {
+            return res.status(400).json({ error: 'Không thể tự đưa chính tài khoản của bạn vào danh sách đen' });
+        }
+
+        const newStatus = typeof isBlacklisted === 'boolean' ? isBlacklisted : !targetUser.isBlacklisted;
+
+        const updatedUser = await prisma.user.update({
+            where: { id: Number(id) },
+            data: { isBlacklisted: newStatus },
+            select: {
+                id: true,
+                email: true,
+                name: true,
+                role: true,
+                membershipTier: true,
+                isBlacklisted: true,
+                createdAt: true
+            }
+        });
+
+        res.json({
+            message: newStatus
+                ? `Đã đưa độc giả "${updatedUser.name}" vào Danh sách Đen (chặn mượn sách).`
+                : `Đã mở khóa và gỡ độc giả "${updatedUser.name}" khỏi Danh sách Đen.`,
+            user: updatedUser
+        });
+    } catch (error) {
+        console.error('Error toggling blacklist:', error);
+        res.status(500).json({ error: 'Không thể cập nhật trạng thái danh sách đen' });
+    }
+};
+
