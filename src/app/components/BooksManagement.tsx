@@ -1,5 +1,5 @@
 import { Search, Plus, Edit, Trash2, BookOpen, Filter, X, FileSpreadsheet, Upload, CheckCircle, AlertCircle, Loader2, FileText } from 'lucide-react';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { client } from '../api/client';
 import { useAuth } from '../contexts/AuthContext';
@@ -85,6 +85,16 @@ export function BooksManagement({ userRole: propUserRole }: BooksManagementProps
     }
   });
 
+  // Keep selectedBook synced with latest books data from query refetch
+  useEffect(() => {
+    if (selectedBook) {
+      const updated = books.find(b => b.id === selectedBook.id);
+      if (updated) {
+        setSelectedBook(updated);
+      }
+    }
+  }, [books]);
+
   // Create Book Mutation
   const createMutation = useMutation({
     mutationFn: async (bookData: any) => {
@@ -93,6 +103,7 @@ export function BooksManagement({ userRole: propUserRole }: BooksManagementProps
     onSuccess: () => {
       toast.success('Thêm sách mới thành công!');
       queryClient.invalidateQueries({ queryKey: ['books'] });
+      queryClient.invalidateQueries({ queryKey: ['book-recommendations'] });
       setShowModal(false);
       resetForm();
     },
@@ -109,6 +120,7 @@ export function BooksManagement({ userRole: propUserRole }: BooksManagementProps
     onSuccess: () => {
       toast.success('Cập nhật thông tin sách thành công!');
       queryClient.invalidateQueries({ queryKey: ['books'] });
+      queryClient.invalidateQueries({ queryKey: ['book-recommendations'] });
       setShowModal(false);
       setEditingBook(null);
       resetForm();
@@ -126,6 +138,7 @@ export function BooksManagement({ userRole: propUserRole }: BooksManagementProps
     onSuccess: () => {
       toast.success('Xóa sách thành công!');
       queryClient.invalidateQueries({ queryKey: ['books'] });
+      queryClient.invalidateQueries({ queryKey: ['book-recommendations'] });
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.error || 'Có lỗi khi xóa sách');
@@ -147,6 +160,7 @@ export function BooksManagement({ userRole: propUserRole }: BooksManagementProps
       setImportResult(data);
       setShowImportResult(true);
       queryClient.invalidateQueries({ queryKey: ['books'] });
+      queryClient.invalidateQueries({ queryKey: ['book-recommendations'] });
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.error || 'Có lỗi khi import file Excel');
@@ -168,11 +182,61 @@ export function BooksManagement({ userRole: propUserRole }: BooksManagementProps
   // Borrow Mutation
   const borrowMutation = useMutation({
     mutationFn: async (bookId: number) => {
-      await client.post('/loans/borrow', { bookId });
+      const { data } = await client.post('/loans/borrow', { bookId });
+      return data;
     },
-    onSuccess: () => {
+    onSuccess: (data: any, bookId: number) => {
       toast.success('Mượn sách thành công!');
+
+      // Bắt buộc gọi invalidateQueries để React tự động fetch lại danh sách sách và cập nhật con số chính xác
       queryClient.invalidateQueries({ queryKey: ['books'] });
+      queryClient.invalidateQueries({ queryKey: ['book-recommendations'] });
+      queryClient.invalidateQueries({ queryKey: ['all-loans'] });
+      queryClient.invalidateQueries({ queryKey: ['my-loans'] });
+      queryClient.invalidateQueries({ queryKey: ['analytics-stats'] });
+      queryClient.invalidateQueries({ queryKey: ['top-books'] });
+      queryClient.invalidateQueries({ queryKey: ['recent-activity'] });
+      queryClient.invalidateQueries({ queryKey: ['borrow-trends'] });
+      queryClient.invalidateQueries({ queryKey: ['notifications'] });
+
+      // Cập nhật ngay trong cache của ['books'] để giao diện phản hồi lập tức không độ trễ
+      queryClient.setQueryData<Book[]>(['books'], (oldBooks) => {
+        if (!oldBooks) return oldBooks;
+        return oldBooks.map((b) => {
+          if (b.id === bookId) {
+            const newAvailable = typeof data?.availableCopies === 'number'
+              ? data.availableCopies
+              : (typeof data?.available === 'number' ? data.available : Math.max(0, (b.available ?? 1) - 1));
+            return {
+              ...b,
+              available: newAvailable,
+              status: newAvailable > 0 ? 'Available' : 'Borrowed'
+            };
+          }
+          return b;
+        });
+      });
+
+      // Cập nhật ngay trong cache của ['book-recommendations']
+      queryClient.setQueryData<any>(['book-recommendations'], (oldData) => {
+        if (!oldData || !oldData.books) return oldData;
+        return {
+          ...oldData,
+          books: oldData.books.map((b: Book) => {
+            if (b.id === bookId) {
+              const newAvailable = typeof data?.availableCopies === 'number'
+                ? data.availableCopies
+                : (typeof data?.available === 'number' ? data.available : Math.max(0, (b.available ?? 1) - 1));
+              return {
+                ...b,
+                available: newAvailable,
+                status: newAvailable > 0 ? 'Available' : 'Borrowed'
+              };
+            }
+            return b;
+          })
+        };
+      });
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.error || 'Có lỗi xảy ra khi mượn sách');
@@ -188,6 +252,7 @@ export function BooksManagement({ userRole: propUserRole }: BooksManagementProps
     onSuccess: (data: any) => {
       toast.success(data.message || 'Đặt trước sách thành công!');
       queryClient.invalidateQueries({ queryKey: ['books'] });
+      queryClient.invalidateQueries({ queryKey: ['book-recommendations'] });
       queryClient.invalidateQueries({ queryKey: ['all-reservations'] });
       queryClient.invalidateQueries({ queryKey: ['my-reservations'] });
     },

@@ -1,7 +1,8 @@
 import { useState, useRef } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { client } from '../api/client';
 import { Book } from './BooksManagement';
+import { toast } from 'sonner';
 import {
   Sparkles,
   TrendingUp,
@@ -34,9 +35,57 @@ export function BookRecommendations({
   onReserve,
   userRole
 }: BookRecommendationsProps) {
+  const queryClient = useQueryClient();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
+
+  const internalBorrowMutation = useMutation({
+    mutationFn: async (bookId: number) => {
+      const { data } = await client.post('/loans/borrow', { bookId });
+      return data;
+    },
+    onSuccess: (data: any, bookId: number) => {
+      toast.success('Mượn sách thành công!');
+      queryClient.invalidateQueries({ queryKey: ['books'] });
+      queryClient.invalidateQueries({ queryKey: ['book-recommendations'] });
+      queryClient.invalidateQueries({ queryKey: ['all-loans'] });
+      queryClient.invalidateQueries({ queryKey: ['my-loans'] });
+      queryClient.invalidateQueries({ queryKey: ['analytics-stats'] });
+      queryClient.invalidateQueries({ queryKey: ['notifications'] });
+
+      queryClient.setQueryData<RecommendationsResponse>(['book-recommendations'], (oldData) => {
+        if (!oldData || !oldData.books) return oldData;
+        return {
+          ...oldData,
+          books: oldData.books.map((b) => {
+            if (b.id === bookId) {
+              const newAvailable = typeof data?.availableCopies === 'number'
+                ? data.availableCopies
+                : (typeof data?.available === 'number' ? data.available : Math.max(0, (b.available ?? 1) - 1));
+              return {
+                ...b,
+                available: newAvailable,
+                status: newAvailable > 0 ? 'Available' : 'Borrowed'
+              };
+            }
+            return b;
+          })
+        };
+      });
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.error || 'Có lỗi xảy ra khi mượn sách');
+    }
+  });
+
+  const handleBorrow = (bookId: number) => {
+    if (onBorrow) {
+      onBorrow(bookId);
+    } else {
+      internalBorrowMutation.mutate(bookId);
+    }
+  };
 
   const { data, isLoading } = useQuery<RecommendationsResponse>({
     queryKey: ['book-recommendations'],
@@ -250,9 +299,10 @@ export function BookRecommendations({
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          if (onBorrow) onBorrow(book.id);
+                          handleBorrow(book.id);
                         }}
-                        className="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium rounded-lg transition-colors shadow-sm flex items-center gap-1 active:scale-95"
+                        disabled={internalBorrowMutation.isPending}
+                        className="px-2.5 py-1 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white text-xs font-medium rounded-lg transition-colors shadow-sm flex items-center gap-1 active:scale-95"
                       >
                         <BookOpen size={12} />
                         Mượn

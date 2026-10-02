@@ -161,7 +161,9 @@ export function BorrowedBooks({ userRole: propUserRole }: BorrowedBooksProps = {
     onSuccess: (data: any) => {
       queryClient.invalidateQueries({ queryKey: ['all-loans'] });
       queryClient.invalidateQueries({ queryKey: ['books'] });
+      queryClient.invalidateQueries({ queryKey: ['book-recommendations'] });
       queryClient.invalidateQueries({ queryKey: ['all-reservations'] });
+      queryClient.invalidateQueries({ queryKey: ['analytics-stats'] });
       if (data?.reservationNotice) {
         toast.success(`Thu hồi sách thành công! Độc giả ${data.reservationNotice.userName} đang đặt trước sách này. Trạng thái đã chuyển sang "Đã thông báo"!`, { duration: 5000 });
       } else {
@@ -230,6 +232,8 @@ export function BorrowedBooks({ userRole: propUserRole }: BorrowedBooksProps = {
     onSuccess: (data: any) => {
       queryClient.invalidateQueries({ queryKey: ['all-loans'] });
       queryClient.invalidateQueries({ queryKey: ['books'] });
+      queryClient.invalidateQueries({ queryKey: ['book-recommendations'] });
+      queryClient.invalidateQueries({ queryKey: ['analytics-stats'] });
       toast.success(data?.message || (language === 'vi' ? 'Báo mất sách và ghi nhận bồi thường thành công!' : 'Reported lost book and recorded compensation!'));
       setLostModalOpen(false);
       setSelectedLoanForLost(null);
@@ -272,7 +276,9 @@ export function BorrowedBooks({ userRole: propUserRole }: BorrowedBooksProps = {
       setSelectedUserId('');
       queryClient.invalidateQueries({ queryKey: ['all-loans'] });
       queryClient.invalidateQueries({ queryKey: ['books'] });
+      queryClient.invalidateQueries({ queryKey: ['book-recommendations'] });
       queryClient.invalidateQueries({ queryKey: ['all-reservations'] });
+      queryClient.invalidateQueries({ queryKey: ['analytics-stats'] });
       barcodeInputRef.current?.focus();
     },
     onError: (error: any) => {
@@ -293,7 +299,9 @@ export function BorrowedBooks({ userRole: propUserRole }: BorrowedBooksProps = {
       setBarcodeInput('');
       queryClient.invalidateQueries({ queryKey: ['all-loans'] });
       queryClient.invalidateQueries({ queryKey: ['books'] });
+      queryClient.invalidateQueries({ queryKey: ['book-recommendations'] });
       queryClient.invalidateQueries({ queryKey: ['all-reservations'] });
+      queryClient.invalidateQueries({ queryKey: ['analytics-stats'] });
       barcodeInputRef.current?.focus();
     },
     onError: (error: any) => {

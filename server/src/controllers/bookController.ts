@@ -83,7 +83,7 @@ export const uploadEbookHandler = async (req: AuthRequest, res: Response) => {
 const formatBookResponse = (book: any) => {
   const items = book.items || [];
   const copies = items.length;
-  const available = items.filter((item: any) => item.status === 'AVAILABLE').length;
+  const available = items.filter((item: any) => String(item.status).toUpperCase() === 'AVAILABLE').length;
 
   return {
     id: book.id,
@@ -199,45 +199,46 @@ export const createBook = async (req: AuthRequest, res: Response) => {
       });
     }
 
-    // Create Book
-    const book = await prisma.book.create({
-      data: {
-        title: String(title).trim(),
-        isbn: String(isbn).trim(),
-        categoryId: catRecord.id,
-        authorId: authorRecord.id,
-        publisherId: publisherRecord ? publisherRecord.id : null,
-        publishedYear: publishedYear ? String(publishedYear) : null,
-        pageCount: pageCount ? Number(pageCount) : null,
-        language: language ? String(language) : 'Tiếng Việt',
-        description: description || null,
-        coverImage: coverImage || null,
-        ebookUrl: ebookUrl ? String(ebookUrl).trim() : null,
-      }
-    });
+    // Create Book and physical copies (All copies created must be AVAILABLE on shelves, avoiding ghost copies)
+    const cleanIsbn = String(isbn).replace(/[^0-9]/g, '').slice(-6) || 'BOOK';
 
-    // Create BookItems (physical copies)
-    const cleanIsbn = String(isbn).replace(/[^0-9]/g, '').slice(-6) || String(book.id);
-    for (let i = 0; i < copiesNum; i++) {
-      const isAvail = i < availableNum;
-      await prisma.bookItem.create({
+    const createdBookWithRelations = await prisma.$transaction(async (tx) => {
+      const newBook = await tx.book.create({
         data: {
-          bookId: book.id,
-          barcode: `BC-${cleanIsbn}-${String(i + 1).padStart(3, '0')}`,
-          location: 'Khu A - Kệ 1',
-          status: isAvail ? 'AVAILABLE' : 'BORROWED'
+          title: String(title).trim(),
+          isbn: String(isbn).trim(),
+          categoryId: catRecord.id,
+          authorId: authorRecord.id,
+          publisherId: publisherRecord ? publisherRecord.id : null,
+          publishedYear: publishedYear ? String(publishedYear) : null,
+          pageCount: pageCount ? Number(pageCount) : null,
+          language: language ? String(language) : 'Tiếng Việt',
+          description: description || null,
+          coverImage: coverImage || null,
+          ebookUrl: ebookUrl ? String(ebookUrl).trim() : null,
         }
       });
-    }
 
-    const createdBookWithRelations = await prisma.book.findUnique({
-      where: { id: book.id },
-      include: {
-        category: true,
-        author: true,
-        publisher: true,
-        items: true,
+      for (let i = 0; i < copiesNum; i++) {
+        await tx.bookItem.create({
+          data: {
+            bookId: newBook.id,
+            barcode: `BC-${cleanIsbn}-${String(i + 1).padStart(3, '0')}`,
+            location: 'Khu A - Kệ 1',
+            status: 'AVAILABLE'
+          }
+        });
       }
+
+      return await tx.book.findUnique({
+        where: { id: newBook.id },
+        include: {
+          category: true,
+          author: true,
+          publisher: true,
+          items: true,
+        }
+      });
     });
 
     res.status(201).json(formatBookResponse(createdBookWithRelations));

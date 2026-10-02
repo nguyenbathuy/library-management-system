@@ -1,6 +1,7 @@
 import { Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { AuthRequest } from '../middleware/auth';
+import { createNotification } from '../services/notificationService';
 
 const prisma = new PrismaClient();
 
@@ -173,14 +174,15 @@ export const paymentCallback = async (req: AuthRequest, res: Response) => {
       return res.status(400).json({ error: 'Giao dịch thanh toán không thành công hoặc đã bị hủy' });
     }
 
-    // Cập nhật CSDL: Đánh dấu đã thanh toán phạt
+    // Cập nhật CSDL: Đánh dấu đã thanh toán phạt & chuyển status thành COMPLETED
     const updatedLoan = await prisma.loan.update({
       where: { id: loanId },
       data: {
         isFinePaid: true,
         finePaidAt: new Date(),
         paymentMethod: method,
-        paymentTransactionId: txnRef
+        paymentTransactionId: txnRef,
+        status: 'COMPLETED'
       },
       include: {
         bookItem: {
@@ -207,12 +209,21 @@ export const paymentCallback = async (req: AuthRequest, res: Response) => {
       }
     });
 
+    // Trigger Event-Driven Notification: Đóng phiếu mượn sau khi nộp phạt thành công
+    const bookTitle = updatedLoan.bookItem?.book?.title || 'Sách mượn';
+    await createNotification({
+      userId: updatedLoan.userId,
+      title: 'Thanh toán phí phạt thành công',
+      message: `Thanh toán phí phạt cho cuốn sách "${bookTitle}" thành công (Mã GD: ${txnRef}). Phiếu mượn của bạn đã được đóng hoàn tất.`
+    });
+
     res.json({
       success: true,
-      message: 'Thanh toán phí phạt thành công!',
+      message: 'Thanh toán phí phạt thành công, phiếu mượn của bạn đã được đóng hoàn tất!',
       loanId: updatedLoan.id,
       paymentTransactionId: txnRef,
-      paidAt: updatedLoan.finePaidAt
+      paidAt: updatedLoan.finePaidAt,
+      status: 'COMPLETED'
     });
   } catch (error: any) {
     console.error('Error handling payment callback:', error);
