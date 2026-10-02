@@ -1,5 +1,8 @@
-import { X, BookOpen, Calendar, FileText, Tag, BookmarkPlus, Clock, ExternalLink } from 'lucide-react';
-import { Book } from './BooksManagement';
+import { useState, useRef, useEffect } from 'react';
+import { useReactToPrint } from 'react-to-print';
+import { X, BookOpen, Calendar, FileText, Tag, BookmarkPlus, Clock, ExternalLink, Printer, QrCode } from 'lucide-react';
+import { Book, BookItem } from './BooksManagement';
+import { BarcodeLabelsPrint } from './BarcodeLabelsPrint';
 
 interface BookDetailModalProps {
   book: Book | null;
@@ -12,6 +15,41 @@ interface BookDetailModalProps {
 
 export function BookDetailModal({ book, isOpen, onClose, onBorrow, onReserve, userRole }: BookDetailModalProps) {
   if (!isOpen || !book) return null;
+
+  const printRef = useRef<HTMLDivElement>(null);
+  const [itemsToPrint, setItemsToPrint] = useState<BookItem[]>([]);
+  const [isPrinting, setIsPrinting] = useState(false);
+
+  const effectiveItems: BookItem[] = (book.items && book.items.length > 0)
+    ? book.items
+    : Array.from({ length: book.copies || 1 }, (_, i) => ({
+        id: i + 1,
+        barcode: `BC-${(book.isbn || 'BOOK').replace(/[^a-zA-Z0-9]/g, '')}-${String(i + 1).padStart(3, '0')}`,
+        location: 'Khu A - Kệ 1',
+        status: i < (book.available || 0) ? 'AVAILABLE' : 'BORROWED'
+      }));
+
+  const handlePrint = useReactToPrint({
+    contentRef: printRef,
+    documentTitle: `Ma-Vach-${(book.title || 'Sach').replace(/[^a-zA-Z0-9]/g, '_')}`,
+  });
+
+  useEffect(() => {
+    if (isPrinting && itemsToPrint.length > 0) {
+      handlePrint();
+      setIsPrinting(false);
+    }
+  }, [isPrinting, itemsToPrint]);
+
+  const triggerPrintSingle = (item: BookItem) => {
+    setItemsToPrint([item]);
+    setIsPrinting(true);
+  };
+
+  const triggerPrintAll = () => {
+    setItemsToPrint(effectiveItems);
+    setIsPrinting(true);
+  };
 
   const handleBorrow = () => {
     if (onBorrow && book.available > 0) {
@@ -207,6 +245,96 @@ export function BookDetailModal({ book, isOpen, onClose, onBorrow, onReserve, us
               </div>
             </div>
           )}
+
+          {/* Admin-only: Physical Copies & Barcode Printing */}
+          {userRole === 'ADMIN' && (
+            <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-800">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+                <div className="flex items-center gap-2.5">
+                  <div className="p-2 bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 rounded-lg">
+                    <QrCode size={20} />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-gray-900 dark:text-white text-base">
+                      Bản sao vật lý & Tem mã vạch ({effectiveItems.length} cuốn)
+                    </h3>
+                    <p className="text-xs text-gray-500">Mã vạch và vị trí kệ sách để in tem dán gáy</p>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={triggerPrintAll}
+                  className="inline-flex items-center gap-2 px-3.5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-semibold shadow-sm hover:shadow transition-all active:scale-95"
+                  title="In toàn bộ tem nhãn mã vạch của các bản sao này"
+                >
+                  <Printer size={15} />
+                  <span>In tất cả mã vạch ({effectiveItems.length})</span>
+                </button>
+              </div>
+
+              {/* Items List */}
+              <div className="overflow-hidden rounded-xl border border-gray-200 dark:border-gray-800">
+                <table className="w-full text-xs text-left">
+                  <thead className="bg-gray-50 dark:bg-gray-800/60 text-gray-600 dark:text-gray-400 uppercase font-semibold">
+                    <tr>
+                      <th className="px-4 py-2.5">STT</th>
+                      <th className="px-4 py-2.5">Mã vạch (Barcode)</th>
+                      <th className="px-4 py-2.5">Vị trí kệ</th>
+                      <th className="px-4 py-2.5">Trạng thái</th>
+                      <th className="px-4 py-2.5 text-right">In nhãn</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100 dark:divide-gray-800 bg-white dark:bg-gray-900">
+                    {effectiveItems.map((item, idx) => (
+                      <tr key={item.id || item.barcode} className="hover:bg-gray-50 dark:hover:bg-gray-800/40 transition-colors">
+                        <td className="px-4 py-2.5 text-gray-400 font-mono">#{idx + 1}</td>
+                        <td className="px-4 py-2.5 font-mono font-bold text-gray-800 dark:text-gray-200">
+                          {item.barcode}
+                        </td>
+                        <td className="px-4 py-2.5 text-gray-600 dark:text-gray-300">
+                          {item.location || 'Khu A - Kệ 1'}
+                        </td>
+                        <td className="px-4 py-2.5">
+                          <span
+                            className={`inline-flex px-2 py-0.5 rounded-full text-[10px] font-semibold ${
+                              item.status === 'AVAILABLE'
+                                ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                                : item.status === 'BORROWED'
+                                ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
+                                : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
+                            }`}
+                          >
+                            {item.status}
+                          </span>
+                        </td>
+                        <td className="px-4 py-2.5 text-right">
+                          <button
+                            type="button"
+                            onClick={() => triggerPrintSingle(item)}
+                            className="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-gray-100 dark:bg-gray-800 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-lg text-xs font-medium transition-colors border border-gray-200 dark:border-gray-700 shadow-sm"
+                            title="In tem nhãn dán gáy sách cho bản sao này"
+                          >
+                            <Printer size={13} />
+                            <span>In mã vạch</span>
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* Hidden Print Container for react-to-print */}
+          <div style={{ position: 'absolute', left: '-9999px', top: '-9999px' }}>
+            <BarcodeLabelsPrint
+              ref={printRef}
+              bookTitle={book.title}
+              items={itemsToPrint}
+            />
+          </div>
 
           {/* Action Buttons */}
           <div className="flex flex-wrap gap-3 mt-6 pt-6 border-t border-gray-200 dark:border-gray-800">

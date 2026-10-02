@@ -8,6 +8,13 @@ import { BookDetailModal } from './BookDetailModal';
 import { BookRecommendations } from './BookRecommendations';
 import { toast } from 'sonner';
 
+export interface BookItem {
+  id: number;
+  barcode: string;
+  location?: string | null;
+  status: string;
+}
+
 export interface Book {
   id: number;
   title: string;
@@ -26,6 +33,7 @@ export interface Book {
   ebookUrl?: string | null;
   recommendationBadge?: string;
   recommendationReason?: string;
+  items?: BookItem[];
 }
 
 interface BooksManagementProps {
