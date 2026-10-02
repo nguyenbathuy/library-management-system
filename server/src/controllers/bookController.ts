@@ -3,6 +3,8 @@ import { PrismaClient } from '@prisma/client';
 import { AuthRequest } from '../middleware/auth';
 import * as XLSX from 'xlsx';
 import multer from 'multer';
+import path from 'path';
+import fs from 'fs';
 
 const prisma = new PrismaClient();
 
@@ -25,6 +27,57 @@ export const uploadExcel = multer({
   limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB
 }).single('file');
 
+// Multer config for E-books (.pdf, .epub)
+const ebookUploadDir = path.join(__dirname, '../../public/uploads/ebooks');
+if (!fs.existsSync(ebookUploadDir)) {
+  fs.mkdirSync(ebookUploadDir, { recursive: true });
+}
+
+const ebookStorage = multer.diskStorage({
+  destination: (_req, _file, cb) => {
+    cb(null, ebookUploadDir);
+  },
+  filename: (_req, file, cb) => {
+    const ext = path.extname(file.originalname).toLowerCase();
+    const uniqueName = `ebook-${Date.now()}-${Math.round(Math.random() * 1e6)}${ext}`;
+    cb(null, uniqueName);
+  }
+});
+
+export const uploadEbook = multer({
+  storage: ebookStorage,
+  fileFilter: (_req, file, cb) => {
+    const ext = path.extname(file.originalname).toLowerCase();
+    if (['.pdf', '.epub'].includes(ext) || file.mimetype === 'application/pdf' || file.mimetype === 'application/epub+zip') {
+      cb(null, true);
+    } else {
+      cb(new Error('Chỉ chấp nhận định dạng file .pdf hoặc .epub'));
+    }
+  },
+  limits: { fileSize: 100 * 1024 * 1024 } // 100 MB
+}).single('file');
+
+export const uploadEbookHandler = async (req: AuthRequest, res: Response) => {
+  try {
+    if (req.user?.role !== 'ADMIN') {
+      return res.status(403).json({ error: 'Chỉ thủ thư/admin mới có quyền tải lên sách điện tử' });
+    }
+    if (!req.file) {
+      return res.status(400).json({ error: 'Vui lòng chọn file PDF hoặc EPUB' });
+    }
+
+    const ebookUrl = `/uploads/ebooks/${req.file.filename}`;
+    res.json({
+      message: 'Tải lên sách điện tử thành công',
+      ebookUrl,
+      fileName: req.file.originalname,
+      size: req.file.size
+    });
+  } catch (error: any) {
+    console.error('Error uploading ebook:', error);
+    res.status(500).json({ error: error.message || 'Không thể tải lên file e-book' });
+  }
+};
 
 // Helper to format book for API & frontend compatibility
 const formatBookResponse = (book: any) => {
@@ -44,6 +97,7 @@ const formatBookResponse = (book: any) => {
     language: book.language,
     description: book.description,
     coverImage: book.coverImage,
+    ebookUrl: book.ebookUrl || null,
     copies,
     available,
     status: available > 0 ? 'Available' : 'Borrowed',
@@ -95,6 +149,7 @@ export const createBook = async (req: AuthRequest, res: Response) => {
       language,
       description,
       coverImage,
+      ebookUrl,
       copies = 1,
       available
     } = req.body;
@@ -157,6 +212,7 @@ export const createBook = async (req: AuthRequest, res: Response) => {
         language: language ? String(language) : 'Tiếng Việt',
         description: description || null,
         coverImage: coverImage || null,
+        ebookUrl: ebookUrl ? String(ebookUrl).trim() : null,
       }
     });
 
@@ -227,6 +283,7 @@ export const updateBook = async (req: AuthRequest, res: Response) => {
       language,
       description,
       coverImage,
+      ebookUrl,
       copies
     } = req.body;
 
@@ -238,6 +295,7 @@ export const updateBook = async (req: AuthRequest, res: Response) => {
     if (language !== undefined) updateData.language = language ? String(language) : null;
     if (description !== undefined) updateData.description = description;
     if (coverImage !== undefined) updateData.coverImage = coverImage;
+    if (ebookUrl !== undefined) updateData.ebookUrl = ebookUrl ? String(ebookUrl).trim() : null;
 
     if (category) {
       const cat = await prisma.category.upsert({
@@ -539,3 +597,184 @@ export const importBooks = async (req: AuthRequest, res: Response) => {
     res.status(500).json({ error: error.message || 'Không thể import sách từ file Excel' });
   }
 };
+
+export const getBookRecommendations = async (req: AuthRequest, res: Response) => {
+  try {
+    const userId = req.user?.userId;
+
+    let userLoans: any[] = [];
+    if (userId) {
+      userLoans = await prisma.loan.findMany({
+        where: { userId },
+        include: {
+          bookItem: {
+            include: {
+              book: {
+                include: {
+                  category: true,
+                  author: true,
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    const borrowedBookIds = new Set<number>();
+    const categoryFrequency: Record<number, { count: number; name: string }> = {};
+    const authorFrequency: Record<number, { count: number; name: string }> = {};
+
+    for (const loan of userLoans) {
+      const book = loan.bookItem?.book;
+      if (!book) continue;
+      borrowedBookIds.add(book.id);
+
+      if (book.categoryId) {
+        if (!categoryFrequency[book.categoryId]) {
+          categoryFrequency[book.categoryId] = { count: 0, name: book.category?.name || '' };
+        }
+        categoryFrequency[book.categoryId].count++;
+      }
+
+      if (book.authorId) {
+        if (!authorFrequency[book.authorId]) {
+          authorFrequency[book.authorId] = { count: 0, name: book.author?.name || '' };
+        }
+        authorFrequency[book.authorId].count++;
+      }
+    }
+
+    const sortedCategories = Object.entries(categoryFrequency).sort((a, b) => b[1].count - a[1].count);
+    const topCategory = sortedCategories.length > 0 ? { id: Number(sortedCategories[0][0]), ...sortedCategories[0][1] } : null;
+
+    const sortedAuthors = Object.entries(authorFrequency).sort((a, b) => b[1].count - a[1].count);
+    const topAuthor = sortedAuthors.length > 0 ? { id: Number(sortedAuthors[0][0]), ...sortedAuthors[0][1] } : null;
+
+    let candidateBooks: any[] = [];
+    let recommendationType: 'PERSONALIZED' | 'TRENDING' = 'PERSONALIZED';
+    let recommendationReason = '';
+
+    if (topCategory || topAuthor) {
+      const orConditions: any[] = [];
+      if (topCategory) {
+        orConditions.push({ categoryId: topCategory.id });
+      }
+      if (topAuthor) {
+        orConditions.push({ authorId: topAuthor.id });
+      }
+
+      candidateBooks = await prisma.book.findMany({
+        where: {
+          AND: [
+            { id: { notIn: Array.from(borrowedBookIds) } },
+            { OR: orConditions }
+          ]
+        },
+        include: {
+          category: true,
+          author: true,
+          publisher: true,
+          items: true
+        },
+        take: 10
+      });
+
+      if (candidateBooks.length > 0) {
+        if (topCategory && topAuthor) {
+          recommendationReason = `Dựa trên sở thích đọc sách: Thể loại "${topCategory.name}" & Tác giả "${topAuthor.name}"`;
+        } else if (topCategory) {
+          recommendationReason = `Dựa trên thể loại bạn thường mượn: "${topCategory.name}"`;
+        } else if (topAuthor) {
+          recommendationReason = `Dựa trên tác giả bạn yêu thích: "${topAuthor.name}"`;
+        }
+      }
+    }
+
+    // Step 3: Fallback or supplement with Trending Books if user is new or candidate count is small (< 6)
+    if (candidateBooks.length < 6) {
+      // Calculate borrow count per book
+      const allLoans = await prisma.loan.findMany({
+        select: {
+          bookItem: {
+            select: { bookId: true }
+          }
+        }
+      });
+
+      const bookBorrowCounts = new Map<number, number>();
+      for (const l of allLoans) {
+        const bId = l.bookItem?.bookId;
+        if (bId) {
+          bookBorrowCounts.set(bId, (bookBorrowCounts.get(bId) || 0) + 1);
+        }
+      }
+
+      const excludeIds = new Set<number>([
+        ...Array.from(borrowedBookIds),
+        ...candidateBooks.map((b: any) => b.id)
+      ]);
+
+      const trendingPool = await prisma.book.findMany({
+        where: {
+          id: { notIn: Array.from(excludeIds) }
+        },
+        include: {
+          category: true,
+          author: true,
+          publisher: true,
+          items: true
+        }
+      });
+
+      // Sort trending pool: most borrowed first, then most available copies
+      trendingPool.sort((a, b) => {
+        const countA = bookBorrowCounts.get(a.id) || 0;
+        const countB = bookBorrowCounts.get(b.id) || 0;
+        if (countB !== countA) return countB - countA;
+        const availA = a.items?.filter((i: any) => i.status === 'AVAILABLE').length || 0;
+        const availB = b.items?.filter((i: any) => i.status === 'AVAILABLE').length || 0;
+        return availB - availA;
+      });
+
+      const needed = 10 - candidateBooks.length;
+      const additionalTrending = trendingPool.slice(0, needed);
+
+      if (candidateBooks.length === 0) {
+        recommendationType = 'TRENDING';
+        recommendationReason = 'Top những cuốn sách thịnh hành được mượn nhiều nhất tại thư viện';
+        candidateBooks = additionalTrending;
+      } else {
+        candidateBooks = [...candidateBooks, ...additionalTrending];
+      }
+    }
+
+    const formattedBooks = candidateBooks.map((book: any) => {
+      const isPersonalized =
+        recommendationType === 'PERSONALIZED' &&
+        ((topCategory && book.categoryId === topCategory.id) || (topAuthor && book.authorId === topAuthor.id));
+
+      const badge = isPersonalized ? 'Phù hợp với bạn' : 'Thịnh hành';
+      const reason = isPersonalized
+        ? (book.categoryId === topCategory?.id ? `Cùng thể loại ${topCategory?.name}` : `Tác giả ${topAuthor?.name}`)
+        : 'Được nhiều bạn đọc yêu thích';
+
+      return {
+        ...formatBookResponse(book),
+        recommendationBadge: badge,
+        recommendationReason: reason
+      };
+    });
+
+    res.json({
+      success: true,
+      type: recommendationType,
+      reason: recommendationReason,
+      books: formattedBooks
+    });
+  } catch (error: any) {
+    console.error('Error fetching book recommendations:', error);
+    res.status(500).json({ error: error.message || 'Không thể lấy danh sách gợi ý sách' });
+  }
+};
+

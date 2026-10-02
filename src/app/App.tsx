@@ -11,6 +11,7 @@ import { MembersManagement } from './components/MembersManagement';
 import { BorrowedBooks } from './components/BorrowedBooks';
 import { Settings } from './components/Settings';
 import { UserProfile } from './components/UserProfile';
+import { MockPaymentGateway } from './components/MockPaymentGateway';
 
 const AdminRoute = ({ children }: { children: ReactNode }) => {
   const { user } = useAuth();
@@ -41,6 +42,7 @@ export default function App() {
             <Route path="/members" element={<AdminRoute><MembersManagement /></AdminRoute>} />
             <Route path="/borrowed" element={<BorrowedBooks />} />
             <Route path="/settings" element={<Settings />} />
+            <Route path="/payment-gateway" element={<MockPaymentGateway />} />
           </Route>
         </Routes>
       </LanguageProvider>

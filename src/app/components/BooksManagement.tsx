@@ -1,10 +1,11 @@
-import { Search, Plus, Edit, Trash2, BookOpen, Filter, X, FileSpreadsheet, Upload, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
+import { Search, Plus, Edit, Trash2, BookOpen, Filter, X, FileSpreadsheet, Upload, CheckCircle, AlertCircle, Loader2, FileText } from 'lucide-react';
 import { useState, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { client } from '../api/client';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { BookDetailModal } from './BookDetailModal';
+import { BookRecommendations } from './BookRecommendations';
 import { toast } from 'sonner';
 
 export interface Book {
@@ -22,6 +23,9 @@ export interface Book {
   description?: string;
   pageCount?: number;
   language?: string;
+  ebookUrl?: string | null;
+  recommendationBadge?: string;
+  recommendationReason?: string;
 }
 
 interface BooksManagementProps {
@@ -42,6 +46,8 @@ export function BooksManagement({ userRole: propUserRole }: BooksManagementProps
   const [showImportResult, setShowImportResult] = useState(false);
   const [importResult, setImportResult] = useState<{ message: string; imported: string[]; errors: string[]; totalRows: number } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const ebookFileInputRef = useRef<HTMLInputElement>(null);
+  const [uploadingEbook, setUploadingEbook] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     author: '',
@@ -54,7 +60,8 @@ export function BooksManagement({ userRole: propUserRole }: BooksManagementProps
     pageCount: 0,
     language: 'Tiếng Việt',
     description: '',
-    coverImage: ''
+    coverImage: '',
+    ebookUrl: ''
   });
 
   const { user } = useAuth();
@@ -194,8 +201,12 @@ export function BooksManagement({ userRole: propUserRole }: BooksManagementProps
       pageCount: 0,
       language: 'Tiếng Việt',
       description: '',
-      coverImage: ''
+      coverImage: '',
+      ebookUrl: ''
     });
+    if (ebookFileInputRef.current) {
+      ebookFileInputRef.current.value = '';
+    }
   };
 
   const handleAddBook = () => {
@@ -218,9 +229,36 @@ export function BooksManagement({ userRole: propUserRole }: BooksManagementProps
       pageCount: book.pageCount || 0,
       language: book.language || 'Tiếng Việt',
       description: book.description || '',
-      coverImage: book.coverImage || ''
+      coverImage: book.coverImage || '',
+      ebookUrl: book.ebookUrl || ''
     });
     setShowModal(true);
+  };
+
+  const handleEbookFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 50 * 1024 * 1024) {
+      toast.error('Dung lượng file vượt quá giới hạn cho phép (tối đa 50MB)');
+      return;
+    }
+
+    setUploadingEbook(true);
+    const data = new FormData();
+    data.append('file', file);
+
+    try {
+      const res = await client.post('/books/upload-ebook', data, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      setFormData(prev => ({ ...prev, ebookUrl: res.data.ebookUrl }));
+      toast.success('Tải lên file E-book thành công!');
+    } catch (err: any) {
+      toast.error(err.response?.data?.error || 'Có lỗi xảy ra khi tải file E-book');
+    } finally {
+      setUploadingEbook(false);
+    }
   };
 
   const handleDeleteBook = (id: number, title: string) => {
@@ -249,7 +287,8 @@ export function BooksManagement({ userRole: propUserRole }: BooksManagementProps
       publishedYear: formData.publishedYear || null,
       publisher: formData.publisher || null,
       description: formData.description || null,
-      coverImage: formData.coverImage || null
+      coverImage: formData.coverImage || null,
+      ebookUrl: formData.ebookUrl || null
     };
 
     if (editingBook) {
@@ -314,6 +353,14 @@ export function BooksManagement({ userRole: propUserRole }: BooksManagementProps
         )}
       </div>
 
+      {/* Smart Book Recommendations Carousel */}
+      <BookRecommendations
+        onSelectBook={handleBookClick}
+        onBorrow={(bookId) => borrowMutation.mutate(bookId)}
+        onReserve={(bookId) => reserveMutation.mutate(bookId)}
+        userRole={userRole}
+      />
+
       {/* Filter Bar */}
       <div className="bg-white dark:bg-gray-900 p-4 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 flex flex-col md:flex-row gap-4">
         <div className="relative flex-1">
@@ -360,6 +407,11 @@ export function BooksManagement({ userRole: propUserRole }: BooksManagementProps
               <div className="absolute top-2 right-2 px-2 py-1 bg-black/60 backdrop-blur-md rounded text-xs text-white">
                 {book.category}
               </div>
+              {book.ebookUrl && (
+                <div className="absolute top-2 left-2 px-2 py-1 bg-emerald-600/90 backdrop-blur-md rounded text-xs text-white font-medium flex items-center gap-1 shadow">
+                  <FileText size={12} /> E-book
+                </div>
+              )}
             </div>
 
             <div className="p-4 flex-1 flex flex-col">
@@ -586,6 +638,73 @@ export function BooksManagement({ userRole: propUserRole }: BooksManagementProps
                     onChange={(e) => setFormData({ ...formData, coverImage: e.target.value })}
                     className="w-full px-3 py-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
+                </div>
+
+                <div className="col-span-2 space-y-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                    File E-book (PDF - Tùy chọn)
+                  </label>
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                    <input
+                      type="file"
+                      ref={ebookFileInputRef}
+                      accept=".pdf,.epub,application/pdf,application/epub+zip"
+                      onChange={handleEbookFileUpload}
+                      className="hidden"
+                      id="ebook-upload-input"
+                    />
+                    <label
+                      htmlFor="ebook-upload-input"
+                      className={`flex items-center justify-center gap-2 px-4 py-2 border border-dashed rounded-lg cursor-pointer transition-colors text-sm font-medium ${
+                        uploadingEbook
+                          ? 'bg-gray-100 dark:bg-gray-800 text-gray-400 border-gray-300 cursor-not-allowed'
+                          : 'border-blue-300 dark:border-blue-700 hover:bg-blue-50 dark:hover:bg-blue-900/20 text-blue-600 dark:text-blue-400 bg-white dark:bg-gray-800'
+                      }`}
+                    >
+                      {uploadingEbook ? (
+                        <>
+                          <Loader2 size={16} className="animate-spin" />
+                          Đang tải lên server...
+                        </>
+                      ) : (
+                        <>
+                          <Upload size={16} />
+                          {formData.ebookUrl ? 'Thay đổi file E-book' : 'Tải lên file E-book (.pdf, .epub)'}
+                        </>
+                      )}
+                    </label>
+
+                    {formData.ebookUrl && (
+                      <div className="flex items-center gap-2 px-3 py-2 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 rounded-lg text-xs text-emerald-700 dark:text-emerald-300 flex-1 min-w-0">
+                        <FileText size={16} className="shrink-0 text-emerald-600 dark:text-emerald-400" />
+                        <span className="truncate flex-1 font-mono" title={formData.ebookUrl}>
+                          {formData.ebookUrl}
+                        </span>
+                        <a
+                          href={formData.ebookUrl.startsWith('http') ? formData.ebookUrl : `http://localhost:5000${formData.ebookUrl}`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="px-2 py-0.5 bg-emerald-100 dark:bg-emerald-900/50 hover:bg-emerald-200 text-emerald-800 dark:text-emerald-200 rounded font-medium shrink-0 ml-1 transition-colors"
+                        >
+                          Xem thử
+                        </a>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setFormData(prev => ({ ...prev, ebookUrl: '' }));
+                            if (ebookFileInputRef.current) ebookFileInputRef.current.value = '';
+                          }}
+                          className="p-1 hover:bg-red-100 dark:hover:bg-red-900/50 rounded text-red-500 shrink-0 transition-colors"
+                          title="Gỡ bỏ file E-book"
+                        >
+                          <X size={14} />
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                  <p className="text-xs text-gray-400">
+                    Hỗ trợ file PDF hoặc EPUB (tối đa 50MB). Khi tải lên, đường dẫn sẽ tự động được lưu và độc giả có thể đọc trực tuyến.
+                  </p>
                 </div>
 
                 <div className="col-span-2">

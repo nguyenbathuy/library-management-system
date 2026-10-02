@@ -1,4 +1,4 @@
-import { X, BookOpen, Calendar, FileText, Tag, BookmarkPlus, Clock } from 'lucide-react';
+import { X, BookOpen, Calendar, FileText, Tag, BookmarkPlus, Clock, ExternalLink } from 'lucide-react';
 import { Book } from './BooksManagement';
 
 interface BookDetailModalProps {
@@ -27,6 +27,19 @@ export function BookDetailModal({ book, isOpen, onClose, onBorrow, onReserve, us
     }
   };
 
+  const getEbookUrl = (url: string) => {
+    if (!url) return '';
+    if (url.startsWith('http://') || url.startsWith('https://')) return url;
+    return `http://localhost:5000${url.startsWith('/') ? '' : '/'}${url}`;
+  };
+
+  const handleReadOnline = () => {
+    if (book.ebookUrl) {
+      const fullUrl = getEbookUrl(book.ebookUrl);
+      window.open(fullUrl, '_blank', 'noopener,noreferrer');
+    }
+  };
+
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={onClose}>
       <div
@@ -52,12 +65,18 @@ export function BookDetailModal({ book, isOpen, onClose, onBorrow, onReserve, us
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Left: Cover Image */}
             <div className="lg:col-span-1">
-              <div className="bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden sticky top-20">
+              <div className="bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden sticky top-20 relative">
                 <img
                   src={book.coverImage || 'https://via.placeholder.com/300x400?text=No+Cover'}
                   alt={book.title}
                   className="w-full h-auto object-cover"
                 />
+                {book.ebookUrl && (
+                  <div className="absolute top-3 left-3 px-2.5 py-1 bg-emerald-600/90 backdrop-blur-md rounded-md text-xs font-semibold text-white flex items-center gap-1.5 shadow-md">
+                    <FileText size={14} />
+                    E-book có sẵn
+                  </div>
+                )}
                 <div className="p-3 bg-gradient-to-t from-black/60 to-transparent absolute bottom-0 left-0 right-0">
                   <div className="flex items-center justify-between">
                     <span className={`text-xs font-medium px-3 py-1 rounded-full ${book.available > 0
@@ -152,6 +171,12 @@ export function BookDetailModal({ book, isOpen, onClose, onBorrow, onReserve, us
 
               {/* Tags */}
               <div className="flex flex-wrap gap-2">
+                {book.ebookUrl && (
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 rounded-full text-sm font-medium">
+                    <FileText size={14} />
+                    Bản điện tử (PDF/EPUB)
+                  </span>
+                )}
                 {book.language && (
                   <span className="inline-flex items-center gap-1 px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded-full text-sm">
                     <Tag size={14} />
@@ -177,25 +202,39 @@ export function BookDetailModal({ book, isOpen, onClose, onBorrow, onReserve, us
                   Tất cả bản sao hiện đang được mượn
                 </h4>
                 <p className="text-xs text-amber-700 dark:text-amber-400 mt-0.5">
-                  Độc giả có thể bấm <strong>"Đặt Trước Sách"</strong> bên dưới. Hệ thống sẽ ghi nhận thứ tự ưu tiên và bạn sẽ nhận được sách ngay khi có người trả.
+                  Độc giả có thể bấm <strong>"Đặt Trước Sách"</strong> bên dưới{book.ebookUrl ? ', hoặc bấm "Đọc Online (PDF)" để đọc bản điện tử ngay lúc này' : '. Hệ thống sẽ ghi nhận thứ tự ưu tiên và bạn sẽ nhận được sách ngay khi có người trả'}.
                 </p>
               </div>
             </div>
           )}
 
           {/* Action Buttons */}
-          <div className="flex gap-3 mt-6 pt-6 border-t border-gray-200 dark:border-gray-800">
+          <div className="flex flex-wrap gap-3 mt-6 pt-6 border-t border-gray-200 dark:border-gray-800">
             <button
               onClick={onClose}
-              className="flex-1 px-6 py-3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-lg transition-colors font-medium"
+              className="px-6 py-3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-lg transition-colors font-medium"
             >
               Đóng
             </button>
+
+            {/* Read Online Button */}
+            {book.ebookUrl && (
+              <button
+                onClick={handleReadOnline}
+                className="flex-1 min-w-[160px] px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-all font-medium flex items-center justify-center gap-2 shadow-sm hover:shadow-emerald-600/30 active:scale-[0.98]"
+                title="Mở tài liệu số đọc trực tiếp trên trình duyệt"
+              >
+                <FileText size={18} />
+                <span>Đọc Online (PDF)</span>
+                <ExternalLink size={16} className="opacity-80" />
+              </button>
+            )}
+
             {userRole !== 'ADMIN' && (
               book.available > 0 ? (
                 <button
                   onClick={handleBorrow}
-                  className="flex-1 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all font-medium flex items-center justify-center gap-2 shadow-sm active:scale-[0.98]"
+                  className="flex-1 min-w-[160px] px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all font-medium flex items-center justify-center gap-2 shadow-sm active:scale-[0.98]"
                 >
                   <BookOpen size={18} />
                   Mượn Sách Này
@@ -203,7 +242,7 @@ export function BookDetailModal({ book, isOpen, onClose, onBorrow, onReserve, us
               ) : (
                 <button
                   onClick={handleReserve}
-                  className="flex-1 px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition-all font-medium flex items-center justify-center gap-2 shadow-sm hover:shadow-md active:scale-[0.98]"
+                  className="flex-1 min-w-[160px] px-6 py-3 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition-all font-medium flex items-center justify-center gap-2 shadow-sm hover:shadow-md active:scale-[0.98]"
                 >
                   <BookmarkPlus size={18} />
                   Đặt Trước Sách

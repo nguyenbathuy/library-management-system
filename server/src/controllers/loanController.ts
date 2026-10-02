@@ -24,6 +24,15 @@ const formatLoanResponse = (loan: any) => {
         }
     }
 
+    const now = new Date();
+    const due = new Date(loan.dueDate);
+    const diffDays = Math.ceil((due.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+
+    let calculatedFine = loan.fineAmount || 0;
+    if (!loan.returnDate && diffDays < 0 && !loan.isFinePaid) {
+        calculatedFine = Math.max(calculatedFine, Math.abs(diffDays) * 5000);
+    }
+
     const book = loan.bookItem?.book;
     return {
         id: loan.id,
@@ -35,8 +44,12 @@ const formatLoanResponse = (loan: any) => {
         returnDate: loan.returnDate,
         status: uiStatus,
         rawStatus: loan.status,
-        fineAmount: loan.fineAmount || 0,
+        fineAmount: calculatedFine,
         compensationAmount: loan.compensationAmount || 0,
+        isFinePaid: Boolean(loan.isFinePaid),
+        finePaidAt: loan.finePaidAt,
+        paymentMethod: loan.paymentMethod,
+        paymentTransactionId: loan.paymentTransactionId,
         book: book ? {
             id: book.id,
             title: book.title,

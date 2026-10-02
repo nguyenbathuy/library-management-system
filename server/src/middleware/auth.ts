@@ -28,3 +28,17 @@ export const authorizeAdmin = (req: AuthRequest, res: Response, next: NextFuncti
     }
     next();
 };
+
+export const optionalAuthenticateToken = (req: AuthRequest, _res: Response, next: NextFunction) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (!token) return next();
+
+    jwt.verify(token, process.env.JWT_SECRET as string, (_err: any, user: any) => {
+        if (user) {
+            req.user = user;
+        }
+        next();
+    });
+};

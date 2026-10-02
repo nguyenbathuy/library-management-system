@@ -1,4 +1,5 @@
-import { User, CreditCard, Calendar, BookOpen, Clock, AlertCircle, CheckCircle, BookmarkPlus, Bell, XCircle, RefreshCw } from 'lucide-react';
+import { User, CreditCard, Calendar, BookOpen, Clock, AlertCircle, CheckCircle, BookmarkPlus, Bell, XCircle, RefreshCw, Wallet } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { client } from '../api/client';
 import { useAuth } from '../contexts/AuthContext';
@@ -7,6 +8,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { toast } from 'sonner';
 
 export function UserProfile() {
+  const navigate = useNavigate();
   const { user: currentUser } = useAuth();
   const { t, language } = useLanguage();
   const queryClient = useQueryClient();
@@ -57,6 +59,22 @@ export function UserProfile() {
     },
     onError: (err: any) => {
       toast.error(err.response?.data?.error || 'Có lỗi khi hủy yêu cầu đặt trước');
+    }
+  });
+
+  // Pay Fine Mutation
+  const payFineMutation = useMutation({
+    mutationFn: async (loanId: number) => {
+      const { data } = await client.post('/payments/create-url', { loanId });
+      return data;
+    },
+    onSuccess: (data: any) => {
+      if (data?.paymentUrl) {
+        navigate(data.paymentUrl);
+      }
+    },
+    onError: (err: any) => {
+      toast.error(err.response?.data?.error || 'Không thể tạo phiên thanh toán');
     }
   });
 
@@ -264,40 +282,76 @@ export function UserProfile() {
                             </span>
                           )}
                           {loan.status === 'Overdue' && (
-                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                              <AlertCircle size={12} /> {t('borrowed.overdue')}
-                            </span>
+                            <div>
+                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                <AlertCircle size={12} /> {t('borrowed.overdue')}
+                              </span>
+                              {loan.fineAmount > 0 && !loan.isFinePaid && (
+                                <p className="text-[11px] font-semibold text-red-600 dark:text-red-400 mt-0.5">
+                                  Phạt: {loan.fineAmount.toLocaleString('vi-VN')} đ
+                                </p>
+                              )}
+                            </div>
                           )}
                           {loan.status === 'Returned' && (
-                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                              {t('borrowed.returned')}
-                            </span>
+                            <div>
+                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                {t('borrowed.returned')}
+                              </span>
+                              {loan.fineAmount > 0 && !loan.isFinePaid && (
+                                <p className="text-[11px] font-semibold text-amber-600 dark:text-amber-400 mt-0.5">
+                                  Phạt quá hạn: {loan.fineAmount.toLocaleString('vi-VN')} đ
+                                </p>
+                              )}
+                            </div>
                           )}
                           {loan.status === 'Lost' && (
                             <div>
                               <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-rose-100 text-rose-800 dark:bg-rose-950/40 dark:text-rose-300 border border-rose-200">
                                 <AlertCircle size={12} /> {language === 'vi' ? 'Đã báo mất' : 'Reported Lost'}
                               </span>
-                              {loan.compensationAmount > 0 && (
+                              {loan.compensationAmount > 0 && !loan.isFinePaid && (
                                 <p className="text-[11px] text-rose-600 font-medium mt-0.5">
                                   {language === 'vi' ? 'Bồi thường' : 'Fine'}: {loan.compensationAmount.toLocaleString('vi-VN')} đ
                                 </p>
                               )}
                             </div>
                           )}
+                          {loan.isFinePaid && (
+                            <div>
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300 border border-emerald-200 mt-1">
+                                <CheckCircle size={10} /> Đã nộp phạt
+                              </span>
+                            </div>
+                          )}
                         </td>
                         <td className="px-6 py-4 text-right">
-                          {loan.status !== 'Returned' && loan.status !== 'Lost' && (
-                            <button
-                              onClick={() => renewLoanMutation.mutate(loan.id)}
-                              disabled={renewLoanMutation.isPending || loan.status === 'Overdue'}
-                              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:hover:bg-blue-900/50 dark:text-blue-400 text-xs font-medium rounded-lg transition-colors border border-blue-200 dark:border-blue-800 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
-                              title={loan.status === 'Overdue' ? (language === 'vi' ? 'Sách đã quá hạn, không thể gia hạn' : 'Overdue books cannot be renewed') : (language === 'vi' ? 'Gia hạn thêm 7 ngày' : 'Renew loan for 7 days')}
-                            >
-                              <RefreshCw size={13} className={renewLoanMutation.isPending ? 'animate-spin' : ''} />
-                              {t('borrowed.renew')}
-                            </button>
-                          )}
+                          <div className="flex items-center justify-end gap-2">
+                            {/* Nút Thanh toán nợ phạt trực tuyến */}
+                            {!loan.isFinePaid && ((loan.fineAmount && loan.fineAmount > 0) || (loan.compensationAmount && loan.compensationAmount > 0) || loan.status === 'Overdue') && (
+                              <button
+                                onClick={() => payFineMutation.mutate(loan.id)}
+                                disabled={payFineMutation.isPending}
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-amber-500 to-rose-600 hover:from-amber-600 hover:to-rose-700 text-white text-xs font-semibold rounded-lg shadow-sm hover:shadow transition-all active:scale-95"
+                                title="Thanh toán tiền phạt trực tuyến qua MoMo hoặc Thẻ ngân hàng"
+                              >
+                                <CreditCard size={13} />
+                                <span>Thanh toán nợ phạt</span>
+                              </button>
+                            )}
+
+                            {loan.status !== 'Returned' && loan.status !== 'Lost' && (
+                              <button
+                                onClick={() => renewLoanMutation.mutate(loan.id)}
+                                disabled={renewLoanMutation.isPending || loan.status === 'Overdue'}
+                                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:hover:bg-blue-900/50 dark:text-blue-400 text-xs font-medium rounded-lg transition-colors border border-blue-200 dark:border-blue-800 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+                                title={loan.status === 'Overdue' ? (language === 'vi' ? 'Sách đã quá hạn, không thể gia hạn' : 'Overdue books cannot be renewed') : (language === 'vi' ? 'Gia hạn thêm 7 ngày' : 'Renew loan for 7 days')}
+                              >
+                                <RefreshCw size={13} className={renewLoanMutation.isPending ? 'animate-spin' : ''} />
+                                {t('borrowed.renew')}
+                              </button>
+                            )}
+                          </div>
                         </td>
                       </tr>
                     ))
