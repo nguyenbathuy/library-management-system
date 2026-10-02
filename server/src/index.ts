@@ -8,6 +8,7 @@ import loanRoutes from './routes/loanRoutes';
 import analyticsRoutes from './routes/analyticsRoutes';
 import reservationRoutes from './routes/reservationRoutes';
 import paymentRoutes from './routes/paymentRoutes';
+import inventoryRoutes from './routes/inventoryRoutes';
 import { startReminderCron } from './jobs/reminderJob';
 
 dotenv.config();
@@ -27,6 +28,7 @@ app.use('/api/loans', loanRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api/reservations', reservationRoutes);
 app.use('/api/payments', paymentRoutes);
+app.use('/api/inventory', inventoryRoutes);
 
 app.get('/', (_req, res) => {
   res.send('Library API is running');

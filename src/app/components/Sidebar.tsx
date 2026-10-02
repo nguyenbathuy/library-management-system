@@ -1,4 +1,4 @@
-import { LayoutDashboard, Book, Users, BookMarked, Settings, Moon, Sun, History } from 'lucide-react';
+import { LayoutDashboard, Book, Users, BookMarked, Settings, Moon, Sun, History, ClipboardCheck } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -67,6 +67,11 @@ export function Sidebar() {
             <NavLink to="/borrowed" className={getLinkClass}>
               <BookMarked size={20} />
               {t('sidebar.circulation')}
+            </NavLink>
+
+            <NavLink to="/inventory" className={getLinkClass}>
+              <ClipboardCheck size={20} />
+              {t('sidebar.inventory')}
             </NavLink>
           </>
         )}
