@@ -109,7 +109,11 @@ export const formatLoanResponse = (loan: any, availableCopies?: number) => {
             id: loan.user.id,
             name: loan.user.name,
             email: loan.user.email
-        } : undefined
+        } : (loan.userId ? {
+            id: loan.userId,
+            name: 'Độc giả',
+            email: ''
+        } : undefined)
     };
 };
 
@@ -843,10 +847,11 @@ export const getMyLoans = async (req: AuthRequest, res: Response) => {
         const loans = await prisma.loan.findMany({
             where: { userId },
             include: {
+                user: true,
                 bookItem: {
                     include: {
                         book: {
-                            include: { author: true, category: true }
+                            include: { author: true, category: true, items: true }
                         }
                     }
                 }
@@ -874,7 +879,7 @@ export const getAllLoans = async (req: AuthRequest, res: Response) => {
                 bookItem: {
                     include: {
                         book: {
-                            include: { author: true, category: true }
+                            include: { author: true, category: true, items: true }
                         }
                     }
                 }

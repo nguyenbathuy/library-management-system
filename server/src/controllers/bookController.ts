@@ -175,38 +175,111 @@ export const createBook = async (req: AuthRequest, res: Response) => {
       return res.status(400).json({ error: 'Số sách available không thể lớn hơn copies' });
     }
 
+    const trimmedTitle = String(title).trim();
+    const trimmedAuthor = String(author).trim();
+    const trimmedIsbn = isbn ? String(isbn).trim() : '';
+    const trimmedCategory = String(category).trim();
+    const trimmedPublisher = publisher && String(publisher).trim() ? String(publisher).trim() : null;
+
     // Upsert Category
     const catRecord = await prisma.category.upsert({
-      where: { name: String(category).trim() },
+      where: { name: trimmedCategory },
       update: {},
-      create: { name: String(category).trim() }
+      create: { name: trimmedCategory }
     });
 
     // Upsert Author
     const authorRecord = await prisma.author.upsert({
-      where: { name: String(author).trim() },
+      where: { name: trimmedAuthor },
       update: {},
-      create: { name: String(author).trim() }
+      create: { name: trimmedAuthor }
     });
 
     // Upsert Publisher if provided
     let publisherRecord = null;
-    if (publisher && String(publisher).trim()) {
+    if (trimmedPublisher) {
       publisherRecord = await prisma.publisher.upsert({
-        where: { name: String(publisher).trim() },
+        where: { name: trimmedPublisher },
         update: {},
-        create: { name: String(publisher).trim() }
+        create: { name: trimmedPublisher }
       });
     }
 
-    // Create Book and physical copies (All copies created must be AVAILABLE on shelves, avoiding ghost copies)
-    const cleanIsbn = String(isbn).replace(/[^0-9]/g, '').slice(-6) || 'BOOK';
+    // --- TỰ ĐỘNG GỘP KHO (Smart Inventory Merge) ---
+    // Kiểm tra xem sách đã tồn tại chưa: Ưu tiên trùng ISBN (nếu có) HOẶC trùng cả title và authorId
+    const existingBook = await prisma.book.findFirst({
+      where: {
+        OR: [
+          ...(trimmedIsbn ? [{ isbn: trimmedIsbn }] : []),
+          {
+            title: trimmedTitle,
+            authorId: authorRecord.id
+          }
+        ]
+      },
+      include: {
+        category: true,
+        author: true,
+        publisher: true,
+        items: true,
+      }
+    });
+
+    // =========================================================================
+    // KỊCH BẢN 2: Sách đã tồn tại trong hệ thống -> TỰ ĐỘNG CỘNG GỘP KHO (MERGE)
+    // =========================================================================
+    if (existingBook) {
+      const cleanIsbn = String(existingBook.isbn).replace(/[^0-9]/g, '').slice(-6) || 'BOOK';
+
+      const updatedBookWithRelations = await prisma.$transaction(async (tx) => {
+        let indexCounter = existingBook.items.length + 1;
+        for (let i = 0; i < copiesNum; i++) {
+          let candidateBarcode = `BC-${cleanIsbn}-${String(indexCounter).padStart(3, '0')}`;
+          // Kiểm tra để barcode tuyệt đối không bao giờ bị trùng lặp
+          while (await tx.bookItem.findUnique({ where: { barcode: candidateBarcode } })) {
+            indexCounter++;
+            candidateBarcode = `BC-${cleanIsbn}-${String(indexCounter).padStart(3, '0')}`;
+          }
+
+          await tx.bookItem.create({
+            data: {
+              bookId: existingBook.id,
+              barcode: candidateBarcode,
+              location: 'Khu A - Kệ 1',
+              status: 'AVAILABLE' // Luôn sẵn sàng trên kệ
+            }
+          });
+          indexCounter++;
+        }
+
+        return await tx.book.findUnique({
+          where: { id: existingBook.id },
+          include: {
+            category: true,
+            author: true,
+            publisher: true,
+            items: true,
+          }
+        });
+      });
+
+      return res.status(200).json({
+        message: `Sách đã tồn tại. Tự động cộng gộp thêm ${copiesNum} bản sao vào kho`,
+        isMerged: true,
+        ...formatBookResponse(updatedBookWithRelations)
+      });
+    }
+
+    // =========================================================================
+    // KỊCH BẢN 1: Chưa tồn tại -> TẠO MỚI HOÀN TOÀN BẢN GHI BOOK VÀ BẢN SAO
+    // =========================================================================
+    const cleanIsbn = String(trimmedIsbn).replace(/[^0-9]/g, '').slice(-6) || 'BOOK';
 
     const createdBookWithRelations = await prisma.$transaction(async (tx) => {
       const newBook = await tx.book.create({
         data: {
-          title: String(title).trim(),
-          isbn: String(isbn).trim(),
+          title: trimmedTitle,
+          isbn: trimmedIsbn,
           categoryId: catRecord.id,
           authorId: authorRecord.id,
           publisherId: publisherRecord ? publisherRecord.id : null,
@@ -219,15 +292,23 @@ export const createBook = async (req: AuthRequest, res: Response) => {
         }
       });
 
+      let indexCounter = 1;
       for (let i = 0; i < copiesNum; i++) {
+        let candidateBarcode = `BC-${cleanIsbn}-${String(indexCounter).padStart(3, '0')}`;
+        while (await tx.bookItem.findUnique({ where: { barcode: candidateBarcode } })) {
+          indexCounter++;
+          candidateBarcode = `BC-${cleanIsbn}-${String(indexCounter).padStart(3, '0')}`;
+        }
+
         await tx.bookItem.create({
           data: {
             bookId: newBook.id,
-            barcode: `BC-${cleanIsbn}-${String(i + 1).padStart(3, '0')}`,
+            barcode: candidateBarcode,
             location: 'Khu A - Kệ 1',
-            status: 'AVAILABLE'
+            status: 'AVAILABLE' // Luôn sẵn sàng trên kệ
           }
         });
+        indexCounter++;
       }
 
       return await tx.book.findUnique({
@@ -241,7 +322,11 @@ export const createBook = async (req: AuthRequest, res: Response) => {
       });
     });
 
-    res.status(201).json(formatBookResponse(createdBookWithRelations));
+    return res.status(201).json({
+      message: `Đã thêm sách mới và ${copiesNum} bản sao vào kho`,
+      isMerged: false,
+      ...formatBookResponse(createdBookWithRelations)
+    });
   } catch (error: any) {
     console.error('Error creating book:', error);
     if (error.code === 'P2002') {
@@ -463,11 +548,11 @@ export const importBooks = async (req: AuthRequest, res: Response) => {
     const colMap: Record<string, string> = {
       'tiêu đề': 'title', 'tieu de': 'title', 'title': 'title', 'tên sách': 'title', 'ten sach': 'title',
       'tác giả': 'author', 'tac gia': 'author', 'author': 'author',
-      'isbn': 'isbn',
+      'isbn': 'isbn', 'mã isbn': 'isbn', 'ma isbn': 'isbn',
       'thể loại': 'category', 'the loai': 'category', 'category': 'category',
-      'số lượng': 'copies', 'so luong': 'copies', 'copies': 'copies',
-      'nhà xuất bản': 'publisher', 'nha xuat ban': 'publisher', 'publisher': 'publisher',
-      'năm xuất bản': 'publishedYear', 'nam xuat ban': 'publishedYear', 'publishedyear': 'publishedYear', 'year': 'publishedYear',
+      'số lượng': 'copies', 'so luong': 'copies', 'copies': 'copies', 'số lượng bản sao': 'copies', 'so luong ban sao': 'copies',
+      'nhà xuất bản': 'publisher', 'nha xuat ban': 'publisher', 'publisher': 'publisher', 'nxb': 'publisher',
+      'năm xuất bản': 'publishedYear', 'nam xuat ban': 'publishedYear', 'publishedyear': 'publishedYear', 'year': 'publishedYear', 'năm xb': 'publishedYear',
       'số trang': 'pageCount', 'so trang': 'pageCount', 'pagecount': 'pageCount', 'pages': 'pageCount',
       'ngôn ngữ': 'language', 'ngon ngu': 'language', 'language': 'language',
       'mô tả': 'description', 'mo ta': 'description', 'description': 'description',
@@ -479,8 +564,10 @@ export const importBooks = async (req: AuthRequest, res: Response) => {
       return colMap[normalized] || normalized;
     };
 
-    const imported: string[] = [];
-    const errors: string[] = [];
+    const imported: { title: string; isbn: string; copies: number }[] = [];
+    const skipped: { row: number; title: string; isbn: string; reason: string }[] = [];
+    const seenIsbnsInFile = new Set<string>();
+    let totalCopiesCreated = 0;
 
     for (let i = 0; i < rows.length; i++) {
       const raw = rows[i];
@@ -499,15 +586,38 @@ export const importBooks = async (req: AuthRequest, res: Response) => {
       const copies = Math.max(1, parseInt(row.copies) || 1);
 
       if (!title || !author || !isbn || !category) {
-        errors.push(`Dòng ${rowNum}: Thiếu trường bắt buộc (Tiêu đề, Tác giả, ISBN, Thể loại)`);
+        skipped.push({
+          row: rowNum,
+          title: title || '(Chưa có tiêu đề)',
+          isbn: isbn || '(Thiếu ISBN)',
+          reason: 'Thiếu trường bắt buộc (Tiêu đề, Tác giả, ISBN, hoặc Thể loại)'
+        });
         continue;
       }
 
+      // Check duplicate within the uploaded file
+      const normalizedIsbn = isbn.replace(/\s+/g, '');
+      if (seenIsbnsInFile.has(normalizedIsbn)) {
+        skipped.push({
+          row: rowNum,
+          title,
+          isbn,
+          reason: `Trùng lặp mã ISBN "${isbn}" với một dòng trước đó trong file Excel`
+        });
+        continue;
+      }
+      seenIsbnsInFile.add(normalizedIsbn);
+
       try {
-        // Check for duplicate ISBN
+        // Check for duplicate ISBN in Database
         const existingBook = await prisma.book.findUnique({ where: { isbn } });
         if (existingBook) {
-          errors.push(`Dòng ${rowNum}: ISBN "${isbn}" đã tồn tại (${existingBook.title})`);
+          skipped.push({
+            row: rowNum,
+            title,
+            isbn,
+            reason: `Trùng mã ISBN "${isbn}" với sách đã có trong thư viện: "${existingBook.title}"`
+          });
           continue;
         }
 
@@ -536,38 +646,46 @@ export const importBooks = async (req: AuthRequest, res: Response) => {
           });
         }
 
-        // Create Book
-        const book = await prisma.book.create({
-          data: {
-            title,
-            isbn,
-            categoryId: catRecord.id,
-            authorId: authorRecord.id,
-            publisherId: publisherRecord ? publisherRecord.id : null,
-            publishedYear: row.publishedYear ? String(row.publishedYear) : null,
-            pageCount: row.pageCount ? Number(row.pageCount) : null,
-            language: row.language ? String(row.language).trim() : 'Tiếng Việt',
-            description: row.description ? String(row.description).trim() : null,
-            coverImage: row.coverImage ? String(row.coverImage).trim() : null,
+        // Prisma Transaction: Atomically create Book and all BookItems with status: "AVAILABLE"
+        await prisma.$transaction(async (tx) => {
+          const createdBook = await tx.book.create({
+            data: {
+              title,
+              isbn,
+              categoryId: catRecord.id,
+              authorId: authorRecord.id,
+              publisherId: publisherRecord ? publisherRecord.id : null,
+              publishedYear: row.publishedYear ? String(row.publishedYear) : null,
+              pageCount: row.pageCount ? Number(row.pageCount) : null,
+              language: row.language ? String(row.language).trim() : 'Tiếng Việt',
+              description: row.description ? String(row.description).trim() : null,
+              coverImage: row.coverImage ? String(row.coverImage).trim() : null,
+            }
+          });
+
+          // Generate physical copies (BookItems) - 100% AVAILABLE (No ghost copies)
+          const cleanIsbn = isbn.replace(/[^0-9]/g, '').slice(-6) || String(createdBook.id);
+          for (let j = 0; j < copies; j++) {
+            await tx.bookItem.create({
+              data: {
+                bookId: createdBook.id,
+                barcode: `BC-${cleanIsbn}-${String(j + 1).padStart(3, '0')}`,
+                location: 'Khu A - Kệ 1',
+                status: 'AVAILABLE'
+              }
+            });
           }
         });
 
-        // Create BookItems (physical copies)
-        const cleanIsbn = isbn.replace(/[^0-9]/g, '').slice(-6) || String(book.id);
-        for (let j = 0; j < copies; j++) {
-          await prisma.bookItem.create({
-            data: {
-              bookId: book.id,
-              barcode: `BC-${cleanIsbn}-${String(j + 1).padStart(3, '0')}`,
-              location: 'Khu A - Kệ 1',
-              status: 'AVAILABLE'
-            }
-          });
-        }
-
-        imported.push(`"${title}" (${copies} cuốn)`);
+        totalCopiesCreated += copies;
+        imported.push({ title, isbn, copies });
       } catch (err: any) {
-        errors.push(`Dòng ${rowNum}: Lỗi tạo "${title}" – ${err.message || 'Unknown error'}`);
+        skipped.push({
+          row: rowNum,
+          title,
+          isbn,
+          reason: `Lỗi xử lý cơ sở dữ liệu: ${err.message || 'Lỗi không xác định'}`
+        });
       }
     }
 
@@ -580,22 +698,107 @@ export const importBooks = async (req: AuthRequest, res: Response) => {
           details: JSON.stringify({
             fileName: req.file.originalname,
             totalRows: rows.length,
-            imported: imported.length,
-            errors: errors.length,
+            importedCount: imported.length,
+            totalCopies: totalCopiesCreated,
+            skippedCount: skipped.length,
           })
         }
       });
     }
 
+    const summaryMessage = skipped.length > 0
+      ? `Đã thêm thành công ${imported.length} đầu sách (${totalCopiesCreated} cuốn), bỏ qua ${skipped.length} cuốn do trùng mã hoặc lỗi dữ liệu`
+      : `Đã thêm thành công toàn bộ ${imported.length} đầu sách (${totalCopiesCreated} cuốn bản sao)!`;
+
     res.json({
-      message: `Import thành công ${imported.length}/${rows.length} sách`,
+      success: true,
+      message: summaryMessage,
+      importedCount: imported.length,
+      totalCopiesCreated,
+      skippedCount: skipped.length,
       imported,
-      errors,
+      skipped,
       totalRows: rows.length,
     });
   } catch (error: any) {
     console.error('Error importing books:', error);
     res.status(500).json({ error: error.message || 'Không thể import sách từ file Excel' });
+  }
+};
+
+// =============================================
+// Download Template Excel for Bulk Import
+// =============================================
+export const downloadImportTemplate = async (_req: Request, res: Response) => {
+  try {
+    const templateData = [
+      {
+        'Tiêu đề': 'Đắc Nhân Tâm',
+        'Tác giả': 'Dale Carnegie',
+        'Thể loại': 'Kỹ năng sống',
+        'ISBN': '978-604-58-1234-5',
+        'Số lượng bản sao': 5,
+        'Nhà xuất bản': 'NXB Tổng Hợp TP.HCM',
+        'Năm xuất bản': 2021,
+        'Số trang': 320,
+        'Ngôn ngữ': 'Tiếng Việt',
+        'Mô tả': 'Nghệ thuật thu phục lòng người và giao tiếp ứng xử kinh điển.',
+        'Ảnh bìa': 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&q=80&w=400'
+      },
+      {
+        'Tiêu đề': 'Nhà Giả Kim',
+        'Tác giả': 'Paulo Coelho',
+        'Thể loại': 'Văn học nước ngoài',
+        'ISBN': '978-604-58-6789-0',
+        'Số lượng bản sao': 3,
+        'Nhà xuất bản': 'NXB Hội Nhà Văn',
+        'Năm xuất bản': 2020,
+        'Số trang': 228,
+        'Ngôn ngữ': 'Tiếng Việt',
+        'Mô tả': 'Hành trình đi tìm kho báu và lắng nghe tiếng gọi của vũ trụ.',
+        'Ảnh bìa': 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&q=80&w=400'
+      },
+      {
+        'Tiêu đề': 'Clean Code: A Handbook of Agile Software Craftsmanship',
+        'Tác giả': 'Robert C. Martin',
+        'Thể loại': 'Công nghệ thông tin',
+        'ISBN': '978-013-23-5088-4',
+        'Số lượng bản sao': 4,
+        'Nhà xuất bản': 'Prentice Hall',
+        'Năm xuất bản': 2008,
+        'Số trang': 464,
+        'Ngôn ngữ': 'Tiếng Anh',
+        'Mô tả': 'Cẩm nang viết mã sạch và tư duy kỹ thuật phần mềm chuẩn mực.',
+        'Ảnh bìa': 'https://images.unsplash.com/photo-1532012164546-f432f2e3777a?auto=format&fit=crop&q=80&w=400'
+      }
+    ];
+
+    const worksheet = XLSX.utils.json_to_sheet(templateData);
+    worksheet['!cols'] = [
+      { wch: 35 }, // Tiêu đề
+      { wch: 22 }, // Tác giả
+      { wch: 22 }, // Thể loại
+      { wch: 22 }, // ISBN
+      { wch: 18 }, // Số lượng bản sao
+      { wch: 26 }, // Nhà xuất bản
+      { wch: 15 }, // Năm xuất bản
+      { wch: 12 }, // Số trang
+      { wch: 15 }, // Ngôn ngữ
+      { wch: 45 }, // Mô tả
+      { wch: 35 }, // Ảnh bìa
+    ];
+
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'MauNhapSach');
+
+    const buffer = XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' });
+
+    res.setHeader('Content-Disposition', 'attachment; filename="mau_nhap_sach_thu_vien.xlsx"');
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.send(buffer);
+  } catch (error: any) {
+    console.error('Error generating template:', error);
+    res.status(500).json({ error: 'Không thể tạo file mẫu' });
   }
 };
 

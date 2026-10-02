@@ -6,6 +6,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { BookDetailModal } from './BookDetailModal';
 import { BookRecommendations } from './BookRecommendations';
+import { ImportExcelModal } from './ImportExcelModal';
 import { toast } from 'sonner';
 
 export interface BookItem {
@@ -51,9 +52,7 @@ export function BooksManagement({ userRole: propUserRole }: BooksManagementProps
   const [editingBook, setEditingBook] = useState<Book | null>(null);
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
-  const [showImportResult, setShowImportResult] = useState(false);
-  const [importResult, setImportResult] = useState<{ message: string; imported: string[]; errors: string[]; totalRows: number } | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const ebookFileInputRef = useRef<HTMLInputElement>(null);
   const [uploadingEbook, setUploadingEbook] = useState(false);
   const [formData, setFormData] = useState({
@@ -95,15 +94,18 @@ export function BooksManagement({ userRole: propUserRole }: BooksManagementProps
     }
   }, [books]);
 
-  // Create Book Mutation
+  // Create Book Mutation (Smart Inventory Merge)
   const createMutation = useMutation({
     mutationFn: async (bookData: any) => {
-      await client.post('/books', bookData);
+      const { data } = await client.post('/books', bookData);
+      return data;
     },
-    onSuccess: () => {
-      toast.success('Thêm sách mới thành công!');
+    onSuccess: (data: any) => {
+      toast.success(data?.message || 'Thêm sách thành công!');
       queryClient.invalidateQueries({ queryKey: ['books'] });
       queryClient.invalidateQueries({ queryKey: ['book-recommendations'] });
+      queryClient.invalidateQueries({ queryKey: ['analytics-stats'] });
+      queryClient.invalidateQueries({ queryKey: ['top-books'] });
       setShowModal(false);
       resetForm();
     },
@@ -144,40 +146,6 @@ export function BooksManagement({ userRole: propUserRole }: BooksManagementProps
       toast.error(error.response?.data?.error || 'Có lỗi khi xóa sách');
     }
   });
-
-  // Import Excel Mutation
-  const importMutation = useMutation({
-    mutationFn: async (file: File) => {
-      const formData = new FormData();
-      formData.append('file', file);
-      const { data } = await client.post('/books/import', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
-      return data;
-    },
-    onSuccess: (data) => {
-      toast.success(`Import thành công ${data.imported?.length || 0} sách!`);
-      setImportResult(data);
-      setShowImportResult(true);
-      queryClient.invalidateQueries({ queryKey: ['books'] });
-      queryClient.invalidateQueries({ queryKey: ['book-recommendations'] });
-    },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.error || 'Có lỗi khi import file Excel');
-    }
-  });
-
-  const handleImportExcel = () => {
-    fileInputRef.current?.click();
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      importMutation.mutate(file);
-      e.target.value = ''; // reset to allow re-uploading the same file
-    }
-  };
 
   // Borrow Mutation
   const borrowMutation = useMutation({
@@ -397,27 +365,16 @@ export function BooksManagement({ userRole: propUserRole }: BooksManagementProps
 
         {userRole === 'ADMIN' && (
           <div className="flex items-center gap-3">
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleFileChange}
-              accept=".xlsx,.xls"
-              className="hidden"
-            />
             <button
-              onClick={handleImportExcel}
-              disabled={importMutation.isPending}
-              className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:bg-gray-400 text-white rounded-lg transition-colors shadow-sm"
+              onClick={() => setIsImportModalOpen(true)}
+              className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition-colors shadow-sm font-semibold"
             >
-              {importMutation.isPending ? (
-                <><Loader2 size={18} className="animate-spin" /> {t('books.importing')}</>
-              ) : (
-                <><FileSpreadsheet size={18} /> {t('books.importExcel')}</>
-              )}
+              <FileSpreadsheet size={18} />
+              {t('books.importExcel') || 'Import Excel'}
             </button>
             <button
               onClick={handleAddBook}
-              className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors shadow-sm"
+              className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors shadow-sm font-semibold"
             >
               <Plus size={18} />
               {t('books.addNew')}
@@ -813,74 +770,11 @@ export function BooksManagement({ userRole: propUserRole }: BooksManagementProps
         </div>
       )}
 
-      {/* Import Result Modal */}
-      {showImportResult && importResult && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-xl max-w-lg w-full max-h-[80vh] overflow-y-auto">
-            <div className="sticky top-0 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 p-4 flex items-center justify-between">
-              <h3 className="text-xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
-                <FileSpreadsheet className="text-emerald-600" size={24} />
-                Kết quả Import
-              </h3>
-              <button
-                onClick={() => setShowImportResult(false)}
-                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
-              >
-                <X size={20} />
-              </button>
-            </div>
-
-            <div className="p-6 space-y-4">
-              {/* Summary */}
-              <div className="flex items-center gap-3 p-4 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
-                <Upload className="text-blue-600" size={20} />
-                <p className="text-sm font-medium text-blue-800 dark:text-blue-300">
-                  {importResult.message}
-                </p>
-              </div>
-
-              {/* Imported list */}
-              {importResult.imported.length > 0 && (
-                <div>
-                  <h4 className="text-sm font-semibold text-green-700 dark:text-green-400 mb-2 flex items-center gap-1">
-                    <CheckCircle size={16} /> Thành công ({importResult.imported.length})
-                  </h4>
-                  <ul className="space-y-1 max-h-40 overflow-y-auto">
-                    {importResult.imported.map((item: string, idx: number) => (
-                      <li key={idx} className="text-sm text-gray-700 dark:text-gray-300 pl-5 relative before:content-['•'] before:absolute before:left-1 before:text-green-500">
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {/* Error list */}
-              {importResult.errors.length > 0 && (
-                <div>
-                  <h4 className="text-sm font-semibold text-red-700 dark:text-red-400 mb-2 flex items-center gap-1">
-                    <AlertCircle size={16} /> Lỗi ({importResult.errors.length})
-                  </h4>
-                  <ul className="space-y-1 max-h-40 overflow-y-auto">
-                    {importResult.errors.map((err: string, idx: number) => (
-                      <li key={idx} className="text-sm text-red-600 dark:text-red-400 pl-5 relative before:content-['•'] before:absolute before:left-1">
-                        {err}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              <button
-                onClick={() => setShowImportResult(false)}
-                className="w-full mt-2 px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 rounded-lg transition-colors font-medium"
-              >
-                Đóng
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Bulk Import Excel Modal */}
+      <ImportExcelModal
+        isOpen={isImportModalOpen}
+        onClose={() => setIsImportModalOpen(false)}
+      />
 
       {/* Book Detail Modal */}
       <BookDetailModal

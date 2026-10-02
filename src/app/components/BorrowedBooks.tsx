@@ -82,9 +82,9 @@ export interface ReservationItem {
 }
 
 export function BorrowedBooks({ userRole: propUserRole }: BorrowedBooksProps = {}) {
-  const { user } = useAuth();
+  const { user: currentAdmin } = useAuth();
   const { t, language } = useLanguage();
-  const userRole = propUserRole || user?.role;
+  const userRole = propUserRole || currentAdmin?.role;
   const [searchParams, setSearchParams] = useSearchParams();
   const tabParam = searchParams.get('tab');
   const [activeTab, setActiveTab] = useState<'loans' | 'reservations'>(
@@ -738,8 +738,14 @@ export function BorrowedBooks({ userRole: propUserRole }: BorrowedBooksProps = {
                         </span>
                       </TableCell>
                       <TableCell>
-                        <p className="font-medium text-gray-900 dark:text-white">{loan.user?.name}</p>
-                        <p className="text-xs text-gray-500">{loan.user?.email}</p>
+                        <div className="flex flex-col">
+                          <p className="font-semibold text-gray-900 dark:text-white">
+                            {loan.user?.name || 'Độc giả'}
+                          </p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400">
+                            {loan.user?.email || '—'}
+                          </p>
+                        </div>
                       </TableCell>
                       <TableCell>{new Date(loan.borrowDate).toLocaleDateString()}</TableCell>
                       <TableCell className="font-medium">{new Date(loan.dueDate).toLocaleDateString()}</TableCell>
