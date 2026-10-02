@@ -2,10 +2,12 @@ import { LayoutDashboard, Book, Users, BookMarked, Settings, Moon, Sun, History 
 import { NavLink } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
 
 export function Sidebar() {
   const { theme, toggleTheme } = useTheme();
   const { user } = useAuth();
+  const { t } = useLanguage();
   const userRole = user?.role;
 
   const getLinkClass = ({ isActive }: { isActive: boolean }) =>
@@ -17,11 +19,11 @@ export function Sidebar() {
   return (
     <aside className="w-64 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 flex flex-col transition-colors duration-300">
       <div className="p-6 flex items-center gap-3">
-        <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xl">
+        <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-md shadow-blue-500/30">
           L
         </div>
         <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-          Thư Viện PKA
+          {t('brand.name')}
         </span>
       </div>
 
@@ -31,7 +33,7 @@ export function Sidebar() {
         {userRole === 'ADMIN' && (
           <NavLink to="/" className={getLinkClass}>
             <LayoutDashboard size={20} />
-            Tổng quan hệ thống
+            {t('sidebar.dashboard')}
           </NavLink>
         )}
 
@@ -39,30 +41,32 @@ export function Sidebar() {
         {userRole === 'USER' && (
           <NavLink to="/profile" className={getLinkClass}>
             <History size={20} />
-            Hồ sơ & Lịch sử mượn
+            {t('sidebar.profile')}
           </NavLink>
         )}
 
         {/* --- CHUNG --- */}
         <NavLink to="/books" className={getLinkClass}>
           <Book size={20} />
-          Tra cứu Tủ sách
+          {t('sidebar.books')}
         </NavLink>
 
         {/* --- QUẢN LÝ (ADMIN) --- */}
         {userRole === 'ADMIN' && (
           <>
             <div className="pt-2 pb-2">
-              <p className="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">Quản trị viên</p>
+              <p className="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                {t('sidebar.adminSection')}
+              </p>
             </div>
             <NavLink to="/members" className={getLinkClass}>
               <Users size={20} />
-              Quản lý Độc giả
+              {t('sidebar.members')}
             </NavLink>
 
             <NavLink to="/borrowed" className={getLinkClass}>
               <BookMarked size={20} />
-              Quản lý Mượn / Đặt trước
+              {t('sidebar.circulation')}
             </NavLink>
           </>
         )}
@@ -71,7 +75,7 @@ export function Sidebar() {
         <div className="pt-4 mt-4 border-t border-gray-100 dark:border-gray-800">
           <NavLink to="/settings" className={getLinkClass}>
             <Settings size={20} />
-            Cài đặt hệ thống
+            {t('sidebar.settings')}
           </NavLink>
         </div>
       </nav>
@@ -82,7 +86,9 @@ export function Sidebar() {
           className="w-full flex items-center justify-center gap-2 p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
         >
           {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
-          <span className="text-sm font-medium">{theme === 'light' ? 'Chế độ Tối' : 'Chế độ Sáng'}</span>
+          <span className="text-sm font-medium">
+            {theme === 'light' ? t('theme.dark') : t('theme.light')}
+          </span>
         </button>
       </div>
     </aside>

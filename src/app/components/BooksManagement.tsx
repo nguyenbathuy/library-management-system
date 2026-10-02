@@ -3,7 +3,9 @@ import { useState, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { client } from '../api/client';
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import { BookDetailModal } from './BookDetailModal';
+import { toast } from 'sonner';
 
 export interface Book {
   id: number;
@@ -30,6 +32,7 @@ interface BooksManagementProps {
 }
 
 export function BooksManagement({ userRole: propUserRole }: BooksManagementProps = {}) {
+  const { t } = useLanguage();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [showModal, setShowModal] = useState(false);
@@ -73,13 +76,13 @@ export function BooksManagement({ userRole: propUserRole }: BooksManagementProps
       await client.post('/books', bookData);
     },
     onSuccess: () => {
-      alert('Thêm sách thành công!');
+      toast.success('Thêm sách mới thành công!');
       queryClient.invalidateQueries({ queryKey: ['books'] });
       setShowModal(false);
       resetForm();
     },
     onError: (error: any) => {
-      alert(error.response?.data?.error || 'Có lỗi khi thêm sách');
+      toast.error(error.response?.data?.error || 'Có lỗi khi thêm sách');
     }
   });
 
@@ -89,14 +92,14 @@ export function BooksManagement({ userRole: propUserRole }: BooksManagementProps
       await client.put(`/books/${id}`, data);
     },
     onSuccess: () => {
-      alert('Cập nhật sách thành công!');
+      toast.success('Cập nhật thông tin sách thành công!');
       queryClient.invalidateQueries({ queryKey: ['books'] });
       setShowModal(false);
       setEditingBook(null);
       resetForm();
     },
     onError: (error: any) => {
-      alert(error.response?.data?.error || 'Có lỗi khi cập nhật sách');
+      toast.error(error.response?.data?.error || 'Có lỗi khi cập nhật sách');
     }
   });
 
@@ -106,11 +109,11 @@ export function BooksManagement({ userRole: propUserRole }: BooksManagementProps
       await client.delete(`/books/${id}`);
     },
     onSuccess: () => {
-      alert('Xóa sách thành công!');
+      toast.success('Xóa sách thành công!');
       queryClient.invalidateQueries({ queryKey: ['books'] });
     },
     onError: (error: any) => {
-      alert(error.response?.data?.error || 'Có lỗi khi xóa sách');
+      toast.error(error.response?.data?.error || 'Có lỗi khi xóa sách');
     }
   });
 
@@ -125,12 +128,13 @@ export function BooksManagement({ userRole: propUserRole }: BooksManagementProps
       return data;
     },
     onSuccess: (data) => {
+      toast.success(`Import thành công ${data.imported?.length || 0} sách!`);
       setImportResult(data);
       setShowImportResult(true);
       queryClient.invalidateQueries({ queryKey: ['books'] });
     },
     onError: (error: any) => {
-      alert(error.response?.data?.error || 'Có lỗi khi import file Excel');
+      toast.error(error.response?.data?.error || 'Có lỗi khi import file Excel');
     }
   });
 
@@ -152,11 +156,11 @@ export function BooksManagement({ userRole: propUserRole }: BooksManagementProps
       await client.post('/loans/borrow', { bookId });
     },
     onSuccess: () => {
-      alert('Mượn sách thành công!');
+      toast.success('Mượn sách thành công!');
       queryClient.invalidateQueries({ queryKey: ['books'] });
     },
     onError: (error: any) => {
-      alert(error.response?.data?.error || 'Có lỗi xảy ra');
+      toast.error(error.response?.data?.error || 'Có lỗi xảy ra khi mượn sách');
     }
   });
 
@@ -167,13 +171,13 @@ export function BooksManagement({ userRole: propUserRole }: BooksManagementProps
       return data;
     },
     onSuccess: (data: any) => {
-      alert(data.message || 'Đặt trước sách thành công!');
+      toast.success(data.message || 'Đặt trước sách thành công!');
       queryClient.invalidateQueries({ queryKey: ['books'] });
       queryClient.invalidateQueries({ queryKey: ['all-reservations'] });
       queryClient.invalidateQueries({ queryKey: ['my-reservations'] });
     },
     onError: (error: any) => {
-      alert(error.response?.data?.error || 'Có lỗi khi đặt trước sách');
+      toast.error(error.response?.data?.error || 'Có lỗi khi đặt trước sách');
     }
   });
 
@@ -234,7 +238,7 @@ export function BooksManagement({ userRole: propUserRole }: BooksManagementProps
     e.preventDefault();
 
     if (!formData.title || !formData.author || !formData.isbn || !formData.category) {
-      alert('Vui lòng điền đầy đủ thông tin bắt buộc (tiêu đề, tác giả, ISBN, thể loại)');
+      toast.error('Vui lòng điền đầy đủ thông tin bắt buộc (tiêu đề, tác giả, ISBN, thể loại)');
       return;
     }
 
@@ -264,7 +268,9 @@ export function BooksManagement({ userRole: propUserRole }: BooksManagementProps
 
   const categories = ['All', ...Array.from(new Set(books.map(b => b.category)))];
 
-  if (isLoading) return <div className="p-8 text-center">Đang tải dữ liệu sách...</div>;
+  if (isLoading) {
+    return <div className="p-8 text-center text-gray-500">{t('books.loading')}</div>;
+  }
 
   return (
     <div className="space-y-6">
@@ -272,9 +278,9 @@ export function BooksManagement({ userRole: propUserRole }: BooksManagementProps
         <div>
           <h2 className="text-2xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
             <BookOpen className="text-blue-600" />
-            Tủ sách
+            {t('books.title')}
           </h2>
-          <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">Danh sách sách trong thư viện</p>
+          <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">{t('books.subtitle')}</p>
         </div>
 
         {userRole === 'ADMIN' && (
@@ -292,9 +298,9 @@ export function BooksManagement({ userRole: propUserRole }: BooksManagementProps
               className="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 disabled:bg-gray-400 text-white rounded-lg transition-colors shadow-sm"
             >
               {importMutation.isPending ? (
-                <><Loader2 size={18} className="animate-spin" /> Đang import...</>
+                <><Loader2 size={18} className="animate-spin" /> {t('books.importing')}</>
               ) : (
-                <><FileSpreadsheet size={18} /> Import Excel</>
+                <><FileSpreadsheet size={18} /> {t('books.importExcel')}</>
               )}
             </button>
             <button
@@ -302,7 +308,7 @@ export function BooksManagement({ userRole: propUserRole }: BooksManagementProps
               className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors shadow-sm"
             >
               <Plus size={18} />
-              Thêm sách mới
+              {t('books.addNew')}
             </button>
           </div>
         )}
@@ -314,7 +320,7 @@ export function BooksManagement({ userRole: propUserRole }: BooksManagementProps
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
           <input
             type="text"
-            placeholder="Tìm kiếm theo tên sách, tác giả..."
+            placeholder={t('books.search')}
             className="w-full pl-10 pr-4 py-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -368,9 +374,9 @@ export function BooksManagement({ userRole: propUserRole }: BooksManagementProps
                     ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
                     : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
                     }`}>
-                    {book.available > 0 ? 'Sẵn sàng' : 'Hết sách'}
+                    {book.available > 0 ? t('books.available') : t('books.outOfStock')}
                   </span>
-                  <p className="text-xs text-gray-400 mt-1">Còn {book.available}/{book.copies}</p>
+                  <p className="text-xs text-gray-400 mt-1">{t('books.remaining')} {book.available}/{book.copies}</p>
                 </div>
 
                 {userRole === 'ADMIN' ? (
@@ -381,7 +387,7 @@ export function BooksManagement({ userRole: propUserRole }: BooksManagementProps
                         handleEditBook(book);
                       }}
                       className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors text-blue-600"
-                      title="Chỉnh sửa"
+                      title={t('common.edit')}
                     >
                       <Edit size={18} />
                     </button>
@@ -391,7 +397,7 @@ export function BooksManagement({ userRole: propUserRole }: BooksManagementProps
                         handleDeleteBook(book.id, book.title);
                       }}
                       className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors text-red-600"
-                      title="Xóa"
+                      title={t('common.delete')}
                     >
                       <Trash2 size={18} />
                     </button>
@@ -406,7 +412,7 @@ export function BooksManagement({ userRole: propUserRole }: BooksManagementProps
                       disabled={borrowMutation.isPending}
                       className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm"
                     >
-                      Mượn
+                      {t('books.borrow')}
                     </button>
                   ) : (
                     <button
@@ -416,9 +422,9 @@ export function BooksManagement({ userRole: propUserRole }: BooksManagementProps
                       }}
                       disabled={reserveMutation.isPending}
                       className="px-3 py-2 bg-amber-600 hover:bg-amber-700 text-white text-sm font-medium rounded-lg transition-colors shadow-sm"
-                      title="Hết sách sẵn có - Bấm để đặt trước"
+                      title={t('books.reserve')}
                     >
-                      Đặt trước
+                      {t('books.reserve')}
                     </button>
                   )
                 )}
@@ -429,7 +435,7 @@ export function BooksManagement({ userRole: propUserRole }: BooksManagementProps
 
         {filteredBooks.length === 0 && (
           <div className="col-span-full text-center py-12 text-gray-500 dark:text-gray-400">
-            Không tìm thấy cuốn sách nào phù hợp.
+            {t('books.notFound')}
           </div>
         )}
       </div>

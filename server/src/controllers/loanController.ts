@@ -528,3 +528,104 @@ export const triggerReminders = async (req: AuthRequest, res: Response) => {
     }
 };
 
+/**
+ * Độc giả gia hạn sách (Renew Loan)
+ * Điều kiện:
+ * 1. Phiếu mượn phải còn đang mượn (chưa trả).
+ * 2. Phiếu mượn không được quá hạn (Overdue).
+ * 3. Không có độc giả khác đặt trước (Reservation WAITING / NOTIFIED) đối với cuốn sách này.
+ * Cập nhật: Cộng thêm 7 ngày vào dueDate.
+ */
+export const renewLoan = async (req: AuthRequest, res: Response) => {
+    try {
+        const loanId = Number(req.params.id);
+        const userId = req.user?.userId;
+        const userRole = req.user?.role;
+
+        if (!loanId || isNaN(loanId)) {
+            return res.status(400).json({ error: 'Mã phiếu mượn không hợp lệ' });
+        }
+
+        const loan = await prisma.loan.findUnique({
+            where: { id: loanId },
+            include: {
+                bookItem: {
+                    include: {
+                        book: {
+                            include: { author: true, category: true }
+                        }
+                    }
+                },
+                user: true
+            }
+        });
+
+        if (!loan) {
+            return res.status(404).json({ error: 'Không tìm thấy phiếu mượn' });
+        }
+
+        // Kiểm tra quyền: Chỉ người mượn hoặc ADMIN mới được gia hạn
+        if (loan.userId !== userId && userRole !== 'ADMIN') {
+            return res.status(403).json({ error: 'Bạn không có quyền gia hạn phiếu mượn này' });
+        }
+
+        // 1. Kiểm tra trạng thái đã trả chưa
+        if (loan.returnDate || loan.status === 'RETURNED') {
+            return res.status(400).json({ error: 'Phiếu mượn này đã được trả, không thể gia hạn' });
+        }
+
+        // 2. Kiểm tra sách đã quá hạn chưa
+        const now = new Date();
+        const dueDate = new Date(loan.dueDate);
+        if (dueDate < now || loan.status === 'OVERDUE') {
+            return res.status(400).json({ error: 'Không thể gia hạn sách đã quá hạn. Vui lòng mang sách đến thư viện để trả!' });
+        }
+
+        // 3. Kiểm tra xem sách có người khác đặt trước không
+        const bookId = loan.bookItem.bookId;
+        const existingReservation = await prisma.reservation.findFirst({
+            where: {
+                bookId,
+                status: { in: ['WAITING', 'NOTIFIED'] },
+                userId: { not: loan.userId }
+            }
+        });
+
+        if (existingReservation) {
+            return res.status(400).json({
+                error: 'Không thể gia hạn vì đầu sách này đang có độc giả khác đặt trước!'
+            });
+        }
+
+        // 4. Cộng thêm 7 ngày vào dueDate
+        const newDueDate = new Date(loan.dueDate);
+        newDueDate.setDate(newDueDate.getDate() + 7);
+
+        const updatedLoan = await prisma.loan.update({
+            where: { id: loanId },
+            data: {
+                dueDate: newDueDate,
+                status: 'BORROWING'
+            },
+            include: {
+                bookItem: {
+                    include: {
+                        book: {
+                            include: { author: true, category: true }
+                        }
+                    }
+                },
+                user: true
+            }
+        });
+
+        res.json({
+            message: `Gia hạn thành công sách "${loan.bookItem.book.title}" thêm 7 ngày!`,
+            loan: formatLoanResponse(updatedLoan)
+        });
+    } catch (error) {
+        console.error('Error renewing loan:', error);
+        res.status(500).json({ error: 'Có lỗi xảy ra khi gia hạn sách' });
+    }
+};
+

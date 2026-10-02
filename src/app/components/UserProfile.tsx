@@ -1,10 +1,14 @@
-import { User, CreditCard, Calendar, BookOpen, Clock, AlertCircle, CheckCircle, BookmarkPlus, Bell, XCircle } from 'lucide-react';
+import { User, CreditCard, Calendar, BookOpen, Clock, AlertCircle, CheckCircle, BookmarkPlus, Bell, XCircle, RefreshCw } from 'lucide-react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { client } from '../api/client';
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
+
+import { toast } from 'sonner';
 
 export function UserProfile() {
   const { user: currentUser } = useAuth();
+  const { t, language } = useLanguage();
   const queryClient = useQueryClient();
 
   // Fetch My Loans
@@ -25,18 +29,34 @@ export function UserProfile() {
     }
   });
 
+  // Renew Loan Mutation
+  const renewLoanMutation = useMutation({
+    mutationFn: async (loanId: number) => {
+      const { data } = await client.post(`/loans/${loanId}/renew`);
+      return data;
+    },
+    onSuccess: (data: any) => {
+      toast.success(data?.message || (language === 'vi' ? 'Gia hạn sách thành công thêm 7 ngày!' : 'Loan renewed successfully for 7 days!'));
+      queryClient.invalidateQueries({ queryKey: ['my-loans'] });
+      queryClient.invalidateQueries({ queryKey: ['all-loans'] });
+    },
+    onError: (err: any) => {
+      toast.error(err.response?.data?.error || (language === 'vi' ? 'Không thể gia hạn sách' : 'Failed to renew loan'));
+    }
+  });
+
   // Cancel reservation mutation
   const cancelReservationMutation = useMutation({
     mutationFn: async (id: number) => {
       await client.delete(`/reservations/${id}`);
     },
     onSuccess: () => {
-      alert('Đã hủy yêu cầu đặt trước!');
+      toast.success('Đã hủy yêu cầu đặt trước thành công!');
       queryClient.invalidateQueries({ queryKey: ['my-reservations'] });
       queryClient.invalidateQueries({ queryKey: ['books'] });
     },
     onError: (err: any) => {
-      alert(err.response?.data?.error || 'Có lỗi khi hủy');
+      toast.error(err.response?.data?.error || 'Có lỗi khi hủy yêu cầu đặt trước');
     }
   });
 
@@ -49,8 +69,8 @@ export function UserProfile() {
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
       <div>
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Hồ sơ độc giả</h2>
-        <p className="text-gray-500 dark:text-gray-400">Quản lý thông tin cá nhân, theo dõi lịch sử mượn trả và sách đặt trước.</p>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t('profile.title')}</h2>
+        <p className="text-gray-500 dark:text-gray-400">{t('profile.subtitle')}</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -64,7 +84,7 @@ export function UserProfile() {
             <h3 className="text-xl font-bold text-gray-900 dark:text-white">{currentUser.name}</h3>
             <span className="text-sm text-gray-500">{currentUser.email}</span>
             <span className="mt-2 px-3 py-1 bg-green-100 text-green-700 text-xs rounded-full font-medium border border-green-200">
-              {currentUser.role === 'ADMIN' ? 'Thủ thư' : 'Thẻ Sinh viên'}
+              {currentUser.role === 'ADMIN' ? t('profile.librarian') : t('profile.studentCard')}
             </span>
           </div>
 
@@ -72,16 +92,16 @@ export function UserProfile() {
             <div className="flex items-center gap-3">
               <CreditCard className="text-gray-400" size={18} />
               <div>
-                <p className="text-xs text-gray-500">Mã thẻ</p>
+                <p className="text-xs text-gray-500">{t('profile.cardId')}</p>
                 <p className="font-medium text-gray-900 dark:text-white">LIB-{currentUser.id}</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <Calendar className="text-gray-400" size={18} />
               <div>
-                <p className="text-xs text-gray-500">Tham gia</p>
+                <p className="text-xs text-gray-500">{t('profile.joined')}</p>
                 <p className="font-medium text-gray-900 dark:text-white">
-                  {currentUser.createdAt ? new Date(currentUser.createdAt).toLocaleDateString() : 'N/A'}
+                  {currentUser.createdAt ? new Date(currentUser.createdAt).toLocaleDateString(language === 'vi' ? 'vi-VN' : 'en-US') : 'N/A'}
                 </p>
               </div>
             </div>
@@ -98,8 +118,8 @@ export function UserProfile() {
                 <BookOpen size={24} />
               </div>
               <div>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Đang mượn</p>
-                <p className="text-xl font-bold text-blue-700 dark:text-blue-400">{totalBorrowed} cuốn</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">{t('profile.activeLoans')}</p>
+                <p className="text-xl font-bold text-blue-700 dark:text-blue-400">{totalBorrowed}</p>
               </div>
             </div>
             <div className="bg-amber-50 dark:bg-amber-900/20 p-4 rounded-lg border border-amber-100 dark:border-amber-800 flex items-center gap-4">
@@ -107,8 +127,8 @@ export function UserProfile() {
                 <BookmarkPlus size={24} />
               </div>
               <div>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Đang đặt trước</p>
-                <p className="text-xl font-bold text-amber-700 dark:text-amber-400">{waitingReservations.length} cuốn</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">{t('profile.reservations')}</p>
+                <p className="text-xl font-bold text-amber-700 dark:text-amber-400">{waitingReservations.length}</p>
               </div>
             </div>
             <div className="bg-red-50 dark:bg-red-900/20 p-4 rounded-lg border border-red-100 dark:border-red-800 flex items-center gap-4">
@@ -116,8 +136,8 @@ export function UserProfile() {
                 <AlertCircle size={24} />
               </div>
               <div>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Quá hạn</p>
-                <p className="text-xl font-bold text-red-700 dark:text-red-400">{overdueCount} cuốn</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">{t('profile.overdue')}</p>
+                <p className="text-xl font-bold text-red-700 dark:text-red-400">{overdueCount}</p>
               </div>
             </div>
           </div>
@@ -127,11 +147,11 @@ export function UserProfile() {
             <div className="p-5 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <BookmarkPlus className="text-amber-600 dark:text-amber-400" size={20} />
-                <h3 className="font-bold text-gray-900 dark:text-white">Sách đang đặt trước (Reservations)</h3>
+                <h3 className="font-bold text-gray-900 dark:text-white">{t('profile.reservations')}</h3>
               </div>
               {waitingReservations.length > 0 && (
                 <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-300">
-                  Đang chờ {waitingReservations.length} cuốn
+                  {waitingReservations.length}
                 </span>
               )}
             </div>
@@ -154,7 +174,7 @@ export function UserProfile() {
                         </p>
                         <p className="text-xs text-gray-500">{resItem.book?.author}</p>
                         <p className="text-[11px] text-gray-400 mt-0.5">
-                          Đặt ngày: {new Date(resItem.createdAt).toLocaleDateString('vi-VN')}
+                          {language === 'vi' ? 'Đặt ngày' : 'Reserved on'}: {new Date(resItem.createdAt).toLocaleDateString(language === 'vi' ? 'vi-VN' : 'en-US')}
                         </p>
                       </div>
                     </div>
@@ -162,37 +182,37 @@ export function UserProfile() {
                     <div className="flex items-center gap-2 self-end sm:self-center">
                       {resItem.status === 'WAITING' && (
                         <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300 border border-amber-200">
-                          <Clock size={12} /> Đang chờ có sách
+                          <Clock size={12} /> {t('profile.waiting')}
                         </span>
                       )}
                       {resItem.status === 'NOTIFIED' && (
                         <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-950/40 dark:text-indigo-300 border border-indigo-200 animate-pulse">
-                          <Bell size={12} /> Sách đã về - Hãy đến nhận
+                          <Bell size={12} /> {language === 'vi' ? 'Sách đã về - Hãy đến nhận' : 'Available for pickup'}
                         </span>
                       )}
                       {resItem.status === 'FULFILLED' && (
                         <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
-                          <CheckCircle size={12} /> Đã nhận sách
+                          <CheckCircle size={12} /> {language === 'vi' ? 'Đã nhận sách' : 'Fulfilled'}
                         </span>
                       )}
                       {resItem.status === 'CANCELLED' && (
                         <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-500">
-                          Đã hủy
+                          {language === 'vi' ? 'Đã hủy' : 'Cancelled'}
                         </span>
                       )}
 
                       {(resItem.status === 'WAITING' || resItem.status === 'NOTIFIED') && (
                         <button
                           onClick={() => {
-                            if (confirm('Bạn có chắc chắn muốn hủy đặt trước cuốn sách này?')) {
+                            if (confirm(language === 'vi' ? 'Bạn có chắc chắn muốn hủy đặt trước cuốn sách này?' : 'Are you sure you want to cancel this reservation?')) {
                               cancelReservationMutation.mutate(resItem.id);
                             }
                           }}
                           className="p-1.5 hover:bg-red-50 text-red-500 rounded-lg transition-colors text-xs flex items-center gap-1"
-                          title="Hủy đặt trước"
+                          title={t('profile.cancelReservation')}
                         >
                           <XCircle size={16} />
-                          <span className="hidden sm:inline">Hủy</span>
+                          <span className="hidden sm:inline">{t('common.cancel')}</span>
                         </button>
                       )}
                     </div>
@@ -200,7 +220,7 @@ export function UserProfile() {
                 ))
               ) : (
                 <div className="p-6 text-center text-gray-500 text-sm">
-                  Bạn chưa có yêu cầu đặt trước nào.
+                  {t('profile.noReservations')}
                 </div>
               )}
             </div>
@@ -209,16 +229,17 @@ export function UserProfile() {
           {/* Danh sách Lịch sử mượn sách */}
           <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm overflow-hidden">
             <div className="p-5 border-b border-gray-100 dark:border-gray-800">
-              <h3 className="font-bold text-gray-900 dark:text-white">Lịch sử mượn sách</h3>
+              <h3 className="font-bold text-gray-900 dark:text-white">{t('profile.history')}</h3>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-sm text-left">
                 <thead className="bg-gray-50 dark:bg-gray-800 text-gray-500">
                   <tr>
-                    <th className="px-6 py-3">Tên sách</th>
-                    <th className="px-6 py-3">Ngày mượn</th>
-                    <th className="px-6 py-3">Hạn trả</th>
-                    <th className="px-6 py-3">Trạng thái</th>
+                    <th className="px-6 py-3">{t('borrowed.book')}</th>
+                    <th className="px-6 py-3">{t('borrowed.borrowDate')}</th>
+                    <th className="px-6 py-3">{t('borrowed.dueDate')}</th>
+                    <th className="px-6 py-3">{t('borrowed.status')}</th>
+                    <th className="px-6 py-3 text-right">{t('borrowed.actions')}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
@@ -229,36 +250,49 @@ export function UserProfile() {
                           {loan.book?.title}
                           <p className="text-xs text-gray-500 font-normal">{loan.book?.author}</p>
                         </td>
-                        <td className="px-6 py-4">{new Date(loan.borrowDate).toLocaleDateString()}</td>
-                        <td className="px-6 py-4 font-medium text-blue-600">{new Date(loan.dueDate).toLocaleDateString()}</td>
+                        <td className="px-6 py-4">{new Date(loan.borrowDate).toLocaleDateString(language === 'vi' ? 'vi-VN' : 'en-US')}</td>
+                        <td className="px-6 py-4 font-medium text-blue-600">{new Date(loan.dueDate).toLocaleDateString(language === 'vi' ? 'vi-VN' : 'en-US')}</td>
                         <td className="px-6 py-4">
                           {loan.status === 'On Time' && (
                             <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                              <CheckCircle size={12} /> Đúng hạn
+                              <CheckCircle size={12} /> {t('borrowed.onTime')}
                             </span>
                           )}
                           {loan.status === 'Due Soon' && (
                             <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                              <Clock size={12} /> Sắp đến hạn
+                              <Clock size={12} /> {t('borrowed.dueSoon')}
                             </span>
                           )}
                           {loan.status === 'Overdue' && (
                             <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                              <AlertCircle size={12} /> Quá hạn
+                              <AlertCircle size={12} /> {t('borrowed.overdue')}
                             </span>
                           )}
                           {loan.status === 'Returned' && (
                             <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                              Đã trả
+                              {t('borrowed.returned')}
                             </span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                          {loan.status !== 'Returned' && (
+                            <button
+                              onClick={() => renewLoanMutation.mutate(loan.id)}
+                              disabled={renewLoanMutation.isPending || loan.status === 'Overdue'}
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:hover:bg-blue-900/50 dark:text-blue-400 text-xs font-medium rounded-lg transition-colors border border-blue-200 dark:border-blue-800 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+                              title={loan.status === 'Overdue' ? (language === 'vi' ? 'Sách đã quá hạn, không thể gia hạn' : 'Overdue books cannot be renewed') : (language === 'vi' ? 'Gia hạn thêm 7 ngày' : 'Renew loan for 7 days')}
+                            >
+                              <RefreshCw size={13} className={renewLoanMutation.isPending ? 'animate-spin' : ''} />
+                              {t('borrowed.renew')}
+                            </button>
                           )}
                         </td>
                       </tr>
                     ))
                   ) : (
                     <tr>
-                      <td colSpan={4} className="px-6 py-8 text-center text-gray-500">
-                        Bạn chưa mượn cuốn sách nào.
+                      <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
+                        {t('profile.noLoans')}
                       </td>
                     </tr>
                   )}

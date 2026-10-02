@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import {
   Search, RotateCcw, AlertCircle, CheckCircle, Clock, ScanBarcode,
   BookOpen, User, Loader2, X, ArrowRightLeft, BookmarkPlus,
-  BookMarked, Bell, CheckCircle2, XCircle, Calendar, Send
+  BookMarked, Bell, CheckCircle2, XCircle, Calendar, Send, RefreshCw
 } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -12,6 +12,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '.
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { client } from '../api/client';
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
+import { toast } from 'sonner';
 
 export interface BorrowedBook {
   id: number;
@@ -80,6 +82,7 @@ export interface ReservationItem {
 
 export function BorrowedBooks({ userRole: propUserRole }: BorrowedBooksProps = {}) {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const userRole = propUserRole || user?.role;
   const [searchParams, setSearchParams] = useSearchParams();
   const tabParam = searchParams.get('tab');
@@ -154,13 +157,29 @@ export function BorrowedBooks({ userRole: propUserRole }: BorrowedBooksProps = {
       queryClient.invalidateQueries({ queryKey: ['books'] });
       queryClient.invalidateQueries({ queryKey: ['all-reservations'] });
       if (data?.reservationNotice) {
-        alert(`Thu hồi sách thành công!\n⚠️ Độc giả ${data.reservationNotice.userName} (${data.reservationNotice.userEmail}) đang đặt trước cuốn sách này. Hệ thống đã chuyển trạng thái sang "Đã thông báo"!`);
+        toast.success(`Thu hồi sách thành công! Độc giả ${data.reservationNotice.userName} đang đặt trước sách này. Trạng thái đã chuyển sang "Đã thông báo"!`, { duration: 5000 });
       } else {
-        alert("Thu hồi sách thành công!");
+        toast.success("Thu hồi sách thành công!");
       }
     },
     onError: (error: any) => {
-      alert(error.response?.data?.error || "Có lỗi xảy ra");
+      toast.error(error.response?.data?.error || "Có lỗi xảy ra khi thu hồi sách");
+    }
+  });
+
+  // Renew Loan Mutation
+  const renewMutation = useMutation({
+    mutationFn: async (loanId: number) => {
+      const { data } = await client.post(`/loans/${loanId}/renew`);
+      return data;
+    },
+    onSuccess: (data: any) => {
+      queryClient.invalidateQueries({ queryKey: ['all-loans'] });
+      queryClient.invalidateQueries({ queryKey: ['books'] });
+      toast.success(data?.message || (language === 'vi' ? 'Gia hạn sách thành công thêm 7 ngày!' : 'Loan renewed successfully for 7 days!'));
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.error || (language === 'vi' ? 'Không thể gia hạn sách' : 'Failed to renew loan'));
     }
   });
 
@@ -232,12 +251,12 @@ export function BorrowedBooks({ userRole: propUserRole }: BorrowedBooksProps = {
       return data;
     },
     onSuccess: (data) => {
-      alert(data.message || 'Cập nhật trạng thái đặt trước thành công!');
+      toast.success(data.message || 'Cập nhật trạng thái đặt trước thành công!');
       queryClient.invalidateQueries({ queryKey: ['all-reservations'] });
       queryClient.invalidateQueries({ queryKey: ['books'] });
     },
     onError: (error: any) => {
-      alert(error.response?.data?.error || 'Có lỗi khi cập nhật trạng thái');
+      toast.error(error.response?.data?.error || 'Có lỗi khi cập nhật trạng thái đặt trước');
     }
   });
 
@@ -248,11 +267,11 @@ export function BorrowedBooks({ userRole: propUserRole }: BorrowedBooksProps = {
       return data;
     },
     onSuccess: () => {
-      alert('Đã hủy yêu cầu đặt trước thành công!');
+      toast.success('Đã hủy yêu cầu đặt trước thành công!');
       queryClient.invalidateQueries({ queryKey: ['all-reservations'] });
     },
     onError: (error: any) => {
-      alert(error.response?.data?.error || 'Có lỗi khi hủy yêu cầu');
+      toast.error(error.response?.data?.error || 'Có lỗi khi hủy yêu cầu đặt trước');
     }
   });
 
@@ -263,11 +282,11 @@ export function BorrowedBooks({ userRole: propUserRole }: BorrowedBooksProps = {
       return data;
     },
     onSuccess: (data) => {
-      alert(data.message || 'Đã hoàn tất quét và gửi email nhắc nhở!');
+      toast.success(data.message || 'Đã hoàn tất quét và gửi email nhắc nhở!');
       queryClient.invalidateQueries({ queryKey: ['all-loans'] });
     },
     onError: (error: any) => {
-      alert(error.response?.data?.error || 'Có lỗi khi gửi email nhắc nhở');
+      toast.error(error.response?.data?.error || 'Có lỗi khi gửi email nhắc nhở');
     }
   });
 
@@ -333,8 +352,8 @@ export function BorrowedBooks({ userRole: propUserRole }: BorrowedBooksProps = {
       {/* Title & Navigation */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Quản lý Lưu thông Thư viện</h2>
-          <p className="text-gray-500 dark:text-gray-400">Theo dõi mượn trả, quét mã vạch và danh sách độc giả đặt trước sách.</p>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t('borrowed.title')}</h2>
+          <p className="text-gray-500 dark:text-gray-400">{t('borrowed.subtitle')}</p>
         </div>
 
         {userRole === 'ADMIN' && (
@@ -363,7 +382,7 @@ export function BorrowedBooks({ userRole: propUserRole }: BorrowedBooksProps = {
             }`}
         >
           <BookMarked size={18} />
-          <span>Sách đang cho mượn</span>
+          <span>{t('borrowed.loansTab')}</span>
           <span className="ml-1 px-2 py-0.5 text-xs rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">
             {loans.filter((l: any) => l.status !== 'Returned').length}
           </span>
@@ -377,7 +396,7 @@ export function BorrowedBooks({ userRole: propUserRole }: BorrowedBooksProps = {
             }`}
         >
           <BookmarkPlus size={18} />
-          <span>Danh sách Đặt trước</span>
+          <span>{t('borrowed.reservationsTab')}</span>
           {waitingCount > 0 && (
             <span className="ml-1 px-2 py-0.5 text-xs rounded-full bg-amber-500 text-white font-bold animate-pulse">
               {waitingCount}
@@ -678,15 +697,27 @@ export function BorrowedBooks({ userRole: propUserRole }: BorrowedBooksProps = {
                       </TableCell>
                       <TableCell className="text-right">
                         {loan.status !== 'Returned' && (
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="gap-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
-                            onClick={() => returnMutation.mutate(loan.id)}
-                            disabled={returnMutation.isPending}
-                          >
-                            <RotateCcw size={16} /> Thu hồi
-                          </Button>
+                          <div className="flex items-center justify-end gap-2">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="gap-1.5 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 border-emerald-200 dark:border-emerald-800 dark:text-emerald-400"
+                              onClick={() => renewMutation.mutate(loan.id)}
+                              disabled={renewMutation.isPending || loan.status === 'Overdue'}
+                              title={loan.status === 'Overdue' ? (language === 'vi' ? 'Sách đã quá hạn, không thể gia hạn' : 'Overdue books cannot be renewed') : (language === 'vi' ? 'Gia hạn thêm 7 ngày' : 'Renew loan for 7 days')}
+                            >
+                              <RefreshCw size={14} className={renewMutation.isPending ? 'animate-spin' : ''} /> {t('borrowed.renew')}
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="gap-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                              onClick={() => returnMutation.mutate(loan.id)}
+                              disabled={returnMutation.isPending}
+                            >
+                              <RotateCcw size={16} /> Thu hồi
+                            </Button>
+                          </div>
                         )}
                       </TableCell>
                     </TableRow>

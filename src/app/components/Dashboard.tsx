@@ -4,6 +4,8 @@ import { client } from '../api/client';
 import { useRef, useState } from 'react';
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import { toast } from 'sonner';
+import { useLanguage } from '../contexts/LanguageContext';
 import {
   BarChart,
   Bar,
@@ -43,6 +45,7 @@ interface RecentActivity {
 export function Dashboard() {
   const chartRef = useRef<HTMLDivElement>(null);
   const [isExporting, setIsExporting] = useState(false);
+  const { t, language } = useLanguage();
 
   const handleExportPDF = async () => {
     if (!chartRef.current) return;
@@ -60,13 +63,14 @@ export function Dashboard() {
       const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
       
       pdf.setFontSize(16);
-      pdf.text('Báo Cáo Thống Kê Thư Viện', 14, 15);
+      pdf.text(t('dashboard.title') + ' - ' + t('brand.name'), 14, 15);
       
       pdf.addImage(imgData, 'PNG', 14, 25, pdfWidth - 28, pdfHeight - 28);
       pdf.save('bao-cao-thu-vien.pdf');
+      toast.success(t('dashboard.exportPdf') + ' - OK!');
     } catch (error) {
       console.error('Error exporting PDF:', error);
-      alert('Có lỗi xảy ra khi xuất báo cáo PDF');
+      toast.error('Có lỗi xảy ra khi xuất báo cáo PDF');
     } finally {
       setIsExporting(false);
     }
@@ -108,9 +112,10 @@ export function Dashboard() {
     }
   });
 
-  const chartData = trends.map(t => ({
-    name: `T${t.month}`,
-    "Lượt mượn": t.count
+  const borrowMetricLabel = t('dashboard.borrowCount');
+  const chartData = trends.map(tData => ({
+    name: language === 'vi' ? `T${tData.month}` : `M${tData.month}`,
+    [borrowMetricLabel]: tData.count
   }));
 
   return (
@@ -119,19 +124,19 @@ export function Dashboard() {
         <div>
           <h2 className="text-2xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
             <BarChart3 className="text-blue-600" />
-            Bảng điều khiển
+            {t('dashboard.title')}
           </h2>
           <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">
-            Chào mừng trở lại! Dưới đây là tình hình hoạt động của thư viện hôm nay.
+            {t('dashboard.subtitle')}
           </p>
         </div>
         <button
           onClick={handleExportPDF}
           disabled={isExporting}
-          className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white rounded-lg transition-colors shadow-sm"
+          className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white rounded-lg transition-colors shadow-sm text-sm font-semibold"
         >
           <Download size={18} />
-          {isExporting ? 'Đang xuất...' : 'Xuất báo cáo PDF'}
+          {isExporting ? t('dashboard.exporting') : t('dashboard.exportPdf')}
         </button>
       </div>
 
@@ -140,9 +145,9 @@ export function Dashboard() {
         <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Tổng đầu sách</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">{t('dashboard.totalBooks')}</p>
               <h3 className="text-3xl font-bold text-gray-800 dark:text-white">{stats?.totalBooks || 0}</h3>
-              <p className="text-xs text-gray-400 mt-1">Cuốn trong kho</p>
+              <p className="text-xs text-gray-400 mt-1">{t('dashboard.inStock')}</p>
             </div>
             <div className="p-4 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
               <BookOpen className="text-blue-600 dark:text-blue-400" size={32} />
@@ -153,9 +158,9 @@ export function Dashboard() {
         <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Độc giả hoạt động</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">{t('dashboard.activeUsers')}</p>
               <h3 className="text-3xl font-bold text-gray-800 dark:text-white">{stats?.activeUsers || 0}</h3>
-              <p className="text-xs text-gray-400 mt-1">Thành viên</p>
+              <p className="text-xs text-gray-400 mt-1">{t('dashboard.membersCount')}</p>
             </div>
             <div className="p-4 bg-green-100 dark:bg-green-900/30 rounded-lg">
               <Users className="text-green-600 dark:text-green-400" size={32} />
@@ -166,9 +171,9 @@ export function Dashboard() {
         <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Đang cho mượn</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">{t('dashboard.borrowing')}</p>
               <h3 className="text-3xl font-bold text-gray-800 dark:text-white">{stats?.totalBorrowed || 0}</h3>
-              <p className="text-xs text-gray-400 mt-1">Phiếu mượn</p>
+              <p className="text-xs text-gray-400 mt-1">{t('dashboard.activeLoans')}</p>
             </div>
             <div className="p-4 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
               <TrendingUp className="text-purple-600 dark:text-purple-400" size={32} />
@@ -179,9 +184,9 @@ export function Dashboard() {
         <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Sách quá hạn</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">{t('dashboard.overdueBooks')}</p>
               <h3 className="text-3xl font-bold text-gray-800 dark:text-white">{stats?.overdueBooks || 0}</h3>
-              <p className="text-xs text-gray-400 mt-1">Cần thu hồi ngay</p>
+              <p className="text-xs text-gray-400 mt-1">{t('dashboard.needAction')}</p>
             </div>
             <div className="p-4 bg-red-100 dark:bg-red-900/30 rounded-lg">
               <AlertCircle className="text-red-600 dark:text-red-400" size={32} />
@@ -197,7 +202,7 @@ export function Dashboard() {
             <div>
               <h3 className="text-lg font-bold text-gray-800 dark:text-white flex items-center gap-2">
                 <BarChart3 size={20} className="text-blue-600" />
-                Xu hướng mượn sách (Năm 2026)
+                {t('dashboard.trendTitle')}
               </h3>
             </div>
           </div>
@@ -214,7 +219,7 @@ export function Dashboard() {
                   color: '#fff'
                 }}
               />
-              <Bar dataKey="Lượt mượn" fill="#3B82F6" radius={[4, 4, 0, 0]} />
+              <Bar dataKey={borrowMetricLabel} fill="#3B82F6" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -223,16 +228,17 @@ export function Dashboard() {
         <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
           <h3 className="text-lg font-bold text-gray-800 dark:text-white flex items-center gap-2 mb-4">
             <BarChart3 size={20} className="text-orange-600" />
-            Sách đọc nhiều
+            {t('dashboard.topBooks')}
           </h3>
           <div className="space-y-3">
             {topBooks.map((book, index) => (
               <div key={book.id} className="flex items-center gap-3">
-                <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold ${index === 0 ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400' :
-                    index === 1 ? 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400' :
-                      index === 2 ? 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400' :
-                        'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
-                  }`}>
+                <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold ${
+                  index === 0 ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400' :
+                  index === 1 ? 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400' :
+                  index === 2 ? 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400' :
+                  'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
+                }`}>
                   {index + 1}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -240,7 +246,7 @@ export function Dashboard() {
                     {book.title}
                   </p>
                   <p className="text-xs text-blue-600 dark:text-blue-400">
-                    {book.borrowCount} lượt
+                    {book.borrowCount} {t('dashboard.times')}
                   </p>
                 </div>
               </div>
@@ -252,7 +258,7 @@ export function Dashboard() {
       {/* Recent Activity */}
       <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
         <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4">
-          Hoạt động mượn trả gần đây
+          {t('dashboard.recentActivity')}
         </h3>
         <div className="space-y-3">
           {activities.map((activity) => (
@@ -270,11 +276,11 @@ export function Dashboard() {
               <div className="flex-1">
                 <p className="text-sm text-gray-800 dark:text-gray-200">
                   <span className="font-medium">{activity.userName}</span>
-                  {' '}đã {activity.action === 'borrowed' ? 'mượn' : 'trả'} cuốn{' '}
+                  {' '}{activity.action === 'borrowed' ? t('dashboard.borrowedAction') : t('dashboard.returnedAction')}{' '}
                   <span className="font-medium">"{activity.bookTitle}"</span>
                 </p>
                 <p className="text-xs text-gray-400 mt-0.5">
-                  {new Date(activity.date).toLocaleDateString('vi-VN')}
+                  {new Date(activity.date).toLocaleDateString(language === 'vi' ? 'vi-VN' : 'en-US')}
                 </p>
               </div>
             </div>

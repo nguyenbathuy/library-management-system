@@ -18,6 +18,8 @@ const AdminRoute = ({ children }: { children: ReactNode }) => {
   return <>{children}</>;
 };
 
+import { Toaster } from 'sonner';
+
 export default function App() {
   const { isAuthenticated, isLoading } = useAuth();
 
@@ -28,6 +30,7 @@ export default function App() {
   return (
     <ThemeProvider>
       <LanguageProvider>
+        <Toaster richColors position="top-right" closeButton />
         <Routes>
           <Route path="/login" element={!isAuthenticated ? <Login /> : <Navigate to="/" replace />} />
 

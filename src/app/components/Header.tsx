@@ -8,7 +8,7 @@ export function Header() {
   const { t } = useLanguage();
   const { user, logout } = useAuth();
 
-  const userName = user?.name || "Người dùng";
+  const userName = user?.name || t('header.defaultUser');
   const userEmail = user?.email || "user@library.com";
   const userInitial = userName.charAt(0).toUpperCase();
 
@@ -22,15 +22,18 @@ export function Header() {
             <input
               type="text"
               placeholder={t('header.search')}
-              className="w-full pl-10 pr-4 py-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+              className="w-full pl-10 pr-4 py-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all text-sm"
             />
           </div>
         </div>
 
         <div className="flex items-center gap-4 ml-4">
-          <button className="relative p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-full transition-colors">
+          <button
+            title={t('header.notifications')}
+            className="relative p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-gray-800 rounded-full transition-colors"
+          >
             <Bell className="w-6 h-6" />
-            <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+            <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-gray-900"></span>
           </button>
 
           <div className="relative">
@@ -46,7 +49,7 @@ export function Header() {
                   {userName}
                 </p>
                 <p className="text-[11px] text-gray-500 dark:text-gray-400 mt-0.5">
-                  {user?.role === 'ADMIN' ? 'Quản trị viên' : 'Độc giả'}
+                  {user?.role === 'ADMIN' ? t('header.admin') : t('header.user')}
                 </p>
               </div>
             </button>

@@ -6,6 +6,7 @@ import {
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { client } from '../api/client';
 import { useLanguage } from '../contexts/LanguageContext';
+import { toast } from 'sonner';
 
 export interface Member {
   id: number;
@@ -22,7 +23,7 @@ export interface Member {
 }
 
 export function MembersManagement() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'ALL' | 'ACTIVE' | 'BLACKLISTED'>('ALL');
   const [showAddModal, setShowAddModal] = useState(false);
@@ -55,10 +56,10 @@ export function MembersManagement() {
       queryClient.invalidateQueries({ queryKey: ['users'] });
       setShowAddModal(false);
       setNewMember({ name: '', email: '', password: 'password123', role: 'USER', membershipTier: 'STANDARD' });
-      alert("Thêm thành viên thành công!");
+      toast.success("Thêm thành viên mới thành công!");
     },
     onError: (error: any) => {
-      alert(error.response?.data?.error || "Có lỗi xảy ra");
+      toast.error(error.response?.data?.error || "Có lỗi xảy ra khi thêm thành viên");
     }
   });
 
@@ -69,11 +70,11 @@ export function MembersManagement() {
       return data;
     },
     onSuccess: (data) => {
-      alert(data.message || 'Cập nhật danh sách đen thành công!');
+      toast.success(data.message || 'Cập nhật danh sách đen thành công!');
       queryClient.invalidateQueries({ queryKey: ['users'] });
     },
     onError: (error: any) => {
-      alert(error.response?.data?.error || 'Có lỗi khi cập nhật trạng thái danh sách đen');
+      toast.error(error.response?.data?.error || 'Có lỗi khi cập nhật trạng thái danh sách đen');
     }
   });
 
@@ -117,8 +118,8 @@ export function MembersManagement() {
       {/* Title & Action */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">Quản lý Độc giả & Kiểm soát Rủi ro</h2>
-          <p className="text-gray-600 dark:text-gray-400">Quản lý tài khoản, theo dõi phân hạng thành viên và kiểm duyệt danh sách đen (Blacklist).</p>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">{t('members.title')}</h2>
+          <p className="text-gray-600 dark:text-gray-400">{t('members.subtitle')}</p>
         </div>
         <button
           onClick={() => setShowAddModal(true)}
@@ -133,7 +134,7 @@ export function MembersManagement() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div className="bg-white dark:bg-gray-900 p-4 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm flex items-center justify-between">
           <div>
-            <p className="text-xs text-gray-500 dark:text-gray-400">Tổng số độc giả</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400">{language === 'vi' ? 'Tổng số độc giả' : 'Total Members'}</p>
             <p className="text-2xl font-bold text-gray-900 dark:text-white mt-1">{members.length}</p>
           </div>
           <div className="p-3 bg-blue-100 dark:bg-blue-900/30 text-blue-600 rounded-lg">
@@ -143,7 +144,7 @@ export function MembersManagement() {
 
         <div className="bg-white dark:bg-gray-900 p-4 rounded-xl border border-green-200 dark:border-green-900/50 shadow-sm flex items-center justify-between">
           <div>
-            <p className="text-xs text-green-700 dark:text-green-400 font-medium">Đang hoạt động</p>
+            <p className="text-xs text-green-700 dark:text-green-400 font-medium">{t('members.active')}</p>
             <p className="text-2xl font-bold text-green-600 dark:text-green-400 mt-1">{activeCount}</p>
           </div>
           <div className="p-3 bg-green-100 dark:bg-green-900/30 text-green-600 rounded-lg">
@@ -153,7 +154,7 @@ export function MembersManagement() {
 
         <div className="bg-white dark:bg-gray-900 p-4 rounded-xl border border-red-200 dark:border-red-900/50 shadow-sm flex items-center justify-between">
           <div>
-            <p className="text-xs text-red-700 dark:text-red-400 font-medium">Bị chặn (Blacklist)</p>
+            <p className="text-xs text-red-700 dark:text-red-400 font-medium">{t('members.blacklisted')}</p>
             <p className="text-2xl font-bold text-red-600 dark:text-red-400 mt-1">{blacklistedCount}</p>
           </div>
           <div className="p-3 bg-red-100 dark:bg-red-900/30 text-red-600 rounded-lg">
@@ -168,7 +169,7 @@ export function MembersManagement() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
           <input
             type="text"
-            placeholder="Tìm kiếm theo tên độc giả, email..."
+            placeholder={t('members.search')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-9 pr-4 py-2 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
@@ -183,7 +184,7 @@ export function MembersManagement() {
                 : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200'
               }`}
           >
-            Tất cả ({members.length})
+            {language === 'vi' ? 'Tất cả' : 'All'} ({members.length})
           </button>
           <button
             onClick={() => setStatusFilter('ACTIVE')}
@@ -192,7 +193,7 @@ export function MembersManagement() {
                 : 'bg-green-50 dark:bg-green-950/30 text-green-700 dark:text-green-300 hover:bg-green-100'
               }`}
           >
-            Hoạt động ({activeCount})
+            {t('members.active')} ({activeCount})
           </button>
           <button
             onClick={() => setStatusFilter('BLACKLISTED')}
@@ -201,7 +202,7 @@ export function MembersManagement() {
                 : 'bg-red-50 dark:bg-red-950/30 text-red-700 dark:text-red-300 hover:bg-red-100'
               }`}
           >
-            Blacklist ({blacklistedCount})
+            {t('members.blacklisted')} ({blacklistedCount})
           </button>
         </div>
       </div>
@@ -239,7 +240,7 @@ export function MembersManagement() {
                             ? 'bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300'
                             : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300'
                           }`}>
-                          {member.role === 'ADMIN' ? 'Thủ thư' : 'Độc giả'}
+                          {member.role === 'ADMIN' ? t('header.admin') : t('header.user')}
                         </span>
                       </div>
                     </div>
@@ -248,11 +249,11 @@ export function MembersManagement() {
                   {/* Status Badge */}
                   {member.isBlacklisted ? (
                     <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300 border border-red-200">
-                      <ShieldAlert size={12} /> Blacklist
+                      <ShieldAlert size={12} /> {t('members.blacklisted')}
                     </span>
                   ) : (
                     <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300 border border-green-200">
-                      <UserCheck size={12} /> Active
+                      <UserCheck size={12} /> {t('members.active')}
                     </span>
                   )}
                 </div>

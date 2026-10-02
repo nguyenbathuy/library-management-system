@@ -4,6 +4,8 @@ import { client } from '../api/client';
 import { useNavigate } from 'react-router-dom';
 import { Mail, Lock, User, ArrowRight } from 'lucide-react';
 
+import { toast } from 'sonner';
+
 interface LoginProps {
   onLogin?: (token: string, user: any) => void; // Optional now
   onRegister?: (name: string, email: string, password: string) => void;
@@ -26,16 +28,17 @@ export function Login({ }: LoginProps) {
     try {
       if (isRegistering) {
         await client.post('/auth/register', { email, password, name });
-        alert('Đăng ký thành công! Vui lòng đăng nhập.');
+        toast.success('Đăng ký tài khoản thành công! Vui lòng đăng nhập.');
         setIsRegistering(false);
       } else {
         const { data } = await client.post('/auth/login', { email, password });
         login(data.token, data.user);
+        toast.success(`Chào mừng ${data.user.name || 'bạn'} đã đăng nhập thành công!`);
         navigate('/');
       }
     } catch (error: any) {
       console.error(error);
-      alert(error.response?.data?.error || 'Có lỗi xảy ra');
+      toast.error(error.response?.data?.error || 'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin!');
     } finally {
       setLoading(false);
     }
