@@ -213,3 +213,82 @@ export const sendOverdueReminderEmail = async (params: {
     };
   }
 };
+
+/**
+ * Gửi email chứa mã OTP đặt lại mật khẩu
+ */
+export const sendPasswordResetOtpEmail = async (params: {
+  to: string;
+  userName?: string;
+  otp: string;
+  expiryMinutes?: number;
+}): Promise<EmailResult> => {
+  try {
+    const transporter = await getTransporter();
+    const fromAddress = process.env.SMTP_FROM || '"Thư Viện PKA" <library-noreply@phenikaa-uni.edu.vn>';
+    const expiry = params.expiryMinutes || 15;
+    const displayName = params.userName || 'bạn';
+
+    const html = `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
+            <div style="background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); padding: 24px; text-align: center; color: white;">
+                <h1 style="margin: 0; font-size: 22px;">🔐 Yêu Cầu Đặt Lại Mật Khẩu</h1>
+                <p style="margin: 6px 0 0 0; opacity: 0.9; font-size: 14px;">Hệ thống Quản lý Thư viện PKA</p>
+            </div>
+            <div style="padding: 24px; color: #1e293b;">
+                <p style="font-size: 16px;">Xin chào <strong>${displayName}</strong>,</p>
+                <p style="font-size: 14px; line-height: 1.6;">
+                    Chúng tôi nhận được yêu cầu đặt lại mật khẩu cho tài khoản liên kết với địa chỉ email này.
+                </p>
+                
+                <div style="text-align: center; margin: 24px 0;">
+                    <p style="font-size: 14px; color: #64748b; margin-bottom: 8px;">Mã xác thực OTP của bạn là:</p>
+                    <div style="display: inline-block; background: #f1f5f9; border: 2px dashed #2563eb; border-radius: 10px; padding: 12px 28px;">
+                        <span style="font-size: 32px; font-weight: bold; letter-spacing: 8px; color: #1e40af; font-family: monospace;">${params.otp}</span>
+                    </div>
+                    <p style="font-size: 13px; color: #dc2626; margin-top: 8px; font-weight: 500;">
+                        ⏱️ Mã này có hiệu lực trong vòng <strong>${expiry} phút</strong>.
+                    </p>
+                </div>
+
+                <div style="background: #fffbeb; border: 1px solid #fef3c7; padding: 12px 16px; border-radius: 8px; font-size: 13px; color: #92400e; margin-bottom: 20px;">
+                    🛡️ <strong>Bảo mật:</strong> Tuyệt đối không chia sẻ mã này cho bất kỳ ai, kể cả nhân viên thư viện. Nếu bạn không thực hiện yêu cầu này, vui lòng bỏ qua email hoặc thông báo cho quản trị viên.
+                </div>
+
+                <div style="margin-top: 30px; padding-top: 16px; border-top: 1px solid #e2e8f0; font-size: 12px; color: #64748b; text-align: center;">
+                    <p style="margin: 0;">Thư viện Đại học Phenikaa | Giờ mở cửa: 08:00 - 21:00 (Thứ 2 - Thứ 7)</p>
+                    <p style="margin: 4px 0 0 0;">Email tự động, vui lòng không phản hồi thư này.</p>
+                </div>
+            </div>
+        </div>
+        `;
+
+    const info = await transporter.sendMail({
+      from: fromAddress,
+      to: params.to,
+      subject: `[Thư Viện PKA] Mã OTP xác nhận đổi mật khẩu: ${params.otp}`,
+      html,
+    });
+
+    const previewUrl = nodemailer.getTestMessageUrl(info);
+    if (previewUrl) {
+      console.log(`[MailService] 🔑 [OTP Reset Password] Preview Ethereal Email cho ${params.to}: ${previewUrl}`);
+    }
+
+    return {
+      success: true,
+      to: params.to,
+      subject: `Mã OTP đổi mật khẩu`,
+      previewUrl
+    };
+  } catch (error: any) {
+    console.error(`[MailService] Lỗi gửi email OTP cho ${params.to}:`, error);
+    return {
+      success: false,
+      to: params.to,
+      subject: 'Mã OTP đổi mật khẩu',
+      error: error.message
+    };
+  }
+};
+

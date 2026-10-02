@@ -93,7 +93,11 @@ export const getPaymentDetails = async (req: AuthRequest, res: Response) => {
       where: { id: loanId },
       include: {
         bookItem: {
-          include: { book: true }
+          include: {
+            book: {
+              include: { author: true }
+            }
+          }
         },
         user: true
       }
@@ -121,7 +125,7 @@ export const getPaymentDetails = async (req: AuthRequest, res: Response) => {
       isFinePaid: Boolean(loan.isFinePaid),
       finePaidAt: loan.finePaidAt,
       bookTitle: loan.bookItem?.book?.title || 'Sách mượn',
-      author: loan.bookItem?.book?.author || '',
+      author: loan.bookItem?.book?.author?.name || '',
       coverImage: loan.bookItem?.book?.coverImage,
       borrowerName: loan.user?.name,
       borrowerEmail: loan.user?.email,
