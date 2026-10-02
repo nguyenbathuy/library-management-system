@@ -273,9 +273,21 @@ export function UserProfile() {
                               {t('borrowed.returned')}
                             </span>
                           )}
+                          {loan.status === 'Lost' && (
+                            <div>
+                              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-rose-100 text-rose-800 dark:bg-rose-950/40 dark:text-rose-300 border border-rose-200">
+                                <AlertCircle size={12} /> {language === 'vi' ? 'Đã báo mất' : 'Reported Lost'}
+                              </span>
+                              {loan.compensationAmount > 0 && (
+                                <p className="text-[11px] text-rose-600 font-medium mt-0.5">
+                                  {language === 'vi' ? 'Bồi thường' : 'Fine'}: {loan.compensationAmount.toLocaleString('vi-VN')} đ
+                                </p>
+                              )}
+                            </div>
+                          )}
                         </td>
                         <td className="px-6 py-4 text-right">
-                          {loan.status !== 'Returned' && (
+                          {loan.status !== 'Returned' && loan.status !== 'Lost' && (
                             <button
                               onClick={() => renewLoanMutation.mutate(loan.id)}
                               disabled={renewLoanMutation.isPending || loan.status === 'Overdue'}

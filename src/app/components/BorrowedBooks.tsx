@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import {
   Search, RotateCcw, AlertCircle, CheckCircle, Clock, ScanBarcode,
   BookOpen, User, Loader2, X, ArrowRightLeft, BookmarkPlus,
-  BookMarked, Bell, CheckCircle2, XCircle, Calendar, Send, RefreshCw
+  BookMarked, Bell, CheckCircle2, XCircle, Calendar, Send, RefreshCw, AlertTriangle
 } from 'lucide-react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -82,7 +82,7 @@ export interface ReservationItem {
 
 export function BorrowedBooks({ userRole: propUserRole }: BorrowedBooksProps = {}) {
   const { user } = useAuth();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const userRole = propUserRole || user?.role;
   const [searchParams, setSearchParams] = useSearchParams();
   const tabParam = searchParams.get('tab');
@@ -102,6 +102,11 @@ export function BorrowedBooks({ userRole: propUserRole }: BorrowedBooksProps = {
   // Reservation filter states
   const [reservationSearch, setReservationSearch] = useState('');
   const [reservationFilter, setReservationFilter] = useState<'ALL' | 'WAITING' | 'NOTIFIED' | 'FULFILLED' | 'CANCELLED'>('ALL');
+
+  // Lost / Compensation Modal states
+  const [lostModalOpen, setLostModalOpen] = useState(false);
+  const [selectedLoanForLost, setSelectedLoanForLost] = useState<any>(null);
+  const [compensationAmount, setCompensationAmount] = useState<string>('50000');
 
   const queryClient = useQueryClient();
 
@@ -180,6 +185,25 @@ export function BorrowedBooks({ userRole: propUserRole }: BorrowedBooksProps = {
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.error || (language === 'vi' ? 'Không thể gia hạn sách' : 'Failed to renew loan'));
+    }
+  });
+
+  // Report Lost Mutation
+  const reportLostMutation = useMutation({
+    mutationFn: async ({ loanId, compensationAmount }: { loanId: number; compensationAmount: number }) => {
+      const { data } = await client.post(`/loans/${loanId}/report-lost`, { compensationAmount });
+      return data;
+    },
+    onSuccess: (data: any) => {
+      queryClient.invalidateQueries({ queryKey: ['all-loans'] });
+      queryClient.invalidateQueries({ queryKey: ['books'] });
+      toast.success(data?.message || (language === 'vi' ? 'Báo mất sách và ghi nhận bồi thường thành công!' : 'Reported lost book and recorded compensation!'));
+      setLostModalOpen(false);
+      setSelectedLoanForLost(null);
+      setCompensationAmount('50000');
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.error || (language === 'vi' ? 'Không thể xử lý báo mất sách' : 'Failed to report lost book'));
     }
   });
 
@@ -694,9 +718,21 @@ export function BorrowedBooks({ userRole: propUserRole }: BorrowedBooksProps = {
                         {loan.status === 'Returned' && (
                           <Badge variant="secondary">Đã trả</Badge>
                         )}
+                        {loan.status === 'Lost' && (
+                          <div>
+                            <Badge className="bg-rose-100 text-rose-700 hover:bg-rose-200 border-rose-200 gap-1 font-semibold">
+                              <AlertTriangle size={12} /> Báo mất
+                            </Badge>
+                            {loan.compensationAmount > 0 && (
+                              <p className="text-[11px] text-rose-600 font-medium mt-0.5">
+                                Đền bù: {loan.compensationAmount.toLocaleString('vi-VN')} đ
+                              </p>
+                            )}
+                          </div>
+                        )}
                       </TableCell>
                       <TableCell className="text-right">
-                        {loan.status !== 'Returned' && (
+                        {loan.status !== 'Returned' && loan.status !== 'Lost' && (
                           <div className="flex items-center justify-end gap-2">
                             <Button
                               size="sm"
@@ -711,11 +747,24 @@ export function BorrowedBooks({ userRole: propUserRole }: BorrowedBooksProps = {
                             <Button
                               size="sm"
                               variant="outline"
-                              className="gap-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                              className="gap-1.5 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
                               onClick={() => returnMutation.mutate(loan.id)}
                               disabled={returnMutation.isPending}
                             >
-                              <RotateCcw size={16} /> Thu hồi
+                              <RotateCcw size={15} /> Thu hồi
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="gap-1.5 text-rose-600 hover:text-rose-700 hover:bg-rose-50 border-rose-200 dark:border-rose-900/60 dark:text-rose-400"
+                              onClick={() => {
+                                setSelectedLoanForLost(loan);
+                                setCompensationAmount('50000');
+                                setLostModalOpen(true);
+                              }}
+                              title="Báo mất hoặc hư hỏng sách và yêu cầu bồi thường"
+                            >
+                              <AlertTriangle size={14} /> Báo mất/hỏng
                             </Button>
                           </div>
                         )}
@@ -1033,6 +1082,140 @@ export function BorrowedBooks({ userRole: propUserRole }: BorrowedBooksProps = {
                 )}
               </TableBody>
             </Table>
+          </div>
+        </div>
+      )}
+
+      {/* ================= MODAL BÁO MẤT SÁCH & BỒI THƯỜNG ================= */}
+      {lostModalOpen && selectedLoanForLost && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl w-full max-w-md shadow-2xl border border-gray-200 dark:border-gray-800 overflow-hidden">
+            {/* Modal Header */}
+            <div className="p-6 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between bg-rose-50/50 dark:bg-rose-950/20">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 bg-rose-100 dark:bg-rose-900/40 text-rose-600 rounded-xl">
+                  <AlertTriangle size={22} />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-gray-900 dark:text-white">Báo mất / Hỏng sách</h3>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Xác nhận mất sách và thiết lập mức tiền bồi thường</p>
+                </div>
+              </div>
+              <button
+                onClick={() => {
+                  setLostModalOpen(false);
+                  setSelectedLoanForLost(null);
+                }}
+                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-6 space-y-4">
+              {/* Thông tin phiếu mượn */}
+              <div className="p-3.5 bg-gray-50 dark:bg-gray-800/60 rounded-xl border border-gray-200/80 dark:border-gray-700/60 space-y-2 text-xs">
+                <div className="flex justify-between">
+                  <span className="text-gray-500">Tên sách:</span>
+                  <span className="font-semibold text-gray-900 dark:text-white text-right truncate max-w-[220px]">
+                    {selectedLoanForLost.book?.title}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-500">Mã vạch (Barcode):</span>
+                  <span className="font-mono font-medium text-gray-700 dark:text-gray-300">
+                    {selectedLoanForLost.bookItem?.barcode || '—'}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-500">Độc giả mượn:</span>
+                  <span className="font-medium text-gray-800 dark:text-gray-200">
+                    {selectedLoanForLost.user?.name} ({selectedLoanForLost.user?.email})
+                  </span>
+                </div>
+              </div>
+
+              {/* Nhập số tiền bồi thường */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-800 dark:text-gray-200 mb-1.5">
+                  Số tiền đền bù / bồi thường (VNĐ) <span className="text-rose-500">*</span>
+                </label>
+                <div className="relative">
+                  <Input
+                    type="number"
+                    min="0"
+                    step="5000"
+                    placeholder="Ví dụ: 50000"
+                    value={compensationAmount}
+                    onChange={(e) => setCompensationAmount(e.target.value)}
+                    className="pr-12 text-base font-medium"
+                    autoFocus
+                  />
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-gray-400">
+                    VNĐ
+                  </span>
+                </div>
+
+                {/* Quick Presets */}
+                <div className="flex items-center gap-2 mt-2">
+                  <span className="text-[11px] text-gray-400">Gợi ý nhanh:</span>
+                  {[50000, 100000, 200000, 500000].map((preset) => (
+                    <button
+                      key={preset}
+                      type="button"
+                      onClick={() => setCompensationAmount(String(preset))}
+                      className="px-2 py-0.5 text-[11px] font-medium bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 rounded text-gray-600 dark:text-gray-300 transition-colors"
+                    >
+                      {(preset / 1000).toLocaleString()}k
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Cảnh báo hậu quả */}
+              <div className="p-3 bg-amber-50 dark:bg-amber-950/30 rounded-xl border border-amber-200 dark:border-amber-800/60 flex items-start gap-2.5">
+                <AlertCircle className="text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" size={16} />
+                <p className="text-xs text-amber-800 dark:text-amber-300 leading-relaxed">
+                  Bản sao vật lý này sẽ được cập nhật trạng thái <strong>LOST</strong> và tự động loại khỏi danh mục sẵn có. Phiếu mượn sẽ được đóng lại và ghi nhận khoản bồi thường.
+                </p>
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="p-4 bg-gray-50 dark:bg-gray-800/40 border-t border-gray-100 dark:border-gray-800 flex justify-end gap-3">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setLostModalOpen(false);
+                  setSelectedLoanForLost(null);
+                }}
+                disabled={reportLostMutation.isPending}
+              >
+                Hủy
+              </Button>
+              <Button
+                className="bg-rose-600 hover:bg-rose-700 text-white font-medium gap-1.5 shadow-sm shadow-rose-600/30"
+                disabled={reportLostMutation.isPending || !compensationAmount}
+                onClick={() => {
+                  const amount = Number(compensationAmount);
+                  if (isNaN(amount) || amount < 0) {
+                    toast.error('Vui lòng nhập số tiền bồi thường hợp lệ');
+                    return;
+                  }
+                  reportLostMutation.mutate({
+                    loanId: selectedLoanForLost.id,
+                    compensationAmount: amount
+                  });
+                }}
+              >
+                {reportLostMutation.isPending ? (
+                  <><Loader2 size={16} className="animate-spin" /> Đang xử lý...</>
+                ) : (
+                  <><AlertTriangle size={16} /> Xác nhận báo mất</>
+                )}
+              </Button>
+            </div>
           </div>
         </div>
       )}

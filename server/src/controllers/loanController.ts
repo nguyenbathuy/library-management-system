@@ -7,7 +7,9 @@ const prisma = new PrismaClient();
 // Helper to compute display status and shape response for frontend
 const formatLoanResponse = (loan: any) => {
     let uiStatus = 'On Time';
-    if (loan.returnDate || loan.status === 'RETURNED' || loan.status === 'Returned') {
+    if (loan.status === 'LOST' || loan.status === 'Lost') {
+        uiStatus = 'Lost';
+    } else if (loan.returnDate || loan.status === 'RETURNED' || loan.status === 'Returned') {
         uiStatus = 'Returned';
     } else {
         const now = new Date();
@@ -34,6 +36,7 @@ const formatLoanResponse = (loan: any) => {
         status: uiStatus,
         rawStatus: loan.status,
         fineAmount: loan.fineAmount || 0,
+        compensationAmount: loan.compensationAmount || 0,
         book: book ? {
             id: book.id,
             title: book.title,
@@ -628,4 +631,86 @@ export const renewLoan = async (req: AuthRequest, res: Response) => {
         res.status(500).json({ error: 'Có lỗi xảy ra khi gia hạn sách' });
     }
 };
+
+/**
+ * Thủ thư báo mất / hỏng sách và xử lý bồi thường (Report Lost Book)
+ * 1. Nhận compensationAmount từ req.body.
+ * 2. Cập nhật Loan: status = 'LOST', compensationAmount, returnDate = new Date().
+ * 3. Cập nhật BookItem: status = 'LOST'.
+ * 4. Trả về thông báo thành công cùng thông tin phiếu mượn cập nhật.
+ */
+export const reportLost = async (req: AuthRequest, res: Response) => {
+    try {
+        const loanId = Number(req.params.id);
+        const { compensationAmount } = req.body;
+
+        if (!loanId || isNaN(loanId)) {
+            return res.status(400).json({ error: 'Mã phiếu mượn không hợp lệ' });
+        }
+
+        const amount = Number(compensationAmount);
+        if (isNaN(amount) || amount < 0) {
+            return res.status(400).json({ error: 'Số tiền đền bù bồi thường không hợp lệ' });
+        }
+
+        const loan = await prisma.loan.findUnique({
+            where: { id: loanId },
+            include: {
+                bookItem: {
+                    include: {
+                        book: {
+                            include: { author: true, category: true }
+                        }
+                    }
+                },
+                user: true
+            }
+        });
+
+        if (!loan) {
+            return res.status(404).json({ error: 'Không tìm thấy phiếu mượn' });
+        }
+
+        if (loan.status === 'LOST') {
+            return res.status(400).json({ error: 'Phiếu mượn này đã được báo mất trước đó' });
+        }
+
+        const [updatedLoan] = await prisma.$transaction([
+            prisma.loan.update({
+                where: { id: loanId },
+                data: {
+                    status: 'LOST',
+                    returnDate: new Date(),
+                    compensationAmount: amount,
+                    fineAmount: amount
+                },
+                include: {
+                    bookItem: {
+                        include: {
+                            book: {
+                                include: { author: true, category: true }
+                            }
+                        }
+                    },
+                    user: true
+                }
+            }),
+            prisma.bookItem.update({
+                where: { id: loan.bookItemId },
+                data: {
+                    status: 'LOST'
+                }
+            })
+        ]);
+
+        res.json({
+            message: `Đã ghi nhận báo mất sách "${loan.bookItem.book.title}". Số tiền bồi thường: ${amount.toLocaleString('vi-VN')} VNĐ.`,
+            loan: formatLoanResponse(updatedLoan)
+        });
+    } catch (error) {
+        console.error('Error reporting lost book:', error);
+        res.status(500).json({ error: 'Không thể xử lý báo mất sách' });
+    }
+};
+
 
