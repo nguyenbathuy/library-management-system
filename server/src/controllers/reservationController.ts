@@ -1,6 +1,7 @@
 import { Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { AuthRequest } from '../middleware/auth';
+import { createNotification } from '../services/notificationService';
 
 const prisma = new PrismaClient();
 
@@ -139,6 +140,13 @@ export const createReservation = async (req: AuthRequest, res: Response) => {
             }
         });
 
+        // Tạo thông báo cho người dùng
+        await createNotification({
+            userId,
+            title: 'Đặt trước sách thành công',
+            message: `Bạn đã đăng ký đặt trước cuốn sách "${book.title}". Hệ thống sẽ gửi thông báo ngay khi có sách hoàn trả về thư viện.`
+        });
+
         res.status(201).json({
             message: `Đặt trước thành công! Bạn đang ở vị trí thứ ${queuePosition} trong danh sách chờ nhận sách "${book.title}".`,
             reservation: formatReservationResponse(newReservation),
@@ -265,6 +273,14 @@ export const updateReservationStatus = async (req: AuthRequest, res: Response) =
                 }
             }
         });
+
+        if (status === 'NOTIFIED') {
+            await createNotification({
+                userId: updated.userId,
+                title: 'Sách đặt trước đã có sẵn!',
+                message: `Đầu sách "${updated.book.title}" bạn đặt trước hiện đã có sẵn tại thư viện. Vui lòng đến nhận sách trong vòng 48h!`
+            });
+        }
 
         res.json({
             message: 'Cập nhật trạng thái đặt trước thành công',

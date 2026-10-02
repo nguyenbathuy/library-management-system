@@ -1,6 +1,7 @@
 import { Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { AuthRequest } from '../middleware/auth';
+import { createNotification } from '../services/notificationService';
 
 const prisma = new PrismaClient();
 
@@ -50,6 +51,7 @@ const formatLoanResponse = (loan: any) => {
         finePaidAt: loan.finePaidAt,
         paymentMethod: loan.paymentMethod,
         paymentTransactionId: loan.paymentTransactionId,
+        renewalStatus: loan.renewalStatus || 'NONE',
         book: book ? {
             id: book.id,
             title: book.title,
@@ -209,6 +211,15 @@ export const borrowBook = async (req: AuthRequest, res: Response) => {
                 data: { status: 'BORROWED' }
             })
         ]);
+
+        // Gửi thông báo mượn sách thành công
+        const bookTitle = createdLoan.bookItem?.book?.title || 'Sách';
+        const formattedDueDate = new Date(dueDate).toLocaleDateString('vi-VN');
+        await createNotification({
+            userId,
+            title: 'Mượn sách thành công',
+            message: `Bạn đã mượn thành công cuốn sách "${bookTitle}". Hạn hoàn trả sách: ${formattedDueDate}.`
+        });
 
         res.json(formatLoanResponse(createdLoan));
     } catch (error) {
@@ -444,6 +455,14 @@ export const borrowByBarcode = async (req: AuthRequest, res: Response) => {
             })
         ]);
 
+        // Gửi thông báo mượn sách cho độc giả
+        const formattedBarcodeDue = new Date(dueDate).toLocaleDateString('vi-VN');
+        await createNotification({
+            userId: Number(userId),
+            title: 'Phiếu mượn sách mới',
+            message: `Thư viện đã tạo phiếu mượn cuốn sách "${bookItem.book.title}" cho bạn. Hạn hoàn trả: ${formattedBarcodeDue}.`
+        });
+
         res.json({
             message: `Cho mượn thành công: "${bookItem.book.title}" → ${borrower.name}`,
             loan: formatLoanResponse(createdLoan)
@@ -545,14 +564,9 @@ export const triggerReminders = async (req: AuthRequest, res: Response) => {
 };
 
 /**
- * Độc giả gia hạn sách (Renew Loan)
- * Điều kiện:
- * 1. Phiếu mượn phải còn đang mượn (chưa trả).
- * 2. Phiếu mượn không được quá hạn (Overdue).
- * 3. Không có độc giả khác đặt trước (Reservation WAITING / NOTIFIED) đối với cuốn sách này.
- * Cập nhật: Cộng thêm 7 ngày vào dueDate.
+ * Độc giả gửi yêu cầu gia hạn sách (Chuyển renewalStatus sang PENDING)
  */
-export const renewLoan = async (req: AuthRequest, res: Response) => {
+export const requestRenewLoan = async (req: AuthRequest, res: Response) => {
     try {
         const loanId = Number(req.params.id);
         const userId = req.user?.userId;
@@ -582,22 +596,27 @@ export const renewLoan = async (req: AuthRequest, res: Response) => {
 
         // Kiểm tra quyền: Chỉ người mượn hoặc ADMIN mới được gia hạn
         if (loan.userId !== userId && userRole !== 'ADMIN') {
-            return res.status(403).json({ error: 'Bạn không có quyền gia hạn phiếu mượn này' });
+            return res.status(403).json({ error: 'Bạn không có quyền yêu cầu gia hạn phiếu mượn này' });
         }
 
         // 1. Kiểm tra trạng thái đã trả chưa
-        if (loan.returnDate || loan.status === 'RETURNED') {
-            return res.status(400).json({ error: 'Phiếu mượn này đã được trả, không thể gia hạn' });
+        if (loan.returnDate || loan.status === 'RETURNED' || loan.status === 'LOST') {
+            return res.status(400).json({ error: 'Phiếu mượn này đã kết thúc, không thể gia hạn' });
         }
 
-        // 2. Kiểm tra sách đã quá hạn chưa
+        // 2. Kiểm tra nếu đã gửi yêu cầu và đang chờ duyệt
+        if (loan.renewalStatus === 'PENDING') {
+            return res.status(400).json({ error: 'Yêu cầu gia hạn cho cuốn sách này đang chờ thủ thư phê duyệt!' });
+        }
+
+        // 3. Kiểm tra sách đã quá hạn chưa
         const now = new Date();
         const dueDate = new Date(loan.dueDate);
         if (dueDate < now || loan.status === 'OVERDUE') {
             return res.status(400).json({ error: 'Không thể gia hạn sách đã quá hạn. Vui lòng mang sách đến thư viện để trả!' });
         }
 
-        // 3. Kiểm tra xem sách có người khác đặt trước không
+        // 4. Kiểm tra xem sách có người khác đặt trước không
         const bookId = loan.bookItem.bookId;
         const existingReservation = await prisma.reservation.findFirst({
             where: {
@@ -613,7 +632,81 @@ export const renewLoan = async (req: AuthRequest, res: Response) => {
             });
         }
 
-        // 4. Cộng thêm 7 ngày vào dueDate
+        // 5. Cập nhật renewalStatus thành PENDING
+        const updatedLoan = await prisma.loan.update({
+            where: { id: loanId },
+            data: {
+                renewalStatus: 'PENDING'
+            },
+            include: {
+                bookItem: {
+                    include: {
+                        book: {
+                            include: { author: true, category: true }
+                        }
+                    }
+                },
+                user: true
+            }
+        });
+
+        // Gửi thông báo ghi nhận yêu cầu gia hạn
+        await createNotification({
+            userId: loan.userId,
+            title: 'Đã gửi yêu cầu gia hạn',
+            message: `Yêu cầu gia hạn cuốn sách "${loan.bookItem.book.title}" đã được gửi tới thủ thư và đang chờ phê duyệt.`
+        });
+
+        res.json({
+            message: `Đã gửi yêu cầu gia hạn sách "${loan.bookItem.book.title}". Vui lòng chờ thủ thư phê duyệt!`,
+            loan: formatLoanResponse(updatedLoan)
+        });
+    } catch (error) {
+        console.error('Error requesting loan renewal:', error);
+        res.status(500).json({ error: 'Có lỗi xảy ra khi gửi yêu cầu gia hạn sách' });
+    }
+};
+
+export const renewLoan = requestRenewLoan; // Giữ để tương thích ngược
+
+/**
+ * Thủ thư (Admin) phê duyệt gia hạn sách
+ * Cộng thêm 7 ngày vào dueDate và đổi renewalStatus thành APPROVED
+ */
+export const approveRenewLoan = async (req: AuthRequest, res: Response) => {
+    try {
+        if (req.user?.role !== 'ADMIN') {
+            return res.status(403).json({ error: 'Chỉ thủ thư mới có quyền phê duyệt gia hạn sách' });
+        }
+
+        const loanId = Number(req.params.id);
+        if (!loanId || isNaN(loanId)) {
+            return res.status(400).json({ error: 'Mã phiếu mượn không hợp lệ' });
+        }
+
+        const loan = await prisma.loan.findUnique({
+            where: { id: loanId },
+            include: {
+                bookItem: {
+                    include: {
+                        book: {
+                            include: { author: true, category: true }
+                        }
+                    }
+                },
+                user: true
+            }
+        });
+
+        if (!loan) {
+            return res.status(404).json({ error: 'Không tìm thấy phiếu mượn' });
+        }
+
+        if (loan.returnDate || loan.status === 'RETURNED' || loan.status === 'LOST') {
+            return res.status(400).json({ error: 'Phiếu mượn này đã kết thúc, không thể gia hạn' });
+        }
+
+        // Cộng thêm 7 ngày vào dueDate
         const newDueDate = new Date(loan.dueDate);
         newDueDate.setDate(newDueDate.getDate() + 7);
 
@@ -621,6 +714,7 @@ export const renewLoan = async (req: AuthRequest, res: Response) => {
             where: { id: loanId },
             data: {
                 dueDate: newDueDate,
+                renewalStatus: 'APPROVED',
                 status: 'BORROWING'
             },
             include: {
@@ -635,15 +729,95 @@ export const renewLoan = async (req: AuthRequest, res: Response) => {
             }
         });
 
+        const bookTitle = loan.bookItem.book.title;
+        const formattedNewDue = new Date(newDueDate).toLocaleDateString('vi-VN');
+
+        // Tạo thông báo cho Độc giả
+        await createNotification({
+            userId: loan.userId,
+            title: 'Yêu cầu gia hạn được phê duyệt',
+            message: `Yêu cầu gia hạn cuốn sách "${bookTitle}" đã được phê duyệt thành công! Hạn trả mới: ${formattedNewDue}.`
+        });
+
         res.json({
-            message: `Gia hạn thành công sách "${loan.bookItem.book.title}" thêm 7 ngày!`,
+            message: `Đã phê duyệt gia hạn sách "${bookTitle}" thêm 7 ngày (Hạn mới: ${formattedNewDue})`,
             loan: formatLoanResponse(updatedLoan)
         });
     } catch (error) {
-        console.error('Error renewing loan:', error);
-        res.status(500).json({ error: 'Có lỗi xảy ra khi gia hạn sách' });
+        console.error('Error approving loan renewal:', error);
+        res.status(500).json({ error: 'Không thể phê duyệt gia hạn sách' });
     }
 };
+
+/**
+ * Thủ thư (Admin) từ chối yêu cầu gia hạn sách
+ * Đổi renewalStatus thành REJECTED
+ */
+export const rejectRenewLoan = async (req: AuthRequest, res: Response) => {
+    try {
+        if (req.user?.role !== 'ADMIN') {
+            return res.status(403).json({ error: 'Chỉ thủ thư mới có quyền từ chối gia hạn sách' });
+        }
+
+        const loanId = Number(req.params.id);
+        if (!loanId || isNaN(loanId)) {
+            return res.status(400).json({ error: 'Mã phiếu mượn không hợp lệ' });
+        }
+
+        const loan = await prisma.loan.findUnique({
+            where: { id: loanId },
+            include: {
+                bookItem: {
+                    include: {
+                        book: {
+                            include: { author: true, category: true }
+                        }
+                    }
+                },
+                user: true
+            }
+        });
+
+        if (!loan) {
+            return res.status(404).json({ error: 'Không tìm thấy phiếu mượn' });
+        }
+
+        const updatedLoan = await prisma.loan.update({
+            where: { id: loanId },
+            data: {
+                renewalStatus: 'REJECTED'
+            },
+            include: {
+                bookItem: {
+                    include: {
+                        book: {
+                            include: { author: true, category: true }
+                        }
+                    }
+                },
+                user: true
+            }
+        });
+
+        const bookTitle = loan.bookItem.book.title;
+
+        // Tạo thông báo cho Độc giả
+        await createNotification({
+            userId: loan.userId,
+            title: 'Yêu cầu gia hạn bị từ chối',
+            message: `Yêu cầu gia hạn cuốn sách "${bookTitle}" của bạn đã bị thủ thư từ chối. Vui lòng sắp xếp hoàn trả sách đúng hạn.`
+        });
+
+        res.json({
+            message: `Đã từ chối yêu cầu gia hạn sách "${bookTitle}"`,
+            loan: formatLoanResponse(updatedLoan)
+        });
+    } catch (error) {
+        console.error('Error rejecting loan renewal:', error);
+        res.status(500).json({ error: 'Không thể từ chối gia hạn sách' });
+    }
+};
+
 
 /**
  * Thủ thư báo mất / hỏng sách và xử lý bồi thường (Report Lost Book)

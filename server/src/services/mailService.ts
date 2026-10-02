@@ -11,19 +11,26 @@ export const getTransporter = async (): Promise<Transporter> => {
   if (cachedTransporter) return cachedTransporter;
 
   if (process.env.SMTP_USER && process.env.SMTP_PASS) {
-    console.log('[MailService] Sử dụng cấu hình SMTP từ biến môi trường (.env)');
+    const host = process.env.SMTP_HOST || 'smtp.gmail.com';
+    const port = Number(process.env.SMTP_PORT) || 587;
+    const isSecure = process.env.SMTP_SECURE === 'true' || port === 465;
+
+    console.log(`[MailService] Đang sử dụng SMTP thật: ${host}:${port} (${process.env.SMTP_USER})`);
+
     cachedTransporter = nodemailer.createTransport({
-      service: process.env.SMTP_SERVICE || 'gmail',
-      host: process.env.SMTP_HOST,
-      port: Number(process.env.SMTP_PORT) || 587,
-      secure: process.env.SMTP_SECURE === 'true',
+      host,
+      port,
+      secure: isSecure,
       auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS,
       },
+      tls: {
+        rejectUnauthorized: false // Cho phép kết nối an toàn linh hoạt
+      }
     });
   } else {
-    console.log('[MailService] Đang kết nối tài khoản Ethereal Email để giả lập gửi thư test...');
+    console.log('[MailService] Không tìm thấy SMTP_USER/SMTP_PASS, sử dụng tài khoản Ethereal giả lập...');
     const testAccount = await nodemailer.createTestAccount();
     console.log(`[MailService] Tài khoản Ethereal: ${testAccount.user}`);
 
@@ -40,6 +47,7 @@ export const getTransporter = async (): Promise<Transporter> => {
 
   return cachedTransporter;
 };
+
 
 export interface EmailResult {
   success: boolean;
@@ -63,7 +71,7 @@ export const sendDueSoonReminderEmail = async (params: {
 }): Promise<EmailResult> => {
   try {
     const transporter = await getTransporter();
-    const fromAddress = process.env.SMTP_FROM || '"Thư Viện PKA" <library-noreply@phenikaa-uni.edu.vn>';
+    const fromAddress = process.env.SMTP_FROM || (process.env.SMTP_USER ? `"Thư Viện PKA" <${process.env.SMTP_USER}>` : '"Thư Viện PKA" <library-noreply@phenikaa-uni.edu.vn>');
 
     const formattedBorrowDate = new Date(params.borrowDate).toLocaleDateString('vi-VN');
     const formattedDueDate = new Date(params.dueDate).toLocaleDateString('vi-VN');
@@ -143,7 +151,7 @@ export const sendOverdueReminderEmail = async (params: {
 }): Promise<EmailResult> => {
   try {
     const transporter = await getTransporter();
-    const fromAddress = process.env.SMTP_FROM || '"Thư Viện PKA" <library-noreply@phenikaa-uni.edu.vn>';
+    const fromAddress = process.env.SMTP_FROM || (process.env.SMTP_USER ? `"Thư Viện PKA" <${process.env.SMTP_USER}>` : '"Thư Viện PKA" <library-noreply@phenikaa-uni.edu.vn>');
 
     const formattedBorrowDate = new Date(params.borrowDate).toLocaleDateString('vi-VN');
     const formattedDueDate = new Date(params.dueDate).toLocaleDateString('vi-VN');
@@ -225,7 +233,7 @@ export const sendPasswordResetOtpEmail = async (params: {
 }): Promise<EmailResult> => {
   try {
     const transporter = await getTransporter();
-    const fromAddress = process.env.SMTP_FROM || '"Thư Viện PKA" <library-noreply@phenikaa-uni.edu.vn>';
+    const fromAddress = process.env.SMTP_FROM || (process.env.SMTP_USER ? `"Thư Viện PKA" <${process.env.SMTP_USER}>` : '"Thư Viện PKA" <library-noreply@phenikaa-uni.edu.vn>');
     const expiry = params.expiryMinutes || 15;
     const displayName = params.userName || 'bạn';
 

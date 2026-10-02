@@ -22,6 +22,7 @@ model User {
   tokens         Token[]
   loans          Loan[]
   reservations   Reservation[]
+  notifications  Notification[]
   createdAt      DateTime @default(now())
 }
 
@@ -109,6 +110,7 @@ model Loan {
   finePaidAt           DateTime? // Thời điểm thanh toán phạt
   paymentMethod        String?   // "MOMO", "VNPAY", "BANK_TRANSFER"
   paymentTransactionId String?   // Mã giao dịch thanh toán
+  renewalStatus        String    @default("NONE") // "NONE", "PENDING", "APPROVED", "REJECTED"
 
   user       User     @relation(fields: [userId], references: [id])
   bookItem   BookItem @relation(fields: [bookItemId], references: [id])
@@ -124,3 +126,15 @@ model Reservation {
   user       User     @relation(fields: [userId], references: [id])
   book       Book     @relation(fields: [bookId], references: [id])
 }
+
+// --- 4. HỆ THỐNG THÔNG BÁO (NOTIFICATION) ---
+model Notification {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  title     String
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id])
+}

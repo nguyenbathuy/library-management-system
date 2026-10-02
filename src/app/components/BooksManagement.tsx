@@ -824,6 +824,8 @@ export function BooksManagement({ userRole: propUserRole }: BooksManagementProps
         onClose={() => setShowDetailModal(false)}
         onBorrow={(bookId) => borrowMutation.mutate(bookId)}
         onReserve={(bookId) => reserveMutation.mutate(bookId)}
+        onEdit={userRole === 'ADMIN' ? handleEditBook : undefined}
+        onDelete={userRole === 'ADMIN' ? handleDeleteBook : undefined}
         userRole={userRole}
       />
     </div>

@@ -31,19 +31,19 @@ export function UserProfile() {
     }
   });
 
-  // Renew Loan Mutation
+  // Request Renew Loan Mutation
   const renewLoanMutation = useMutation({
     mutationFn: async (loanId: number) => {
-      const { data } = await client.post(`/loans/${loanId}/renew`);
+      const { data } = await client.post(`/loans/${loanId}/request-renew`);
       return data;
     },
     onSuccess: (data: any) => {
-      toast.success(data?.message || (language === 'vi' ? 'Gia hạn sách thành công thêm 7 ngày!' : 'Loan renewed successfully for 7 days!'));
+      toast.success(data?.message || (language === 'vi' ? 'Đã gửi yêu cầu gia hạn sách thành công!' : 'Renewal request sent successfully!'));
       queryClient.invalidateQueries({ queryKey: ['my-loans'] });
       queryClient.invalidateQueries({ queryKey: ['all-loans'] });
     },
     onError: (err: any) => {
-      toast.error(err.response?.data?.error || (language === 'vi' ? 'Không thể gia hạn sách' : 'Failed to renew loan'));
+      toast.error(err.response?.data?.error || (language === 'vi' ? 'Không thể gửi yêu cầu gia hạn sách' : 'Failed to request renewal'));
     }
   });
 
@@ -341,15 +341,54 @@ export function UserProfile() {
                             )}
 
                             {loan.status !== 'Returned' && loan.status !== 'Lost' && (
-                              <button
-                                onClick={() => renewLoanMutation.mutate(loan.id)}
-                                disabled={renewLoanMutation.isPending || loan.status === 'Overdue'}
-                                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:hover:bg-blue-900/50 dark:text-blue-400 text-xs font-medium rounded-lg transition-colors border border-blue-200 dark:border-blue-800 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
-                                title={loan.status === 'Overdue' ? (language === 'vi' ? 'Sách đã quá hạn, không thể gia hạn' : 'Overdue books cannot be renewed') : (language === 'vi' ? 'Gia hạn thêm 7 ngày' : 'Renew loan for 7 days')}
-                              >
-                                <RefreshCw size={13} className={renewLoanMutation.isPending ? 'animate-spin' : ''} />
-                                {t('borrowed.renew')}
-                              </button>
+                              (() => {
+                                const renewalStatus = loan.renewalStatus || 'NONE';
+                                if (renewalStatus === 'PENDING') {
+                                  return (
+                                    <button
+                                      disabled
+                                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800 text-xs font-semibold rounded-lg opacity-90 cursor-not-allowed shadow-sm"
+                                      title="Yêu cầu gia hạn đang chờ thủ thư phê duyệt"
+                                    >
+                                      <Clock size={13} className="text-amber-500 animate-pulse" />
+                                      <span>Đang chờ duyệt</span>
+                                    </button>
+                                  );
+                                }
+                                if (renewalStatus === 'APPROVED') {
+                                  return (
+                                    <span
+                                      className="inline-flex items-center gap-1 px-3 py-1.5 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/50 text-xs font-semibold rounded-lg cursor-default select-none shadow-sm"
+                                      title="Yêu cầu gia hạn đã được phê duyệt thành công"
+                                    >
+                                      <CheckCircle size={13} />
+                                      <span>Đã gia hạn</span>
+                                    </span>
+                                  );
+                                }
+                                if (renewalStatus === 'REJECTED') {
+                                  return (
+                                    <span
+                                      className="inline-flex items-center gap-1 px-3 py-1.5 bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800/50 text-xs font-semibold rounded-lg cursor-default select-none shadow-sm"
+                                      title="Yêu cầu gia hạn đã bị thủ thư từ chối"
+                                    >
+                                      <XCircle size={13} />
+                                      <span>Từ chối gia hạn</span>
+                                    </span>
+                                  );
+                                }
+                                return (
+                                  <button
+                                    onClick={() => renewLoanMutation.mutate(loan.id)}
+                                    disabled={renewLoanMutation.isPending || loan.status === 'Overdue'}
+                                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:hover:bg-blue-900/50 dark:text-blue-400 text-xs font-medium rounded-lg transition-colors border border-blue-200 dark:border-blue-800 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+                                    title={loan.status === 'Overdue' ? (language === 'vi' ? 'Sách đã quá hạn, không thể gia hạn' : 'Overdue books cannot be renewed') : (language === 'vi' ? 'Gửi yêu cầu gia hạn thêm 7 ngày' : 'Request renewal for 7 days')}
+                                  >
+                                    <RefreshCw size={13} className={renewLoanMutation.isPending ? 'animate-spin' : ''} />
+                                    {t('borrowed.renew')}
+                                  </button>
+                                );
+                              })()
                             )}
                           </div>
                         </td>

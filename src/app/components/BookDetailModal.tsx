@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
 import { useReactToPrint } from 'react-to-print';
-import { X, BookOpen, Calendar, FileText, Tag, BookmarkPlus, Clock, ExternalLink, Printer, QrCode } from 'lucide-react';
+import { X, BookOpen, Calendar, FileText, Tag, BookmarkPlus, Clock, ExternalLink, Printer, QrCode, Edit, Trash2 } from 'lucide-react';
 import { Book, BookItem } from './BooksManagement';
 import { BarcodeLabelsPrint } from './BarcodeLabelsPrint';
+import { useAuth } from '../contexts/AuthContext';
 
 interface BookDetailModalProps {
   book: Book | null;
@@ -10,11 +11,17 @@ interface BookDetailModalProps {
   onClose: () => void;
   onBorrow?: (bookId: number) => void;
   onReserve?: (bookId: number) => void;
+  onEdit?: (book: Book) => void;
+  onDelete?: (bookId: number, title: string) => void;
   userRole?: 'ADMIN' | 'USER' | null;
 }
 
-export function BookDetailModal({ book, isOpen, onClose, onBorrow, onReserve, userRole }: BookDetailModalProps) {
+export function BookDetailModal({ book, isOpen, onClose, onBorrow, onReserve, onEdit, onDelete, userRole }: BookDetailModalProps) {
   if (!isOpen || !book) return null;
+
+  const { user } = useAuth();
+  const effectiveRole = userRole || user?.role;
+  const isAdmin = effectiveRole === 'ADMIN';
 
   const printRef = useRef<HTMLDivElement>(null);
   const [itemsToPrint, setItemsToPrint] = useState<BookItem[]>([]);
@@ -247,7 +254,7 @@ export function BookDetailModal({ book, isOpen, onClose, onBorrow, onReserve, us
           )}
 
           {/* Admin-only: Physical Copies & Barcode Printing */}
-          {userRole === 'ADMIN' && (
+          {isAdmin && (
             <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-800">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
                 <div className="flex items-center gap-2.5">
@@ -358,7 +365,42 @@ export function BookDetailModal({ book, isOpen, onClose, onBorrow, onReserve, us
               </button>
             )}
 
-            {userRole !== 'ADMIN' && (
+            {/* Nút hành động CHỈ DÀNH CHO ADMIN: Sửa & Xóa sách */}
+            {isAdmin && (
+              <>
+                {onEdit && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onClose();
+                      onEdit(book);
+                    }}
+                    className="px-5 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all font-medium flex items-center justify-center gap-2 shadow-sm active:scale-[0.98]"
+                    title="Chỉnh sửa thông tin sách"
+                  >
+                    <Edit size={18} />
+                    <span>Sửa</span>
+                  </button>
+                )}
+                {onDelete && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onClose();
+                      onDelete(book.id, book.title);
+                    }}
+                    className="px-5 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-all font-medium flex items-center justify-center gap-2 shadow-sm active:scale-[0.98]"
+                    title="Xóa đầu sách này"
+                  >
+                    <Trash2 size={18} />
+                    <span>Xóa</span>
+                  </button>
+                )}
+              </>
+            )}
+
+            {/* Dành cho Độc giả: Mượn Sách hoặc Đặt Trước */}
+            {!isAdmin && (
               book.available > 0 ? (
                 <button
                   onClick={handleBorrow}

@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { AuthRequest } from '../middleware/auth';
 import { sendPasswordResetOtpEmail } from '../services/mailService';
+import { createNotification } from '../services/notificationService';
 
 const prisma = new PrismaClient();
 
@@ -179,6 +180,13 @@ export const changePassword = async (req: AuthRequest, res: Response) => {
       data: { password: hashedPassword }
     });
 
+    // Tạo thông báo cho người dùng
+    await createNotification({
+      userId,
+      title: 'Đổi mật khẩu thành công',
+      message: 'Mật khẩu tài khoản của bạn vừa được cập nhật thành công.',
+    });
+
     res.json({ message: 'Đổi mật khẩu thành công!' });
   } catch (error) {
     console.error('Error changing password:', error);
@@ -276,6 +284,13 @@ export const resetPassword = async (req: Request, res: Response) => {
         resetOtp: null,
         resetOtpExpiry: null,
       },
+    });
+
+    // Tạo thông báo cho người dùng
+    await createNotification({
+      userId: user.id,
+      title: 'Đặt lại mật khẩu thành công',
+      message: 'Mật khẩu tài khoản của bạn đã được đặt lại thành công qua mã xác thực OTP.',
     });
 
     res.json({ message: 'Đặt lại mật khẩu thành công! Bạn có thể đăng nhập bằng mật khẩu mới.' });

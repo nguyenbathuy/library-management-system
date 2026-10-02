@@ -13,17 +13,24 @@ import { Settings } from './components/Settings';
 import { UserProfile } from './components/UserProfile';
 import { MockPaymentGateway } from './components/MockPaymentGateway';
 import { InventoryCheck } from './components/InventoryCheck';
+import { Forbidden } from './components/Forbidden';
+import { Toaster } from 'sonner';
 
+/**
+ * Route Guard chỉ cho phép người dùng có vai trò 'ADMIN' (Thủ thư).
+ * Nếu Độc giả (USER) truy cập các URL quản trị (/settings, /members,...),
+ * hệ thống sẽ chặn và điều hướng ngay về trang 403 Forbidden hoặc trang chủ.
+ */
 const AdminRoute = ({ children }: { children: ReactNode }) => {
   const { user } = useAuth();
-  if (user?.role !== 'ADMIN') return <Navigate to="/profile" replace />;
+  if (user?.role !== 'ADMIN') {
+    return <Navigate to="/403" replace />;
+  }
   return <>{children}</>;
 };
 
-import { Toaster } from 'sonner';
-
 export default function App() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { user, isAuthenticated, isLoading } = useAuth();
 
   if (isLoading) {
     return <div className="flex h-screen items-center justify-center">Loading...</div>;
@@ -37,15 +44,32 @@ export default function App() {
           <Route path="/login" element={!isAuthenticated ? <Login /> : <Navigate to="/" replace />} />
 
           <Route element={isAuthenticated ? <Layout /> : <Navigate to="/login" replace />}>
-            <Route path="/" element={<AdminRoute><Dashboard /></AdminRoute>} />
+            {/* Trang chủ: Admin vào Dashboard, Độc giả vào Profile */}
+            <Route
+              path="/"
+              element={
+                user?.role === 'ADMIN' ? (
+                  <Dashboard />
+                ) : (
+                  <Navigate to="/profile" replace />
+                )
+              }
+            />
+
+            {/* Dành cho tất cả độc giả và thủ thư */}
             <Route path="/profile" element={<UserProfile />} />
             <Route path="/books" element={<BooksManagement />} />
-            <Route path="/members" element={<AdminRoute><MembersManagement /></AdminRoute>} />
-            <Route path="/borrowed" element={<BorrowedBooks />} />
-            <Route path="/inventory" element={<AdminRoute><InventoryCheck /></AdminRoute>} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/payment-gateway" element={<MockPaymentGateway />} />
+            <Route path="/403" element={<Forbidden />} />
+
+            {/* CÁC ROUTE QUẢN TRỊ VIÊN (CHỈ DÀNH CHO ADMIN) */}
+            <Route path="/members" element={<AdminRoute><MembersManagement /></AdminRoute>} />
+            <Route path="/borrowed" element={<AdminRoute><BorrowedBooks /></AdminRoute>} />
+            <Route path="/inventory" element={<AdminRoute><InventoryCheck /></AdminRoute>} />
           </Route>
+
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </LanguageProvider>
     </ThemeProvider>

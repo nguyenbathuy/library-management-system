@@ -23,6 +23,7 @@ export interface BorrowedBook {
   borrowDate: string;
   dueDate: string;
   status: 'On Time' | 'Overdue' | 'Due Soon' | 'Returned';
+  renewalStatus?: 'NONE' | 'PENDING' | 'APPROVED' | 'REJECTED' | string;
 }
 
 interface BorrowedBooksProps {
@@ -185,6 +186,38 @@ export function BorrowedBooks({ userRole: propUserRole }: BorrowedBooksProps = {
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.error || (language === 'vi' ? 'Không thể gia hạn sách' : 'Failed to renew loan'));
+    }
+  });
+
+  // Approve Renew Loan Mutation (Admin)
+  const approveRenewMutation = useMutation({
+    mutationFn: async (loanId: number) => {
+      const { data } = await client.post(`/loans/${loanId}/approve-renew`);
+      return data;
+    },
+    onSuccess: (data: any) => {
+      queryClient.invalidateQueries({ queryKey: ['all-loans'] });
+      queryClient.invalidateQueries({ queryKey: ['books'] });
+      toast.success(data?.message || (language === 'vi' ? 'Đã phê duyệt gia hạn sách thêm 7 ngày!' : 'Loan renewal approved for 7 days!'));
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.error || (language === 'vi' ? 'Không thể phê duyệt gia hạn sách' : 'Failed to approve renewal'));
+    }
+  });
+
+  // Reject Renew Loan Mutation (Admin)
+  const rejectRenewMutation = useMutation({
+    mutationFn: async (loanId: number) => {
+      const { data } = await client.post(`/loans/${loanId}/reject-renew`);
+      return data;
+    },
+    onSuccess: (data: any) => {
+      queryClient.invalidateQueries({ queryKey: ['all-loans'] });
+      queryClient.invalidateQueries({ queryKey: ['books'] });
+      toast.success(data?.message || (language === 'vi' ? 'Đã từ chối yêu cầu gia hạn sách!' : 'Loan renewal rejected!'));
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.error || (language === 'vi' ? 'Không thể từ chối gia hạn sách' : 'Failed to reject renewal'));
     }
   });
 
@@ -683,7 +716,10 @@ export function BorrowedBooks({ userRole: propUserRole }: BorrowedBooksProps = {
               <TableBody>
                 {filteredLoans.length > 0 ? (
                   filteredLoans.map((loan: any) => (
-                    <TableRow key={loan.id}>
+                    <TableRow 
+                      key={loan.id}
+                      className={loan.renewalStatus === 'PENDING' ? 'bg-amber-50/70 dark:bg-amber-950/25 border-l-4 border-l-amber-500 hover:bg-amber-100/60 dark:hover:bg-amber-950/40 transition-colors' : ''}
+                    >
                       <TableCell>
                         <p className="font-medium text-gray-900 dark:text-white">{loan.book?.title}</p>
                         <p className="text-xs text-gray-500">{loan.book?.author}</p>
@@ -700,50 +736,92 @@ export function BorrowedBooks({ userRole: propUserRole }: BorrowedBooksProps = {
                       <TableCell>{new Date(loan.borrowDate).toLocaleDateString()}</TableCell>
                       <TableCell className="font-medium">{new Date(loan.dueDate).toLocaleDateString()}</TableCell>
                       <TableCell>
-                        {loan.status === 'On Time' && (
-                          <Badge className="bg-green-100 text-green-700 hover:bg-green-200 border-green-200 gap-1">
-                            <CheckCircle size={12} /> Đúng hạn
-                          </Badge>
-                        )}
-                        {loan.status === 'Due Soon' && (
-                          <Badge className="bg-yellow-100 text-yellow-700 hover:bg-yellow-200 border-yellow-200 gap-1">
-                            <Clock size={12} /> Sắp đến hạn
-                          </Badge>
-                        )}
-                        {loan.status === 'Overdue' && (
-                          <Badge className="bg-red-100 text-red-700 hover:bg-red-200 border-red-200 gap-1">
-                            <AlertCircle size={12} /> Quá hạn
-                          </Badge>
-                        )}
-                        {loan.status === 'Returned' && (
-                          <Badge variant="secondary">Đã trả</Badge>
-                        )}
-                        {loan.status === 'Lost' && (
-                          <div>
-                            <Badge className="bg-rose-100 text-rose-700 hover:bg-rose-200 border-rose-200 gap-1 font-semibold">
-                              <AlertTriangle size={12} /> Báo mất
+                        <div className="flex flex-col gap-1 items-start">
+                          {loan.status === 'On Time' && (
+                            <Badge className="bg-green-100 text-green-700 hover:bg-green-200 border-green-200 gap-1">
+                              <CheckCircle size={12} /> Đúng hạn
                             </Badge>
-                            {loan.compensationAmount > 0 && (
-                              <p className="text-[11px] text-rose-600 font-medium mt-0.5">
-                                Đền bù: {loan.compensationAmount.toLocaleString('vi-VN')} đ
-                              </p>
-                            )}
-                          </div>
-                        )}
+                          )}
+                          {loan.status === 'Due Soon' && (
+                            <Badge className="bg-yellow-100 text-yellow-700 hover:bg-yellow-200 border-yellow-200 gap-1">
+                              <Clock size={12} /> Sắp đến hạn
+                            </Badge>
+                          )}
+                          {loan.status === 'Overdue' && (
+                            <Badge className="bg-red-100 text-red-700 hover:bg-red-200 border-red-200 gap-1">
+                              <AlertCircle size={12} /> Quá hạn
+                            </Badge>
+                          )}
+                          {loan.status === 'Returned' && (
+                            <Badge variant="secondary">Đã trả</Badge>
+                          )}
+                          {loan.status === 'Lost' && (
+                            <div>
+                              <Badge className="bg-rose-100 text-rose-700 hover:bg-rose-200 border-rose-200 gap-1 font-semibold">
+                                <AlertTriangle size={12} /> Báo mất
+                              </Badge>
+                              {loan.compensationAmount > 0 && (
+                                <p className="text-[11px] text-rose-600 font-medium mt-0.5">
+                                  Đền bù: {loan.compensationAmount.toLocaleString('vi-VN')} đ
+                                </p>
+                              )}
+                            </div>
+                          )}
+
+                          {loan.renewalStatus === 'PENDING' && (
+                            <Badge className="bg-amber-100 text-amber-800 dark:bg-amber-950/60 dark:text-amber-300 border-amber-300 dark:border-amber-700 gap-1 animate-pulse font-semibold">
+                              <Clock size={11} /> Yêu cầu gia hạn
+                            </Badge>
+                          )}
+                          {loan.renewalStatus === 'APPROVED' && (
+                            <Badge className="bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border-emerald-200 gap-1 text-[11px]">
+                              <CheckCircle size={10} /> Đã gia hạn
+                            </Badge>
+                          )}
+                          {loan.renewalStatus === 'REJECTED' && (
+                            <Badge className="bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-300 border-rose-200 gap-1 text-[11px]">
+                              <XCircle size={10} /> Từ chối gia hạn
+                            </Badge>
+                          )}
+                        </div>
                       </TableCell>
                       <TableCell className="text-right">
                         {loan.status !== 'Returned' && loan.status !== 'Lost' && (
                           <div className="flex items-center justify-end gap-2">
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              className="gap-1.5 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 border-emerald-200 dark:border-emerald-800 dark:text-emerald-400"
-                              onClick={() => renewMutation.mutate(loan.id)}
-                              disabled={renewMutation.isPending || loan.status === 'Overdue'}
-                              title={loan.status === 'Overdue' ? (language === 'vi' ? 'Sách đã quá hạn, không thể gia hạn' : 'Overdue books cannot be renewed') : (language === 'vi' ? 'Gia hạn thêm 7 ngày' : 'Renew loan for 7 days')}
-                            >
-                              <RefreshCw size={14} className={renewMutation.isPending ? 'animate-spin' : ''} /> {t('borrowed.renew')}
-                            </Button>
+                            {loan.renewalStatus === 'PENDING' ? (
+                              <>
+                                <Button
+                                  size="sm"
+                                  className="gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm"
+                                  onClick={() => approveRenewMutation.mutate(loan.id)}
+                                  disabled={approveRenewMutation.isPending || rejectRenewMutation.isPending}
+                                  title="Phê duyệt yêu cầu gia hạn thêm 7 ngày"
+                                >
+                                  <CheckCircle2 size={14} className={approveRenewMutation.isPending ? 'animate-spin' : ''} /> Duyệt gia hạn
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  className="gap-1.5 text-rose-600 hover:text-rose-700 hover:bg-rose-50 border-rose-200 dark:border-rose-900/60 dark:text-rose-400"
+                                  onClick={() => rejectRenewMutation.mutate(loan.id)}
+                                  disabled={approveRenewMutation.isPending || rejectRenewMutation.isPending}
+                                  title="Từ chối yêu cầu gia hạn"
+                                >
+                                  <XCircle size={14} className={rejectRenewMutation.isPending ? 'animate-spin' : ''} /> Từ chối
+                                </Button>
+                              </>
+                            ) : (
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="gap-1.5 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 border-emerald-200 dark:border-emerald-800 dark:text-emerald-400"
+                                onClick={() => renewMutation.mutate(loan.id)}
+                                disabled={renewMutation.isPending || loan.status === 'Overdue'}
+                                title={loan.status === 'Overdue' ? (language === 'vi' ? 'Sách đã quá hạn, không thể gia hạn' : 'Overdue books cannot be renewed') : (language === 'vi' ? 'Gia hạn thêm 7 ngày' : 'Renew loan for 7 days')}
+                              >
+                                <RefreshCw size={14} className={renewMutation.isPending ? 'animate-spin' : ''} /> {t('borrowed.renew')}
+                              </Button>
+                            )}
                             <Button
                               size="sm"
                               variant="outline"
