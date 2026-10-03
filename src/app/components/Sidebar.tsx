@@ -4,6 +4,8 @@ import { useTheme } from '../contexts/ThemeContext';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
 
+const PHENIKAA_LOGO = '/images/phenikaa-logo.png';
+
 export function Sidebar() {
   const { theme, toggleTheme } = useTheme();
   const { user } = useAuth();
@@ -18,10 +20,12 @@ export function Sidebar() {
 
   return (
     <aside className="w-64 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 flex flex-col transition-colors duration-300">
-      <div className="p-6 flex items-center gap-3">
-        <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-xl shadow-md shadow-blue-500/30">
-          L
-        </div>
+      <div className="p-6 flex items-center gap-2">
+        <img
+          src={PHENIKAA_LOGO}
+          alt="Phenikaa University Logo"
+          className="w-10 h-10 object-contain rounded-md"
+        />
         <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
           {t('brand.name')}
         </span>

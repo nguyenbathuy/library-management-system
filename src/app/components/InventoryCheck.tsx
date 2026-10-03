@@ -3,7 +3,7 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import { client } from '../api/client';
 import { toast } from 'sonner';
 import * as XLSX from 'xlsx';
-import jsPDF from 'jspdf';
+import jsPDFInstance, { jsPDF } from 'jspdf';
 import {
   ClipboardCheck,
   QrCode,
@@ -19,7 +19,11 @@ import {
   Layers,
   ArrowRight,
   TrendingUp,
-  FileText
+  FileText,
+  Eye,
+  Barcode,
+  MapPin,
+  X
 } from 'lucide-react';
 
 interface ExpectedItem {
@@ -80,6 +84,10 @@ export function InventoryCheck() {
   const [activeResultTab, setActiveResultTab] = useState<'MATCHED' | 'MISSING' | 'ANOMALOUS'>('MATCHED');
   const [result, setResult] = useState<VerificationResult | null>(null);
 
+  // States cho Modal Xem chi tiết kho dự kiến
+  const [showExpectedModal, setShowExpectedModal] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+
   const barcodeInputRef = useRef<HTMLInputElement>(null);
 
   // Fetch expected AVAILABLE inventory from database
@@ -95,6 +103,28 @@ export function InventoryCheck() {
   });
 
   const expectedTotal = expectedData?.total || 0;
+
+  // Lọc nhanh danh sách sách dự kiến theo tên sách, mã vạch, tác giả hoặc vị trí
+  const filteredExpectedItems = (expectedData?.items || []).filter((item) => {
+    const q = searchQuery.toLowerCase().trim();
+    if (!q) return true;
+    return (
+      item.bookTitle.toLowerCase().includes(q) ||
+      item.barcode.toLowerCase().includes(q) ||
+      (item.author && item.author.toLowerCase().includes(q)) ||
+      (item.location && item.location.toLowerCase().includes(q)) ||
+      (item.category && item.category.toLowerCase().includes(q))
+    );
+  });
+
+  // Đóng modal và tự động focus lại ô quét mã vạch
+  const handleCloseExpectedModal = () => {
+    setShowExpectedModal(false);
+    setSearchQuery('');
+    setTimeout(() => {
+      barcodeInputRef.current?.focus();
+    }, 100);
+  };
 
   // Auto focus input on mount and whenever user clicks outside
   useEffect(() => {
@@ -267,7 +297,8 @@ export function InventoryCheck() {
     }
 
     try {
-      const doc = new jsPDF();
+      const Constructor = (jsPDF as any) || (jsPDFInstance as any)?.jsPDF || (jsPDFInstance as any)?.default || jsPDFInstance;
+      const doc = new (Constructor as any)();
       doc.setFont('Helvetica', 'bold');
       doc.setFontSize(16);
       doc.text('THU VIEN PKA - BIEN BAN KIEM KE KHO SACH', 20, 20);
@@ -366,17 +397,37 @@ export function InventoryCheck() {
 
       {/* Progress & Stat Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-white dark:bg-gray-900 p-4 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm">
+        <div className="bg-white dark:bg-gray-900 p-4 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm relative group">
           <div className="flex items-center justify-between">
             <span className="text-xs font-medium text-gray-500 dark:text-gray-400">Sách dự kiến trên kệ</span>
-            <span className="p-2 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg">
-              <Layers size={18} />
-            </span>
+            <div className="flex items-center gap-1.5">
+              <button
+                type="button"
+                onClick={() => setShowExpectedModal(true)}
+                className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-900/50 rounded-lg transition-colors cursor-pointer"
+                title="Xem danh sách chi tiết các mã vạch dự kiến trong kho"
+              >
+                <Eye size={13} />
+                <span>Xem chi tiết</span>
+              </button>
+              <span className="p-1.5 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-lg">
+                <Layers size={16} />
+              </span>
+            </div>
           </div>
           <p className="text-2xl font-bold text-gray-900 dark:text-white mt-2">
             {isLoadingExpected ? '...' : expectedTotal}
           </p>
-          <p className="text-[11px] text-gray-400 mt-1">Trạng thái AVAILABLE trong CSDL</p>
+          <div className="flex items-center justify-between mt-1">
+            <p className="text-[11px] text-gray-400">Trạng thái AVAILABLE trong CSDL</p>
+            <button
+              type="button"
+              onClick={() => setShowExpectedModal(true)}
+              className="text-[11px] font-medium text-blue-500 hover:underline cursor-pointer"
+            >
+              Danh sách chi tiết &rarr;
+            </button>
+          </div>
         </div>
 
         <div className="bg-white dark:bg-gray-900 p-4 rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm">
@@ -746,6 +797,173 @@ export function InventoryCheck() {
               </table>
             </div>
           )}
+        </div>
+      )}
+
+      {/* Modal: Chi tiết kho sách dự kiến (Expected Inventory Modal) */}
+      {showExpectedModal && (
+        <div
+          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200"
+          onClick={handleCloseExpectedModal}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') handleCloseExpectedModal();
+          }}
+        >
+          <div
+            className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-2xl w-full max-w-5xl max-h-[88vh] flex flex-col overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-xl">
+                  <Layers size={22} />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                    Danh sách Sách dự kiến trên kệ (Kho Available)
+                    <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300">
+                      {expectedTotal} cuốn
+                    </span>
+                  </h3>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                    Toàn bộ các bản sao sách (BookItem) đang ở trạng thái AVAILABLE sẵn sàng trên các kệ thư viện
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={handleCloseExpectedModal}
+                className="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors cursor-pointer"
+                title="Đóng cửa sổ (Esc)"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            {/* Quick Search & Summary Bar */}
+            <div className="px-6 py-3.5 bg-gray-50 dark:bg-gray-800/40 border-b border-gray-200 dark:border-gray-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="relative flex-1 max-w-md">
+                <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+                <input
+                  type="text"
+                  autoFocus
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Tìm kiếm nhanh theo tên sách, mã vạch, tác giả hoặc vị trí kệ..."
+                  className="w-full pl-10 pr-9 py-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-sm text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                />
+                {searchQuery && (
+                  <button
+                    type="button"
+                    onClick={() => setSearchQuery('')}
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 rounded-full"
+                    title="Xóa tìm kiếm"
+                  >
+                    <X size={14} />
+                  </button>
+                )}
+              </div>
+
+              <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                <span>
+                  Hiển thị <strong className="text-gray-900 dark:text-white font-semibold">{filteredExpectedItems.length}</strong> / {expectedTotal} bản sao
+                </span>
+                {searchQuery && (
+                  <span className="text-blue-600 dark:text-blue-400 font-medium">
+                    (đang lọc kết quả)
+                  </span>
+                )}
+              </div>
+            </div>
+
+            {/* Data Table */}
+            <div className="flex-1 overflow-y-auto">
+              {filteredExpectedItems.length === 0 ? (
+                <div className="py-16 text-center">
+                  <div className="w-12 h-12 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center mx-auto mb-3 text-gray-400">
+                    <Search size={22} />
+                  </div>
+                  <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    Không tìm thấy bản sao sách nào
+                  </p>
+                  <p className="text-xs text-gray-400 mt-1">
+                    Thử thay đổi từ khóa tìm kiếm "{searchQuery}"
+                  </p>
+                </div>
+              ) : (
+                <table className="w-full text-left text-sm border-collapse">
+                  <thead className="bg-gray-50 dark:bg-gray-800/70 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider sticky top-0 border-b border-gray-200 dark:border-gray-800 z-10">
+                    <tr>
+                      <th className="py-3 px-4 w-14 text-center">STT</th>
+                      <th className="py-3 px-4">Tên sách & Tác giả</th>
+                      <th className="py-3 px-4 w-48">Mã vạch (Barcode)</th>
+                      <th className="py-3 px-4 w-44">Vị trí (Location)</th>
+                      <th className="py-3 px-4 w-32 text-center">Trạng thái</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-100 dark:divide-gray-800/60">
+                    {filteredExpectedItems.map((item, index) => (
+                      <tr
+                        key={item.id || item.barcode}
+                        className="hover:bg-blue-50/40 dark:hover:bg-blue-950/20 transition-colors"
+                      >
+                        <td className="py-3 px-4 text-center text-xs font-mono text-gray-400">
+                          {index + 1}
+                        </td>
+                        <td className="py-3 px-4">
+                          <div className="font-semibold text-gray-900 dark:text-white">
+                            {item.bookTitle}
+                          </div>
+                          <div className="text-xs text-gray-500 dark:text-gray-400 flex items-center gap-2 mt-0.5">
+                            {item.author && <span>Tác giả: {item.author}</span>}
+                            {item.category && (
+                              <>
+                                <span>•</span>
+                                <span className="text-blue-600 dark:text-blue-400">{item.category}</span>
+                              </>
+                            )}
+                          </div>
+                        </td>
+                        <td className="py-3 px-4">
+                          <div className="inline-flex items-center gap-1.5 font-mono text-xs font-bold text-gray-800 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 px-2.5 py-1 rounded-md border border-gray-200 dark:border-gray-700">
+                            <Barcode size={14} className="text-gray-400" />
+                            <span>{item.barcode}</span>
+                          </div>
+                        </td>
+                        <td className="py-3 px-4">
+                          <div className="inline-flex items-center gap-1.5 text-xs text-gray-600 dark:text-gray-300">
+                            <MapPin size={13} className="text-amber-500 shrink-0" />
+                            <span>{item.location || 'Khu A - Kệ 1'}</span>
+                          </div>
+                        </td>
+                        <td className="py-3 px-4 text-center">
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/40">
+                            <CheckCircle2 size={12} />
+                            AVAILABLE
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="px-6 py-3.5 bg-gray-50 dark:bg-gray-800/50 border-t border-gray-200 dark:border-gray-800 flex items-center justify-between">
+              <span className="text-xs text-gray-500 dark:text-gray-400">
+                Mẹo: Bấm phím <kbd className="px-1.5 py-0.5 text-[11px] font-mono bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded shadow-xs">Esc</kbd> để đóng và tiếp tục quét mã vạch
+              </span>
+              <button
+                type="button"
+                onClick={handleCloseExpectedModal}
+                className="px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-xl text-xs font-semibold transition-colors cursor-pointer"
+              >
+                Đóng
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

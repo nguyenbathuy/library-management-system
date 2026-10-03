@@ -1,11 +1,12 @@
-import { BarChart3, Users, BookOpen, AlertCircle, TrendingUp, Download } from 'lucide-react';
+import { BarChart3, Users, BookOpen, AlertCircle, TrendingUp, Download, Loader2 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { client } from '../api/client';
 import { useRef, useState } from 'react';
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas-pro';
+import jsPDFInstance, { jsPDF } from 'jspdf';
 import { toast } from 'sonner';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useAuth } from '../contexts/AuthContext';
 import {
   BarChart,
   Bar,
@@ -43,33 +44,75 @@ interface RecentActivity {
 }
 
 export function Dashboard() {
-  const chartRef = useRef<HTMLDivElement>(null);
+  const dashboardRef = useRef<HTMLDivElement>(null);
   const [isExporting, setIsExporting] = useState(false);
+  const [exportTime, setExportTime] = useState<string>('');
   const { t, language } = useLanguage();
+  const { user } = useAuth();
 
   const handleExportPDF = async () => {
-    if (!chartRef.current) return;
+    if (!dashboardRef.current) return;
     try {
       setIsExporting(true);
-      const canvas = await html2canvas(chartRef.current, {
+
+      const now = new Date();
+      const formattedDate = now.toLocaleDateString(language === 'vi' ? 'vi-VN' : 'en-US', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      });
+      setExportTime(formattedDate);
+
+      // Chờ React cập nhật DOM với timestamp mới nhất
+      await new Promise(resolve => setTimeout(resolve, 80));
+
+      const isDark = document.documentElement.classList.contains('dark');
+      const canvas = await html2canvas(dashboardRef.current, {
         scale: 2,
-        backgroundColor: '#ffffff'
+        useCORS: true,
+        logging: false,
+        backgroundColor: isDark ? '#111827' : '#ffffff'
       });
       
       const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('l', 'mm', 'a4');
+      const Constructor = (jsPDF as any) || (jsPDFInstance as any)?.jsPDF || (jsPDFInstance as any)?.default || jsPDFInstance;
+      const pdf = new (Constructor as any)('l', 'mm', 'a4');
       
-      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const margin = 10;
+      const pdfWidth = pageWidth - (margin * 2);
       const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
       
-      pdf.setFontSize(16);
-      pdf.text(t('dashboard.title') + ' - ' + t('brand.name'), 14, 15);
-      
-      pdf.addImage(imgData, 'PNG', 14, 25, pdfWidth - 28, pdfHeight - 28);
-      pdf.save('bao-cao-thu-vien.pdf');
-      toast.success(t('dashboard.exportPdf') + ' - OK!');
+      // KHÔNG sử dụng pdf.text() để tránh lỗi font tiếng Việt của jsPDF.
+      // Toàn bộ tiêu đề, logo, ngày giờ và số liệu đều được chụp từ HTML canvas chuẩn Unicode 100%.
+      const contentTop = 10;
+      const availableHeight = pageHeight - (contentTop * 2);
+
+      if (pdfHeight <= availableHeight) {
+        pdf.addImage(imgData, 'PNG', margin, contentTop, pdfWidth, pdfHeight, undefined, 'FAST');
+      } else {
+        let heightLeft = pdfHeight;
+        let position = contentTop;
+
+        pdf.addImage(imgData, 'PNG', margin, position, pdfWidth, pdfHeight, undefined, 'FAST');
+        heightLeft -= (pageHeight - contentTop);
+
+        while (heightLeft > 0) {
+          pdf.addPage();
+          position = heightLeft - pdfHeight;
+          pdf.addImage(imgData, 'PNG', margin, position, pdfWidth, pdfHeight, undefined, 'FAST');
+          heightLeft -= pageHeight;
+        }
+      }
+
+      pdf.save(`bao-cao-thu-vien-${now.toISOString().slice(0, 10)}.pdf`);
+      toast.success('Xuất báo cáo PDF thành công!');
     } catch (error) {
-      console.error('Error exporting PDF:', error);
+      console.error('Lỗi chi tiết khi xuất báo cáo PDF:', error);
       toast.error('Có lỗi xảy ra khi xuất báo cáo PDF');
     } finally {
       setIsExporting(false);
@@ -133,69 +176,112 @@ export function Dashboard() {
         <button
           onClick={handleExportPDF}
           disabled={isExporting}
-          className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white rounded-lg transition-colors shadow-sm text-sm font-semibold"
+          className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-lg transition-colors shadow-sm text-sm font-semibold cursor-pointer disabled:cursor-not-allowed"
         >
-          <Download size={18} />
+          {isExporting ? <Loader2 size={18} className="animate-spin" /> : <Download size={18} />}
           {isExporting ? t('dashboard.exporting') : t('dashboard.exportPdf')}
         </button>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
-          <div className="flex items-center justify-between">
+      <div ref={dashboardRef} className="space-y-6">
+        {/* Khối Header Báo Cáo - Xuất hiện trong file PDF xuất ra chuẩn tiếng Việt 100% */}
+        <div className="bg-white dark:bg-gray-900 p-5 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <img
+              src="/images/phenikaa-logo.png"
+              alt="Phenikaa University"
+              className="w-14 h-14 object-contain"
+            />
             <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">{t('dashboard.totalBooks')}</p>
-              <h3 className="text-3xl font-bold text-gray-800 dark:text-white">{stats?.totalBooks || 0}</h3>
-              <p className="text-xs text-gray-400 mt-1">{t('dashboard.inStock')}</p>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white">
+                {t('dashboard.title')} - {t('brand.name')}
+              </h3>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                Trường Đại học Phenikaa • Trung tâm Thông tin - Thư viện
+              </p>
             </div>
-            <div className="p-4 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
-              <BookOpen className="text-blue-600 dark:text-blue-400" size={32} />
+          </div>
+          <div className="flex sm:flex-col sm:items-end justify-between text-xs text-gray-500 dark:text-gray-400 border-t sm:border-t-0 pt-2 sm:pt-0 border-gray-100 dark:border-gray-800">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full font-medium bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300">
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400"></span>
+              {language === 'vi' ? 'Báo cáo thống kê' : 'Statistics Report'}
+            </span>
+            <p className="mt-1">
+              {language === 'vi' ? 'Thời gian xuất' : 'Exported at'}:{' '}
+              <span className="font-medium text-gray-700 dark:text-gray-300">
+                {exportTime || new Date().toLocaleDateString(language === 'vi' ? 'vi-VN' : 'en-US', {
+                  year: 'numeric',
+                  month: '2-digit',
+                  day: '2-digit',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })}
+              </span>
+            </p>
+            {user?.name && (
+              <p className="text-[11px] text-gray-400 mt-0.5">
+                {language === 'vi' ? 'Người lập' : 'Generated by'}: {user.name}
+              </p>
+            )}
+          </div>
+        </div>
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">{t('dashboard.totalBooks')}</p>
+                <h3 className="text-3xl font-bold text-gray-800 dark:text-white">{stats?.totalBooks || 0}</h3>
+                <p className="text-xs text-gray-400 mt-1">{t('dashboard.inStock')}</p>
+              </div>
+              <div className="p-4 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                <BookOpen className="text-blue-600 dark:text-blue-400" size={32} />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">{t('dashboard.activeUsers')}</p>
+                <h3 className="text-3xl font-bold text-gray-800 dark:text-white">{stats?.activeUsers || 0}</h3>
+                <p className="text-xs text-gray-400 mt-1">{t('dashboard.membersCount')}</p>
+              </div>
+              <div className="p-4 bg-green-100 dark:bg-green-900/30 rounded-lg">
+                <Users className="text-green-600 dark:text-green-400" size={32} />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">{t('dashboard.borrowing')}</p>
+                <h3 className="text-3xl font-bold text-gray-800 dark:text-white">{stats?.totalBorrowed || 0}</h3>
+                <p className="text-xs text-gray-400 mt-1">{t('dashboard.activeLoans')}</p>
+              </div>
+              <div className="p-4 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
+                <TrendingUp className="text-purple-600 dark:text-purple-400" size={32} />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">{t('dashboard.overdueBooks')}</p>
+                <h3 className="text-3xl font-bold text-gray-800 dark:text-white">{stats?.overdueBooks || 0}</h3>
+                <p className="text-xs text-gray-400 mt-1">{t('dashboard.needAction')}</p>
+              </div>
+              <div className="p-4 bg-red-100 dark:bg-red-900/30 rounded-lg">
+                <AlertCircle className="text-red-600 dark:text-red-400" size={32} />
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">{t('dashboard.activeUsers')}</p>
-              <h3 className="text-3xl font-bold text-gray-800 dark:text-white">{stats?.activeUsers || 0}</h3>
-              <p className="text-xs text-gray-400 mt-1">{t('dashboard.membersCount')}</p>
-            </div>
-            <div className="p-4 bg-green-100 dark:bg-green-900/30 rounded-lg">
-              <Users className="text-green-600 dark:text-green-400" size={32} />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">{t('dashboard.borrowing')}</p>
-              <h3 className="text-3xl font-bold text-gray-800 dark:text-white">{stats?.totalBorrowed || 0}</h3>
-              <p className="text-xs text-gray-400 mt-1">{t('dashboard.activeLoans')}</p>
-            </div>
-            <div className="p-4 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
-              <TrendingUp className="text-purple-600 dark:text-purple-400" size={32} />
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">{t('dashboard.overdueBooks')}</p>
-              <h3 className="text-3xl font-bold text-gray-800 dark:text-white">{stats?.overdueBooks || 0}</h3>
-              <p className="text-xs text-gray-400 mt-1">{t('dashboard.needAction')}</p>
-            </div>
-            <div className="p-4 bg-red-100 dark:bg-red-900/30 rounded-lg">
-              <AlertCircle className="text-red-600 dark:text-red-400" size={32} />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6" ref={chartRef}>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Chart Section */}
         <div className="lg:col-span-2 bg-white dark:bg-gray-900 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
           <div className="flex items-center justify-between mb-6">
@@ -288,5 +374,6 @@ export function Dashboard() {
         </div>
       </div>
     </div>
+  </div>
   );
 }
