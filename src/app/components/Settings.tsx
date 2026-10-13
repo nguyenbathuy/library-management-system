@@ -35,7 +35,28 @@ export function Settings() {
   // Toggle states
   const [overdueRemindersEnabled, setOverdueRemindersEnabled] = useState(true);
   const [newBookAlertsEnabled, setNewBookAlertsEnabled] = useState(true);
-  const [twoFactorEnabled, setTwoFactorEnabled] = useState(false);
+  const [twoFactorEnabled, setTwoFactorEnabled] = useState(!!user?.twoFactorEnabled);
+
+  useEffect(() => {
+    if (user) {
+      setTwoFactorEnabled(!!user.twoFactorEnabled);
+    }
+  }, [user]);
+
+  const toggle2FAMutation = useMutation({
+    mutationFn: async (newStatus: boolean) => {
+      const { data } = await client.patch('/auth/toggle-2fa', { enabled: newStatus });
+      return data;
+    },
+    onSuccess: (data: any) => {
+      setTwoFactorEnabled(data.twoFactorEnabled);
+      toast.success(data.message);
+      queryClient.invalidateQueries({ queryKey: ['user'] });
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.error || 'Không thể cập nhật cấu hình 2FA');
+    }
+  });
 
   // Cronjob trigger mutation state
   const [lastReport, setLastReport] = useState<ReminderReport | null>(null);
@@ -460,14 +481,17 @@ export function Settings() {
                 </p>
               </div>
               <button
-                onClick={() => setTwoFactorEnabled(!twoFactorEnabled)}
-                className={`px-4 py-2 rounded-lg text-xs font-bold transition-colors ${
+                onClick={() => toggle2FAMutation.mutate(!twoFactorEnabled)}
+                disabled={toggle2FAMutation.isPending}
+                className={`px-4 py-2 rounded-lg text-xs font-bold transition-colors disabled:opacity-50 ${
                   twoFactorEnabled
                     ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300'
                     : 'bg-blue-600 hover:bg-blue-700 text-white shadow-sm'
                 }`}
               >
-                {twoFactorEnabled ? 'Đã kích hoạt' : t('settings.enable')}
+                {toggle2FAMutation.isPending
+                  ? 'Đang cập nhật...'
+                  : (twoFactorEnabled ? 'Đã kích hoạt' : t('settings.enable'))}
               </button>
             </div>
 

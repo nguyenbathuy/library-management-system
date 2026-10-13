@@ -17,6 +17,17 @@ export function Login({ }: LoginProps) {
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
 
+  // States cho tính năng Đăng nhập bảo mật 2 lớp (2FA / OTP Verification Modal)
+  const [showOtpModal, setShowOtpModal] = useState(false);
+  const [tempUserId, setTempUserId] = useState<number | null>(() => {
+    const saved = localStorage.getItem('tempUserId');
+    return saved ? Number(saved) : null;
+  });
+  const [loginOtp, setLoginOtp] = useState('');
+  const [otpVerifying, setOtpVerifying] = useState(false);
+  const [otpResending, setOtpResending] = useState(false);
+  const [otpPreviewUrl, setOtpPreviewUrl] = useState<string | null>(null);
+
   // States cho tính năng Quên mật khẩu (Forgot Password Modal)
   const [showForgotModal, setShowForgotModal] = useState(false);
   const [forgotStep, setForgotStep] = useState<1 | 2>(1);
@@ -30,7 +41,11 @@ export function Login({ }: LoginProps) {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  /**
+   * Xử lý đăng nhập / đăng ký
+   * Nếu Backend yêu cầu OTP: TUYỆT ĐỐI KHÔNG set isAuthenticated, chỉ lưu tempUserId và mở popup OTP
+   */
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
@@ -39,17 +54,132 @@ export function Login({ }: LoginProps) {
         await client.post('/auth/register', { email, password, name });
         toast.success('Đăng ký tài khoản thành công! Vui lòng đăng nhập.');
         setIsRegistering(false);
-      } else {
-        const { data } = await client.post('/auth/login', { email, password });
+        return;
+      }
+
+      // Gọi API đăng nhập
+      const { data } = await client.post('/auth/login', { email, password });
+
+      // NẾU BACKEND YÊU CẦU OTP
+      if (data.requireOtp) {
+        // KHÔNG set isAuthenticated = true
+        // KHÔNG lưu bất kỳ token nào vào localStorage
+        // Chỉ lưu tempUserId để phục vụ bước verify
+        localStorage.setItem('tempUserId', String(data.tempUserId));
+        setTempUserId(data.tempUserId);
+        setLoginOtp('');
+        setOtpPreviewUrl(data.previewUrl || null);
+        setShowOtpModal(true);
+        toast.info(data.message || 'Tài khoản yêu cầu xác thực 2 lớp (OTP). Vui lòng kiểm tra email!');
+        return;
+      }
+
+      // NẾU KHÔNG CẦN OTP
+      if (data.token && data.user) {
         login(data.token, data.user);
         toast.success(`Chào mừng ${data.user.name || 'bạn'} đã đăng nhập thành công!`);
-        navigate('/');
+        if (data.user.role === 'ADMIN') {
+          navigate('/');
+        } else {
+          navigate('/profile');
+        }
       }
     } catch (error: any) {
       console.error(error);
       toast.error(error.response?.data?.error || 'Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin!');
     } finally {
       setLoading(false);
+    }
+  };
+
+  /**
+   * Đóng popup OTP: Đảm bảo MỌI state liên quan đến đăng nhập bị reset sạch sẽ.
+   * Khi bấm đăng nhập lại, luồng phải gọi lại API login từ đầu và tiếp tục bị chặn nếu chưa xác thực OTP.
+   */
+  const handleCloseOtpModal = () => {
+    setShowOtpModal(false);
+    setLoginOtp('');
+    setTempUserId(null);
+    setOtpPreviewUrl(null);
+    localStorage.removeItem('tempUserId');
+    localStorage.removeItem('token');
+  };
+
+  /**
+   * Xác thực mã OTP: Khi API verify-otp trả về thành công kèm Token thật,
+   * lúc này mới lưu Token vào localStorage và redirect vào trang chủ theo Role.
+   */
+  const handleVerifyOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!loginOtp.trim()) {
+      toast.error('Vui lòng nhập mã OTP 6 chữ số');
+      return;
+    }
+
+    const currentTempUserId = tempUserId || Number(localStorage.getItem('tempUserId'));
+    if (!currentTempUserId) {
+      toast.error('Phiên xác thực không hợp lệ hoặc đã hết hạn. Vui lòng đăng nhập lại.');
+      handleCloseOtpModal();
+      return;
+    }
+
+    setOtpVerifying(true);
+    try {
+      const { data } = await client.post('/auth/verify-otp', {
+        tempUserId: currentTempUserId,
+        otp: loginOtp.trim(),
+      });
+
+      // API trả về thành công kèm token thật và user
+      if (data.token && data.user) {
+        // Dọn dẹp trạng thái tạm thời
+        localStorage.removeItem('tempUserId');
+        setShowOtpModal(false);
+        setLoginOtp('');
+        setTempUserId(null);
+        setOtpPreviewUrl(null);
+
+        // Lưu Token và User vào localStorage thông qua AuthContext
+        login(data.token, data.user);
+
+        toast.success(`Xác thực OTP thành công! Chào mừng ${data.user.name || 'bạn'}`);
+
+        // Chuyển hướng theo Role
+        if (data.user.role === 'ADMIN') {
+          navigate('/');
+        } else {
+          navigate('/profile');
+        }
+      } else {
+        toast.error('Dữ liệu xác thực không hợp lệ. Vui lòng thử lại.');
+      }
+    } catch (error: any) {
+      console.error(error);
+      toast.error(error.response?.data?.error || 'Mã OTP không chính xác hoặc đã hết hạn.');
+    } finally {
+      setOtpVerifying(false);
+    }
+  };
+
+  /**
+   * Gửi lại mã OTP đăng nhập
+   */
+  const handleResendLoginOtp = async () => {
+    const currentTempUserId = tempUserId || Number(localStorage.getItem('tempUserId'));
+    if (!currentTempUserId) return;
+
+    setOtpResending(true);
+    const toastId = toast.loading('Đang gửi lại mã OTP...');
+    try {
+      const { data } = await client.post('/auth/resend-otp', {
+        tempUserId: currentTempUserId,
+      });
+      if (data.previewUrl) setOtpPreviewUrl(data.previewUrl);
+      toast.success(data.message || 'Đã gửi lại mã OTP đến email của bạn!', { id: toastId });
+    } catch (error: any) {
+      toast.error(error.response?.data?.error || 'Không thể gửi lại mã OTP', { id: toastId });
+    } finally {
+      setOtpResending(false);
     }
   };
 
@@ -164,7 +294,7 @@ export function Login({ }: LoginProps) {
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleLogin} className="space-y-4">
             {isRegistering && (
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -424,6 +554,109 @@ export function Login({ }: LoginProps) {
                   </div>
                 </form>
               )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL XÁC THỰC OTP ĐĂNG NHẬP 2 LỚP (2FA VERIFICATION POPUP) */}
+      {showOtpModal && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden border border-gray-100 transition-all transform animate-in fade-in zoom-in-95">
+            {/* Header */}
+            <div className="px-6 py-5 border-b border-gray-100 flex items-center justify-between bg-gradient-to-r from-emerald-50 to-teal-50">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center shadow-md">
+                  <ShieldCheck size={22} />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-gray-900">
+                    Xác thực 2 lớp (2FA)
+                  </h3>
+                  <p className="text-xs text-gray-500">
+                    Bảo vệ tài khoản với mã OTP
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={handleCloseOtpModal}
+                className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-200/50 transition-colors"
+                title="Đóng popup (Hủy xác thực)"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            {/* Content */}
+            <div className="p-6">
+              <form onSubmit={handleVerifyOtp} className="space-y-4">
+                <div className="text-sm text-gray-600 leading-relaxed">
+                  Tài khoản của bạn được kích hoạt bảo vệ 2 bước. Hệ thống đã gửi mã <strong>OTP gồm 6 chữ số</strong> đến địa chỉ email đăng ký.
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                    Mã xác thực OTP (6 chữ số)
+                  </label>
+                  <div className="relative">
+                    <KeyRound className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                    <input
+                      type="text"
+                      maxLength={6}
+                      value={loginOtp}
+                      onChange={(e) => setLoginOtp(e.target.value.replace(/\D/g, ''))}
+                      className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 tracking-widest font-mono text-center text-xl font-bold text-gray-800 transition-all outline-none"
+                      placeholder="000000"
+                      autoFocus
+                      required
+                    />
+                  </div>
+                  <div className="mt-2 flex items-center justify-between text-xs text-gray-500">
+                    <span>Hiệu lực trong 10 phút</span>
+                    <button
+                      type="button"
+                      onClick={handleResendLoginOtp}
+                      disabled={otpResending}
+                      className="text-emerald-600 hover:text-emerald-700 font-medium hover:underline focus:outline-none disabled:opacity-50"
+                    >
+                      {otpResending ? 'Đang gửi lại...' : 'Chưa nhận được mã? Gửi lại'}
+                    </button>
+                  </div>
+                </div>
+
+                {otpPreviewUrl && (
+                  <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-lg text-xs text-emerald-800 flex items-center justify-between">
+                    <span>Thư thử nghiệm (Ethereal Email):</span>
+                    <a
+                      href={otpPreviewUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="font-bold underline text-emerald-700 hover:text-emerald-900"
+                    >
+                      Mở Thư Preview ↗
+                    </a>
+                  </div>
+                )}
+
+                <div className="pt-2 flex gap-3">
+                  <button
+                    type="button"
+                    onClick={handleCloseOtpModal}
+                    className="w-1/3 border border-gray-300 hover:bg-gray-100 text-gray-700 font-medium py-2.5 rounded-lg transition-colors text-sm"
+                  >
+                    Hủy bỏ
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={otpVerifying || loginOtp.length !== 6}
+                    className="w-2/3 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2.5 rounded-lg transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg disabled:opacity-50 text-sm"
+                  >
+                    {otpVerifying && <Loader2 size={16} className="animate-spin" />}
+                    {otpVerifying ? 'Đang xác thực...' : 'Xác nhận & Đăng nhập'}
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         </div>

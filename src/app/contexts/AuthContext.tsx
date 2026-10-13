@@ -9,6 +9,7 @@ interface User {
   createdAt?: string;
   membershipTier?: string;
   isBlacklisted?: boolean;
+  twoFactorEnabled?: boolean;
   phone?: string;
 }
 
@@ -53,6 +54,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('tempUserId');
     setToken(null);
     setUser(null);
   };

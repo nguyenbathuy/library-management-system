@@ -16,6 +16,9 @@ model User {
   role           String   @default("USER") // "ADMIN" hoặc "USER"
   membershipTier String   @default("STANDARD") // STANDARD, PREMIUM, LECTURER
   isBlacklisted  Boolean  @default(false)      // Chặn mượn sách nếu vi phạm
+  twoFactorEnabled Boolean @default(false)      // Kích hoạt xác thực 2 bước 2FA
+  loginOtp       String?   // Mã OTP xác thực khi đăng nhập
+  loginOtpExpiry DateTime? // Thời hạn hiệu lực của OTP đăng nhập
   resetOtp       String?   // Mã OTP 6 chữ số để đặt lại mật khẩu
   resetOtpExpiry DateTime? // Thời hạn hiệu lực của OTP
   

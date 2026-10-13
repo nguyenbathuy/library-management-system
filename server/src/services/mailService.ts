@@ -300,3 +300,82 @@ export const sendPasswordResetOtpEmail = async (params: {
   }
 };
 
+/**
+ * Gửi email chứa mã OTP xác thực đăng nhập 2 lớp (2FA)
+ */
+export const sendLoginOtpEmail = async (params: {
+  to: string;
+  userName?: string;
+  otp: string;
+  expiryMinutes?: number;
+}): Promise<EmailResult> => {
+  try {
+    const transporter = await getTransporter();
+    const fromAddress = process.env.SMTP_FROM || (process.env.SMTP_USER ? `"Thư Viện PKA" <${process.env.SMTP_USER}>` : '"Thư Viện PKA" <library-noreply@phenikaa-uni.edu.vn>');
+    const expiry = params.expiryMinutes || 10;
+    const displayName = params.userName || 'bạn';
+
+    const html = `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
+            <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 24px; text-align: center; color: white;">
+                <h1 style="margin: 0; font-size: 22px;">🛡️ Xác Thực Đăng Nhập 2 Lớp (2FA)</h1>
+                <p style="margin: 6px 0 0 0; opacity: 0.9; font-size: 14px;">Hệ thống Quản lý Thư viện PKA</p>
+            </div>
+            <div style="padding: 24px; color: #1e293b;">
+                <p style="font-size: 16px;">Xin chào <strong>${displayName}</strong>,</p>
+                <p style="font-size: 14px; line-height: 1.6;">
+                    Bạn đang đăng nhập vào tài khoản trên hệ thống Thư Viện PKA. Do tài khoản đã bật tính năng bảo mật 2 lớp (hoặc yêu cầu xác minh bảo mật), vui lòng dùng mã OTP dưới đây:
+                </p>
+                
+                <div style="text-align: center; margin: 24px 0;">
+                    <p style="font-size: 14px; color: #64748b; margin-bottom: 8px;">Mã xác thực đăng nhập (OTP):</p>
+                    <div style="display: inline-block; background: #ecfdf5; border: 2px dashed #059669; border-radius: 10px; padding: 12px 28px;">
+                        <span style="font-size: 32px; font-weight: bold; letter-spacing: 8px; color: #047857; font-family: monospace;">${params.otp}</span>
+                    </div>
+                    <p style="font-size: 13px; color: #dc2626; margin-top: 8px; font-weight: 500;">
+                        ⏱️ Mã này có hiệu lực trong vòng <strong>${expiry} phút</strong>.
+                    </p>
+                </div>
+
+                <div style="background: #fffbeb; border: 1px solid #fef3c7; padding: 12px 16px; border-radius: 8px; font-size: 13px; color: #92400e; margin-bottom: 20px;">
+                    ⚠️ <strong>Cảnh báo an toàn:</strong> Nếu không phải bạn thực hiện đăng nhập, vui lòng đổi mật khẩu ngay lập tức để bảo vệ tài khoản.
+                </div>
+
+                <div style="margin-top: 30px; padding-top: 16px; border-top: 1px solid #e2e8f0; font-size: 12px; color: #64748b; text-align: center;">
+                    <p style="margin: 0;">Thư viện Đại học Phenikaa | Giờ mở cửa: 08:00 - 21:00 (Thứ 2 - Thứ 7)</p>
+                    <p style="margin: 4px 0 0 0;">Email tự động, vui lòng không phản hồi thư này.</p>
+                </div>
+            </div>
+        </div>
+        `;
+
+    const info = await transporter.sendMail({
+      from: fromAddress,
+      to: params.to,
+      subject: `[Thư Viện PKA] Mã xác thực đăng nhập (OTP): ${params.otp}`,
+      html,
+    });
+
+    const previewUrl = nodemailer.getTestMessageUrl(info);
+    if (previewUrl) {
+      console.log(`[MailService] 🛡️ [OTP Login 2FA] Preview Ethereal Email cho ${params.to}: ${previewUrl}`);
+    }
+
+    return {
+      success: true,
+      to: params.to,
+      subject: 'Mã OTP đăng nhập 2FA',
+      previewUrl
+    };
+  } catch (error: any) {
+    console.error(`[MailService] Lỗi gửi email OTP đăng nhập cho ${params.to}:`, error);
+    return {
+      success: false,
+      to: params.to,
+      subject: 'Mã OTP đăng nhập 2FA',
+      error: error.message
+    };
+  }
+};
+
+
