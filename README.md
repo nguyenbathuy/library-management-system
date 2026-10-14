@@ -10,6 +10,7 @@
 ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4.x-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-6.x-646CFF?style=for-the-badge&logo=vite&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
+[![CI](https://github.com/nguyenbathuy/library-management-system/actions/workflows/ci.yml/badge.svg)](https://github.com/nguyenbathuy/library-management-system/actions/workflows/ci.yml)
 ![Status](https://img.shields.io/badge/Build-Passing-brightgreen?style=for-the-badge)
 
 **Giải pháp chuyển đổi số toàn diện cho công tác quản lý học liệu và lưu thông sách học đường.**  
@@ -251,7 +252,7 @@ Khi chuẩn bị môi trường này, database được sao lưu tại `~/.local
 
 Kiểm tra khởi chạy đã xác nhận đăng nhập Admin/User và tải được Dashboard, danh mục, thành viên, kiểm kê, hồ sơ độc giả. Frontend build và backend kiểm tra TypeScript thành công. Xem [ảnh Dashboard](docs/local-preview/admin-dashboard.png), [danh mục sách](docs/local-preview/book-catalog.png), [trang đăng nhập](docs/local-preview/login.png), [hồ sơ độc giả](docs/local-preview/user-profile.png) và [kết quả kiểm tra môi trường](docs/local-preview/runtime-check.json). Đây là kiểm tra khởi chạy hiện tại, không thay thế kết quả 44 testcase manual.
 
-Repo hiện có theo dõi các tệp trong `node_modules`; việc cài lại thư viện cho Linux làm Git báo thay đổi ở các thư mục này. Trong lần chuẩn bị môi trường, mã nguồn ứng dụng, hai lockfile, `.env`, database và các tài liệu QA được giữ nguyên. Các thay đổi package/lockfile và test tooling ở nhiệm vụ White-box sau đó được ghi riêng trong [QA Changelog](docs/qa/CHANGELOG.md). Phiên chạy thử của lần chuẩn bị đã dừng; dùng lệnh trên để khởi động trong Terminal của bạn.
+`node_modules/` và `server/node_modules/` không còn được Git theo dõi (đã bỏ khỏi index, xem `.gitignore`); chạy `npm install` ở root và trong `server/` sau khi clone. Thay đổi package/lockfile và test tooling được ghi trong [QA Changelog](docs/qa/CHANGELOG.md).
 
 ---
 
@@ -416,7 +417,14 @@ Library Management System/
 │   ├── styles/                           # CSS Tokens, Tailwind v4 & Theme Colors
 ├── package.json                          # Cấu hình gói và kịch bản Root
 ├── vite.config.ts                        # Cấu hình Vite Build Tool
-├── vitest.backend.config.ts              # Runner/coverage unit Authentication + Member
+├── vitest.backend.config.ts              # Runner unit (white-box, loan rules, state machine, property)
+├── vitest.integration.config.ts          # Runner tích hợp API (supertest + SQLite tạm) + fuzz API
+├── playwright.config.ts                  # E2E Playwright (backend thật trên DB tạm e2e/.tmp)
+├── stryker.config.mjs                    # Mutation testing (Stryker)
+├── e2e/                                  # Page Objects, fixtures, specs, launcher E2E
+├── server/tests/                         # unit/, integration/, property/, helpers/, setup/, mocks/
+├── test-results/                         # Bằng chứng Chương 5–6 (output, coverage, report, ảnh)
+├── .github/workflows/ci.yml              # CI: unit + integration + E2E
 ├── AGENTS.md                             # Quy tắc dự án và kiểm tra cuối nhiệm vụ
 ├── docs/qa/                              # Baseline, kế hoạch, báo cáo và evidence QA
 └── README.md                             # Tài liệu kỹ thuật & Hướng dẫn sử dụng
@@ -426,18 +434,21 @@ Library Management System/
 
 [AGENTS.md](AGENTS.md) quy định phạm vi phát triển/QA, database/Git safety và mục bắt buộc **Rules Maintenance & Documentation Synchronization**. Sau mỗi nhiệm vụ có sửa file, review diff/file mới, đánh giá thay đổi lâu dài, đồng bộ hướng dẫn khi cần và báo `RULES MAINTENANCE CHECK`; nếu quy tắc không đổi thì giữ AGENTS nguyên.
 
-[QA Workflow](docs/qa/QA_WORKFLOW.md) hướng dẫn mocks/isolation, Test ID/oracle, evidence và cách đọc coverage. Chạy unit **từ repository root**, dùng dependency đã cài; không cần khởi động app hoặc seed database:
+[QA Workflow](docs/qa/QA_WORKFLOW.md) hướng dẫn mocks/isolation, Test ID/oracle, evidence và cách đọc coverage. Mọi lệnh chạy **từ repository root** (các script trong `server/` chuyển tiếp về root). Unit/integration không cần khởi động app hay seed database; integration và E2E tự tạo SQLite tạm, không chạm `server/prisma/dev.db`:
 
 ```bash
-npm test
-npm run test:unit
-npm run test:coverage
-LMS_WB_SCOPE=member npm run test:coverage
-LMS_WB_SCOPE=authentication npm run test:coverage
+npm install && npm --prefix server install && npx playwright install chromium   # lần đầu
+npm test                          # unit + integration
+npm run test:coverage             # unit + V8 coverage (scope mặc định: all)
+npm run test:integration:coverage # API tích hợp + fuzz API + coverage
+npm run test:property             # fast-check (thuộc tính + fuzz API)
+npm run test:e2e                  # Playwright (tự bật backend thật + Vite)
+npm run test:mutation             # Stryker trên loanRules.ts + authController.ts
+LMS_WB_SCOPE=whitebox npm run test:coverage   # 3 file Authentication như baseline Chương 4
 ./server/node_modules/.bin/tsc --project server/tsconfig.tests.json --noEmit
 ```
 
-Runner dùng Vitest/coverage-v8 4.1.0. Mặc định `LMS_WB_SCOPE=all` chạy unit Authentication tại `server/tests/unit/auth/` và Member tại `server/tests/unit/member/`; có thể chọn riêng `authentication` hoặc `member`. Coverage vẫn gồm nguyên `authController.ts`, `middleware/auth.ts`, `authRoutes.ts`, không phải coverage toàn hệ thống. Condition ledger thủ công được báo riêng với branch metric của công cụ. Default output ở `artifacts/qa/whitebox/<scope>/latest/`; dùng `LMS_WB_RUN_DIR` tới thư mục mới khi lưu evidence chính thức để giữ lịch sử.
+Runner dùng Vitest/coverage-v8 4.1.0. `LMS_WB_SCOPE` chọn `all` (mặc định: auth + member + loan + property, coverage `controllers/middleware/services/utils`), `whitebox` (auth + member, coverage 3 file `authController.ts`, `middleware/auth.ts`, `authRoutes.ts`), `authentication`, `member`, `loan`, `property`. Ca lỗi đã biết viết theo đặc tả và đánh dấu `test.fails`/`test.fail`; `node server/tests/support/verify-known-bugs.mjs <config> <files>` và `E2E_SHOW_KNOWN_BUGS=1` hiển thị lỗi thật. Output mặc định ở `artifacts/qa/...`; dùng `LMS_WB_RUN_DIR`/`LMS_IT_RUN_DIR` tới thư mục mới khi lưu evidence. Tổng kết Chương 5–6: [test-results/SUMMARY_CH5_CH6.md](test-results/SUMMARY_CH5_CH6.md).
 
 Xem [Phase 1 Results](docs/qa/whitebox/Whitebox_Phase1_Results.md), [Phase 2 Results](docs/qa/whitebox/Whitebox_Phase2_Results.md), [Phase 3 Results](docs/qa/whitebox/Whitebox_Phase3_Results.md), [Manual baseline v2](docs/qa/output/Manual_Test_Gap_Analysis_v2.md), [QA Changelog](docs/qa/CHANGELOG.md) và [Rules Audit](docs/qa/Rules_Audit.md). Bốn kế hoạch white-box giữ trạng thái thiết kế tại thời điểm tạo; package/config hiện tại và evidence từng run xác định trạng thái triển khai/thực thi. Các báo cáo kỹ thuật cũ trong `docs/` có ghi chú phạm vi; chúng không tự xác nhận defect đã được retest hoặc tính năng đạt production-ready.
 
