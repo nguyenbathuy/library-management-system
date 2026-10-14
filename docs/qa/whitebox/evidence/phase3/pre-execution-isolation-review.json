@@ -1,0 +1,25 @@
+{
+  "reviewType": "STATIC_REVIEW_BEFORE_EXECUTION",
+  "reviewedAtUtc": "2026-10-12T08:06:57.092213+00:00",
+  "newDistinctCaseCount": 25,
+  "oldDistinctCaseCount": 40,
+  "caseIdsUniqueAcrossPhases": true,
+  "noPendingOracleRegistered": true,
+  "mockBeforeImport": {
+    "vi.hoisted": true,
+    "prismaGuardAliasKept": true
+  },
+  "beforeAllIdentityGatePresent": true,
+  "networkGuardSetupUnchanged": true,
+  "sourceDatabaseOldTestsEvidencePreservedBeforeExecution": true,
+  "expectedRetainedFailures": [
+    "WB-RG-04",
+    "WB-RG-05"
+  ],
+  "runtimeIsolationGateResults": "NOT YET EXECUTED",
+  "coverageScope": [
+    "server/src/controllers/authController.ts",
+    "server/src/middleware/auth.ts",
+    "server/src/routes/authRoutes.ts"
+  ]
+}

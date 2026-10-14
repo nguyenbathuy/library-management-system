@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "concurrently \"npm run start:server\" \"npm run start:client\"",
     "start:client": "vite",
-    "start:server": "cd server && npm run dev"
+    "start:server": "cd server && npm run dev",
+    "test": "vitest run --config vitest.backend.config.ts",
+    "test:unit": "vitest run --config vitest.backend.config.ts",
+    "test:coverage": "vitest run --config vitest.backend.config.ts --coverage"
   },
   "dependencies": {
     "@emotion/react": "11.14.0",
@@ -75,9 +78,11 @@
   "devDependencies": {
     "@tailwindcss/vite": "4.1.12",
     "@vitejs/plugin-react": "4.7.0",
+    "@vitest/coverage-v8": "4.1.0",
     "concurrently": "^9.2.1",
     "tailwindcss": "4.1.12",
-    "vite": "6.3.5"
+    "vite": "6.3.5",
+    "vitest": "4.1.0"
   },
   "peerDependencies": {
     "react": "18.3.1",
@@ -95,5 +100,8 @@
     "overrides": {
       "vite": "6.3.5"
     }
+  },
+  "overrides": {
+    "vite": "$vite"
   }
 }

@@ -1,0 +1,42 @@
+
+> @figma/my-make-file@0.0.1 test:coverage
+> vitest run --config vitest.backend.config.ts --coverage
+
+
+ RUN  v4.1.0 /home/a2ilab/Documents/project/library-management-system
+      Coverage enabled with v8
+
+ ✓ |authentication-phase1| server/tests/unit/auth/authController.test.ts > Authentication Phase 1 — public registration > WB-RG-01 register hashes password and creates a USER 3ms
+ ✓ |authentication-phase1| server/tests/unit/auth/authController.test.ts > Authentication Phase 1 — public registration > WB-RG-02 register rejects a duplicate email 1ms
+ ✓ |authentication-phase1| server/tests/unit/auth/authController.test.ts > Authentication Phase 1 — login > WB-LG-01 login short-circuits when user does not exist 1ms
+ ✓ |authentication-phase1| server/tests/unit/auth/authController.test.ts > Authentication Phase 1 — login > WB-LG-02 login rejects an incorrect password 0ms
+ ✓ |authentication-phase1| server/tests/unit/auth/authController.test.ts > Authentication Phase 1 — login > WB-LG-03 login returns a one-hour token and safe user DTO 1ms
+ ✓ |authentication-phase1| server/tests/unit/auth/authController.test.ts > Authentication Phase 1 — changePassword > WB-CP-01 changePassword requires an authenticated user 1ms
+ ✓ |authentication-phase1| server/tests/unit/auth/authController.test.ts > Authentication Phase 1 — changePassword > WB-CP-02 changePassword rejects a missing current password 0ms
+ ✓ |authentication-phase1| server/tests/unit/auth/authController.test.ts > Authentication Phase 1 — changePassword > WB-CP-03 changePassword rejects a missing new password 0ms
+ ✓ |authentication-phase1| server/tests/unit/auth/authController.test.ts > Authentication Phase 1 — changePassword > WB-CP-04 changePassword rejects five characters 0ms
+ ✓ |authentication-phase1| server/tests/unit/auth/authController.test.ts > Authentication Phase 1 — changePassword > WB-CP-08 changePassword accepts six characters and sends notification 1ms
+ ✓ |authentication-phase1| server/tests/unit/auth/authController.test.ts > Authentication Phase 1 — changePassword > WB-CP-09 changePassword reports an update failure with seven characters 1ms
+ ✓ |authentication-phase1| server/tests/unit/auth/authController.test.ts > Authentication Phase 1 — resetPassword > WB-RP-04 resetPassword rejects a non-string password 1ms
+ ✓ |authentication-phase1| server/tests/unit/auth/authController.test.ts > Authentication Phase 1 — resetPassword > WB-RP-08 resetPassword rejects an incorrect OTP 0ms
+ ✓ |authentication-phase1| server/tests/unit/auth/authController.test.ts > Authentication Phase 1 — resetPassword > WB-RP-10 resetPassword rejects an OTP expired by one millisecond 2ms
+ ✓ |authentication-phase1| server/tests/unit/auth/authController.test.ts > Authentication Phase 1 — resetPassword > WB-RP-12 resetPassword normalizes input and clears a valid OTP 1ms
+
+ Test Files  1 passed (1)
+      Tests  15 passed (15)
+   Start at  23:01:40
+   Duration  299ms (transform 84ms, setup 40ms, import 78ms, tests 17ms, environment 0ms)
+
+JSON report written to /home/a2ilab/Documents/project/library-management-system/docs/qa/whitebox/evidence/phase1/coverage/vitest-results.json
+ % Coverage report from v8
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------|---------|----------|---------|---------|-------------------
+All files          |    43.6 |    45.07 |   30.76 |   45.31 |                   
+ controllers       |   57.42 |    56.14 |      50 |   58.58 |                   
+  ...Controller.ts |   57.42 |    56.14 |      50 |   58.58 | ...50,265,298-299 
+ middleware        |       0 |        0 |       0 |       0 |                   
+  auth.ts          |       0 |        0 |       0 |       0 | 12-42             
+ routes            |       0 |      100 |     100 |       0 |                   
+  authRoutes.ts    |       0 |      100 |     100 |       0 | 14-23             
+-------------------|---------|----------|---------|---------|-------------------

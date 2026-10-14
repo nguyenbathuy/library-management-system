@@ -1,0 +1,21 @@
+{
+  "kind": "Static pre-execution review, not test execution result",
+  "reportDateClient": "2026-10-12",
+  "reviewedAtUtc": "2026-10-12T06:34:40.086084+00:00",
+  "oldTestCount": 15,
+  "newTestCount": 25,
+  "pendingOracleSelected": 0,
+  "oldTestSourceUnchanged": true,
+  "protectedFilesUnchanged": 222,
+  "mainDatabaseUnchangedBeforeRun": true,
+  "mockStrategy": "Same fail-closed Prisma alias plus hoisted factories and beforeAll identity/delegate gates; controller mocks never access SQLite; middleware imports JWT-only logic",
+  "networkGuards": "Installed before collection; per-module results and assertions",
+  "replayStrategy": "RP-15 uses mutable RAM record and actual update.data; returns a fresh lookup copy each call",
+  "configChanges": "Only test label/default output; include/exclude/provider identical",
+  "sharedSetupChange": "Additional network result file per module to avoid collisions",
+  "startupPolicy": "No production index/cron/routes bootstrap/seed/migration import",
+  "typeCheck": {
+    "command": "./server/node_modules/.bin/tsc --project server/tsconfig.tests.json --noEmit",
+    "exitCode": 0
+  }
+}

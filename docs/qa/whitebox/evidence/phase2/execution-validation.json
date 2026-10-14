@@ -1,0 +1,68 @@
+{
+  "finalRuns": [
+    {
+      "name": "phase1-regression",
+      "command": "npm run test:unit -- server/tests/unit/auth/authController.test.ts",
+      "total": 15,
+      "pass": 15,
+      "fail": 0,
+      "skipped": 0,
+      "exit": 0,
+      "timestampClient": "2026-10-12T13:36:39.126200+07:00"
+    },
+    {
+      "name": "phase2-only",
+      "command": "npm run test:unit -- server/tests/unit/auth/authController.phase2.test.ts server/tests/unit/auth/authMiddleware.phase2.test.ts",
+      "total": 25,
+      "pass": 25,
+      "fail": 0,
+      "skipped": 0,
+      "exit": 0,
+      "timestampClient": "2026-10-12T13:37:33.908238+07:00"
+    },
+    {
+      "name": "unit",
+      "command": "npm test",
+      "total": 40,
+      "pass": 40,
+      "fail": 0,
+      "skipped": 0,
+      "exit": 0,
+      "timestampClient": "2026-10-12T13:37:50.610165+07:00"
+    },
+    {
+      "name": "shuffle",
+      "command": "npm run test:unit -- --sequence.shuffle --sequence.seed=20261012",
+      "total": 40,
+      "pass": 40,
+      "fail": 0,
+      "skipped": 0,
+      "exit": 0,
+      "timestampClient": "2026-10-12T13:38:00.309121+07:00"
+    },
+    {
+      "name": "coverage",
+      "command": "npm run test:coverage",
+      "total": 40,
+      "pass": 40,
+      "fail": 0,
+      "skipped": 0,
+      "exit": 0,
+      "timestampClient": "2026-10-12T13:38:11.892430+07:00"
+    }
+  ],
+  "shuffleSeed": 20261012,
+  "normalAndShuffleOrdersDiffer": true,
+  "distinctIds": 40,
+  "initialFailurePreserved": {
+    "path": "initial-hook-error",
+    "exitCode": 1,
+    "bodiesPassed": 15,
+    "suiteFailure": "FixtureParseError; test setup hook fixed"
+  },
+  "phase1OriginalTestSourcePreserved": true,
+  "protectedFilesUnchanged": 222,
+  "sameScopeComparisonVerified": true,
+  "perModuleNetworkAssertionsPassed": true,
+  "canonicalRun": "coverage"
+}

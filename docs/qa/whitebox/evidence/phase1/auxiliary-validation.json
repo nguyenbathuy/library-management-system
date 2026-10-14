@@ -1,0 +1,15 @@
+{
+  "recordedAt": "2026-10-11T16:16:08.875322+00:00",
+  "provenance": "Exit codes observed from actual shell tool execution; auxiliary checks, not additional testcase results",
+  "typeCheck": {
+    "command": "./server/node_modules/.bin/tsc --project server/tsconfig.tests.json --noEmit",
+    "exitCode": 0
+  },
+  "frontendBuild": {
+    "command": "./node_modules/.bin/vite build --outDir /tmp/lms-phase1-frontend-build",
+    "exitCode": 0,
+    "purpose": "Check build tooling after installing test dependencies; no frontend test or coverage claim",
+    "outputOutsideRepository": true
+  },
+  "protectedFileHashesStillUnchanged": 154
+}

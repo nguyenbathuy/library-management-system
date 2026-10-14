@@ -1,0 +1,67 @@
+
+> @figma/my-make-file@0.0.1 test:coverage
+> vitest run --config vitest.backend.config.ts --coverage
+
+
+ RUN  v4.1.0 /home/a2ilab/Documents/project/library-management-system
+      Coverage enabled with v8
+
+ ✓ |authentication-whitebox| server/tests/unit/auth/authController.phase2.test.ts > Authentication Phase 2 — login and password guards > WB-LG-04 login preserves the stored ADMIN role in token and DTO 3ms
+ ✓ |authentication-whitebox| server/tests/unit/auth/authController.phase2.test.ts > Authentication Phase 2 — login and password guards > WB-CP-05 changePassword rejects a missing user record 1ms
+ ✓ |authentication-whitebox| server/tests/unit/auth/authController.phase2.test.ts > Authentication Phase 2 — login and password guards > WB-CP-06 changePassword rejects an incorrect current password 1ms
+ ✓ |authentication-whitebox| server/tests/unit/auth/authController.phase2.test.ts > Authentication Phase 2 — login and password guards > WB-CP-07 changePassword rejects reusing the current password 1ms
+ ✓ |authentication-whitebox| server/tests/unit/auth/authController.phase2.test.ts > Authentication Phase 2 — forgotPassword > WB-FP-01 forgotPassword rejects an empty email before lookup 1ms
+ ✓ |authentication-whitebox| server/tests/unit/auth/authController.phase2.test.ts > Authentication Phase 2 — forgotPassword > WB-FP-03 forgotPassword normalizes email and rejects an unknown user 0ms
+ ✓ |authentication-whitebox| server/tests/unit/auth/authController.phase2.test.ts > Authentication Phase 2 — forgotPassword > WB-FP-04 forgotPassword stores a six-digit OTP with a fifteen-minute expiry 2ms
+ ✓ |authentication-whitebox| server/tests/unit/auth/authController.phase2.test.ts > Authentication Phase 2 — forgotPassword > WB-FP-07 forgotPassword reports a mail failure after storing the OTP 1ms
+ ✓ |authentication-whitebox| server/tests/unit/auth/authController.phase2.test.ts > Authentication Phase 2 — resetPassword guards and OTP reuse > WB-RP-01 resetPassword rejects a missing email 1ms
+ ✓ |authentication-whitebox| server/tests/unit/auth/authController.phase2.test.ts > Authentication Phase 2 — resetPassword guards and OTP reuse > WB-RP-02 resetPassword rejects a missing OTP 1ms
+ ✓ |authentication-whitebox| server/tests/unit/auth/authController.phase2.test.ts > Authentication Phase 2 — resetPassword guards and OTP reuse > WB-RP-03 resetPassword rejects a missing new password 0ms
+ ✓ |authentication-whitebox| server/tests/unit/auth/authController.phase2.test.ts > Authentication Phase 2 — resetPassword guards and OTP reuse > WB-RP-05 resetPassword rejects a five-character password 0ms
+ ✓ |authentication-whitebox| server/tests/unit/auth/authController.phase2.test.ts > Authentication Phase 2 — resetPassword guards and OTP reuse > WB-RP-06 resetPassword rejects a missing user record 0ms
+ ✓ |authentication-whitebox| server/tests/unit/auth/authController.phase2.test.ts > Authentication Phase 2 — resetPassword guards and OTP reuse > WB-RP-09 resetPassword rejects an OTP without expiry 2ms
+ ✓ |authentication-whitebox| server/tests/unit/auth/authController.phase2.test.ts > Authentication Phase 2 — resetPassword guards and OTP reuse > WB-RP-15 resetPassword rejects reusing an OTP cleared by the first reset 1ms
+ ✓ |authentication-whitebox| server/tests/unit/auth/authController.test.ts > Authentication Phase 1 — public registration > WB-RG-01 register hashes password and creates a USER 3ms
+ ✓ |authentication-whitebox| server/tests/unit/auth/authController.test.ts > Authentication Phase 1 — public registration > WB-RG-02 register rejects a duplicate email 1ms
+ ✓ |authentication-whitebox| server/tests/unit/auth/authController.test.ts > Authentication Phase 1 — login > WB-LG-01 login short-circuits when user does not exist 1ms
+ ✓ |authentication-whitebox| server/tests/unit/auth/authController.test.ts > Authentication Phase 1 — login > WB-LG-02 login rejects an incorrect password 0ms
+ ✓ |authentication-whitebox| server/tests/unit/auth/authController.test.ts > Authentication Phase 1 — login > WB-LG-03 login returns a one-hour token and safe user DTO 1ms
+ ✓ |authentication-whitebox| server/tests/unit/auth/authController.test.ts > Authentication Phase 1 — changePassword > WB-CP-01 changePassword requires an authenticated user 1ms
+ ✓ |authentication-whitebox| server/tests/unit/auth/authController.test.ts > Authentication Phase 1 — changePassword > WB-CP-02 changePassword rejects a missing current password 0ms
+ ✓ |authentication-whitebox| server/tests/unit/auth/authController.test.ts > Authentication Phase 1 — changePassword > WB-CP-03 changePassword rejects a missing new password 0ms
+ ✓ |authentication-whitebox| server/tests/unit/auth/authController.test.ts > Authentication Phase 1 — changePassword > WB-CP-04 changePassword rejects five characters 0ms
+ ✓ |authentication-whitebox| server/tests/unit/auth/authController.test.ts > Authentication Phase 1 — changePassword > WB-CP-08 changePassword accepts six characters and sends notification 1ms
+ ✓ |authentication-whitebox| server/tests/unit/auth/authController.test.ts > Authentication Phase 1 — changePassword > WB-CP-09 changePassword reports an update failure with seven characters 1ms
+ ✓ |authentication-whitebox| server/tests/unit/auth/authController.test.ts > Authentication Phase 1 — resetPassword > WB-RP-04 resetPassword rejects a non-string password 1ms
+ ✓ |authentication-whitebox| server/tests/unit/auth/authController.test.ts > Authentication Phase 1 — resetPassword > WB-RP-08 resetPassword rejects an incorrect OTP 0ms
+ ✓ |authentication-whitebox| server/tests/unit/auth/authController.test.ts > Authentication Phase 1 — resetPassword > WB-RP-10 resetPassword rejects an OTP expired by one millisecond 2ms
+ ✓ |authentication-whitebox| server/tests/unit/auth/authController.test.ts > Authentication Phase 1 — resetPassword > WB-RP-12 resetPassword normalizes input and clears a valid OTP 1ms
+ ✓ |authentication-whitebox| server/tests/unit/auth/authMiddleware.phase2.test.ts > Authentication Phase 2 — authenticateToken > WB-AT-01 authenticateToken rejects a missing Authorization header 3ms
+ ✓ |authentication-whitebox| server/tests/unit/auth/authMiddleware.phase2.test.ts > Authentication Phase 2 — authenticateToken > WB-AT-02 authenticateToken rejects a Bearer header without a token 0ms
+ ✓ |authentication-whitebox| server/tests/unit/auth/authMiddleware.phase2.test.ts > Authentication Phase 2 — authenticateToken > WB-AT-03 authenticateToken rejects invalid and expired verifier errors 1ms
+ ✓ |authentication-whitebox| server/tests/unit/auth/authMiddleware.phase2.test.ts > Authentication Phase 2 — authenticateToken > WB-AT-04 authenticateToken forwards a valid decoded user once 1ms
+ ✓ |authentication-whitebox| server/tests/unit/auth/authMiddleware.phase2.test.ts > Authentication Phase 2 — authorizeAdmin > WB-AA-01 authorizeAdmin rejects an anonymous user 1ms
+ ✓ |authentication-whitebox| server/tests/unit/auth/authMiddleware.phase2.test.ts > Authentication Phase 2 — authorizeAdmin > WB-AA-02 authorizeAdmin rejects the USER role 0ms
+ ✓ |authentication-whitebox| server/tests/unit/auth/authMiddleware.phase2.test.ts > Authentication Phase 2 — authorizeAdmin > WB-AA-03 authorizeAdmin allows the ADMIN role 0ms
+ ✓ |authentication-whitebox| server/tests/unit/auth/authMiddleware.phase2.test.ts > Authentication Phase 2 — optionalAuthenticateToken > WB-OA-01 optionalAuthenticateToken allows an anonymous request 0ms
+ ✓ |authentication-whitebox| server/tests/unit/auth/authMiddleware.phase2.test.ts > Authentication Phase 2 — optionalAuthenticateToken > WB-OA-02 optionalAuthenticateToken continues after an invalid token 0ms
+ ✓ |authentication-whitebox| server/tests/unit/auth/authMiddleware.phase2.test.ts > Authentication Phase 2 — optionalAuthenticateToken > WB-OA-03 optionalAuthenticateToken attaches a valid decoded user 0ms
+
+ Test Files  3 passed (3)
+      Tests  40 passed (40)
+   Start at  13:38:12
+   Duration  697ms (transform 131ms, setup 87ms, import 142ms, tests 50ms, environment 0ms)
+
+JSON report written to /home/a2ilab/Documents/project/library-management-system/docs/qa/whitebox/evidence/phase2/coverage/vitest-results.json
+ % Coverage report from v8
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------|---------|----------|---------|---------|-------------------
+All files          |   75.93 |    81.69 |   76.92 |   76.56 |                   
+ controllers       |   77.22 |    77.19 |    62.5 |   78.78 |                   
+  ...Controller.ts |   77.22 |    77.19 |    62.5 |   78.78 | ...94-135,298-299 
+ middleware        |     100 |      100 |     100 |     100 |                   
+  auth.ts          |     100 |      100 |     100 |     100 |                   
+ routes            |       0 |      100 |     100 |       0 |                   
+  authRoutes.ts    |       0 |      100 |     100 |       0 | 14-23             
+-------------------|---------|----------|---------|---------|-------------------

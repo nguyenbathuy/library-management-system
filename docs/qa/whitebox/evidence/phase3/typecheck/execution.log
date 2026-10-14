@@ -1,0 +1,4 @@
+COMMAND: ["./server/node_modules/.bin/tsc", "--project", "server/tsconfig.tests.json", "--noEmit"]
+SCOPE: all
+
+EXIT CODE: 0

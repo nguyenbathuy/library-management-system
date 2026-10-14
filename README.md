@@ -4,7 +4,7 @@
 
 ![React](https://img.shields.io/badge/React-18.3-61DAFB?style=for-the-badge&logo=react&logoColor=black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
-![Node.js](https://img.shields.io/badge/Node.js-20.x-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-22.x-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
 ![Express](https://img.shields.io/badge/Express-5.x-000000?style=for-the-badge&logo=express&logoColor=white)
 ![Prisma](https://img.shields.io/badge/Prisma-5.22-2D3748?style=for-the-badge&logo=prisma&logoColor=white)
 ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4.x-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
@@ -30,7 +30,7 @@ Hệ thống được thiết kế và xây dựng theo chuẩn mực thư việ
 * ⚙️ **Quản trị vòng đời bằng State Machine**: Khóa chặt các chuyển dịch trạng thái của phiếu mượn (`ACTIVE` $\rightarrow$ `OVERDUE` $\rightarrow$ `COMPLETED`), ngăn ngừa tình trạng dữ liệu mồ côi hoặc thất thoát sách.
 * 💰 **Kỷ cương tài chính chặt chẽ**: Tự động tính toán mức phạt quá hạn theo ngày và đền bù sách mất/hỏng; khóa chức năng mượn và đóng phiếu cho tới khi nghĩa vụ tài chính được tất toán.
 * 🔔 **Truyền thông sự kiện đa kênh (Event-Driven)**: Kết hợp chuông thông báo In-app thời gian thực và tiến trình nền (Cronjob) gửi Email HTML tự động nhắc hạn mỗi sáng.
-* 📊 **Trực quan hóa chỉ số KPI**: Bảng điều khiển thời gian thực và chức năng xuất báo cáo thống kê PDF chuẩn A4, hiển thị tiếng Việt Unicode 100% không lỗi font.
+* 📊 **Trực quan hóa chỉ số KPI**: Bảng điều khiển và chức năng xuất báo cáo thống kê PDF chuẩn A4, với mục tiêu hiển thị tiếng Việt không lỗi font. Trạng thái kiểm thử và các lỗi còn mở xem [Manual Gap Analysis v2](docs/qa/output/Manual_Test_Gap_Analysis_v2.md).
 
 ---
 
@@ -57,7 +57,7 @@ Hệ thống tuân thủ kiến trúc phân tầng **Client - Server (RESTful AP
                                     │ Prisma ORM 5.22
                                     ▼
 ┌────────────────────────────────────────────────────────────────────────┐
-│                   CƠ SỞ DỮ LIỆU QUAN HỆ (SQLite / PostgreSQL)          │
+│                     CƠ SỞ DỮ LIỆU QUAN HỆ (SQLite)                    │
 │   • User, Token, Book, BookItem, Category, Author, Publisher,          │
 │     Loan, Fine, Reservation, Notification, AuditLog                    │
 └────────────────────────────────────────────────────────────────────────┘
@@ -72,11 +72,11 @@ Hệ thống tuân thủ kiến trúc phân tầng **Client - Server (RESTful AP
   - `Lucide React`: Hệ thống icon vector tối giản, sắc nét.
   - `Recharts`: Biểu đồ trực quan hóa dữ liệu xu hướng mượn sách theo từng tháng.
   - Hỗ trợ chế độ giao diện **Dark Mode / Light Mode** và chuyển đổi **Song ngữ (Việt - Anh)** linh hoạt.
-* **Kết xuất tài liệu báo cáo**: `html2canvas-pro` (hỗ trợ đầy đủ CSS `oklch` của Tailwind v4) kết hợp `jspdf` giúp xuất file PDF báo cáo chuẩn A4 với font tiếng Việt sắc nét.
+* **Kết xuất tài liệu báo cáo**: Dashboard sử dụng `html2canvas-pro` kết hợp `jspdf` để xuất file PDF báo cáo chuẩn A4. Chất lượng font cần đối chiếu file xuất và kết quả QA, không suy từ thư viện sử dụng.
 
 ### 2.2. Phía Backend
-* **Nền tảng thực thi**: `Node.js 20.x LTS` với framework `Express 5.x` viết toàn bộ bằng `TypeScript`.
-* **ORM & CSDL**: `Prisma ORM 5.22` kết nối cơ sở dữ liệu quan hệ SQLite cục bộ (dễ dàng chuyển đổi sang PostgreSQL/MySQL trong môi trường production).
+* **Nền tảng thực thi**: `Node.js 22.x` với framework `Express 5.x` viết toàn bộ bằng `TypeScript`; môi trường đã ghi nhận trong QA dùng Node.js `22.23.3`.
+* **ORM & CSDL**: `Prisma ORM 5.22` kết nối SQLite cục bộ tại `server/prisma/dev.db`, theo datasource `file:./dev.db` trong schema hiện tại.
 * **Bảo mật & Phân quyền**: Xác thực người dùng qua `jsonwebtoken` (JWT), mã hóa mật khẩu bằng `bcryptjs` (salt 10 rounds), bảo vệ route theo vai trò (RBAC: `ADMIN` / `USER`).
 
 ### 2.3. Bảng tổng hợp công nghệ & thư viện
@@ -143,7 +143,7 @@ Hệ thống tuân thủ kiến trúc phân tầng **Client - Server (RESTful AP
   - Gửi email định dạng HTML chuyên nghiệp: **Màu xanh nhắc nhở** khi còn 1-2 ngày đến hạn; **Màu đỏ cảnh báo khẩn cấp** khi sách đã quá hạn.
 
 ### 3.5. 📊 Xuất báo cáo PDF chuẩn hóa tiếng Việt (Unicode PDF Export)
-* **Render trực tiếp qua HTML & Canvas**: Giải quyết triệt để lỗi bể font (`B£ng iÁu khiÃn...`) của thư viện jsPDF truyền thống bằng giải pháp kết xuất qua `html2canvas-pro`.
+* **Render trực tiếp qua HTML & Canvas**: Dashboard kết xuất nội dung qua `html2canvas-pro` và đóng gói bằng jsPDF. Baseline manual v2 còn ghi nhận **DEF-003 / DASH-02** về font tiếng Việt; chưa có evidence fix/retest để xác nhận lỗi đã được xử lý. PDF kiểm kê được theo dõi riêng, không suy hai luồng cùng nguyên nhân.
 * **Định dạng báo cáo chuẩn mực**: Bổ sung đầy đủ Logo trường Đại học Phenikaa, tiêu đề báo cáo chính thức, thời gian xuất báo cáo thực tế, tên thủ thư lập báo cáo, thẻ KPI thống kê, đồ thị xu hướng và danh sách hoạt động.
 * **Hỗ trợ chia trang tự động**: Tự động tính toán tỷ lệ khổ giấy A4 Landscape và phân trang mượt mà nếu nội dung dài.
 
@@ -226,12 +226,36 @@ erDiagram
 ## 6. 🚀 Hướng dẫn Cài đặt & Khởi chạy
 
 ### Yêu cầu tiên quyết
-* Đã cài đặt **Node.js** (Phiên bản `18.x` hoặc `20.x LTS` trở lên).
-* Trình quản lý gói **npm** (đi kèm Node.js) hoặc **pnpm**.
+* **Node.js 22 LTS** và **npm**. Phiên bản đã kiểm tra trên máy hiện tại: Node.js `22.23.3`, npm `10.9.9`. Tham khảo [danh sách phiên bản chính thức của Node.js](https://nodejs.org/en/about/previous-releases).
+* Dự án dùng SQLite qua Prisma; không cần cài thêm MySQL/PostgreSQL để chạy bản local này.
+
+### Chạy ngay trên máy đã được chuẩn bị
+
+Node.js, dependencies frontend/backend và Prisma Client đã được cài. Database `server/prisma/dev.db` đã có dữ liệu và tài khoản thử; **không cần chạy lại seed**.
+
+Mở Terminal rồi chạy:
+
+```bash
+cd /home/a2ilab/Documents/project/library-management-system
+export PATH="$HOME/.local/bin:$PATH"
+npm run dev
+```
+
+Giữ Terminal mở, chờ cả hai dòng `VITE ... ready` và `Server is running on http://localhost:5000`, sau đó mở **http://localhost:5173** trong Chrome/Firefox. Trang **http://localhost:5000** chỉ là API, không phải giao diện ứng dụng. Dừng cả frontend/backend bằng **Ctrl+C** trong Terminal đang chạy.
+
+Node được cài tại `~/.local/share/nodejs/node-v22.23.3-linux-x64`, các lệnh `node`, `npm`, `npx` liên kết trong `~/.local/bin`. PATH đã được thêm vào `~/.bashrc` cho các Terminal Bash mở mới; lệnh `export` bên trên cũng dùng được cho Terminal đã mở từ trước.
+
+Đăng nhập bằng tài khoản ở mục 7. Admin có thể xem Dashboard, danh mục sách, thành viên, quản lý mượn/đặt trước và kiểm kê. User mở Hồ sơ độc giả, danh mục và cài đặt giao diện.
+
+Khi chuẩn bị môi trường này, database được sao lưu tại `~/.local/share/library-management-system/backups/dev-before-local-setup.db`. Không chạy migration, `db push` hoặc seed trên database đang có dữ liệu chỉ để khởi động lại ứng dụng.
+
+Kiểm tra khởi chạy đã xác nhận đăng nhập Admin/User và tải được Dashboard, danh mục, thành viên, kiểm kê, hồ sơ độc giả. Frontend build và backend kiểm tra TypeScript thành công. Xem [ảnh Dashboard](docs/local-preview/admin-dashboard.png), [danh mục sách](docs/local-preview/book-catalog.png), [trang đăng nhập](docs/local-preview/login.png), [hồ sơ độc giả](docs/local-preview/user-profile.png) và [kết quả kiểm tra môi trường](docs/local-preview/runtime-check.json). Đây là kiểm tra khởi chạy hiện tại, không thay thế kết quả 44 testcase manual.
+
+Repo hiện có theo dõi các tệp trong `node_modules`; việc cài lại thư viện cho Linux làm Git báo thay đổi ở các thư mục này. Trong lần chuẩn bị môi trường, mã nguồn ứng dụng, hai lockfile, `.env`, database và các tài liệu QA được giữ nguyên. Các thay đổi package/lockfile và test tooling ở nhiệm vụ White-box sau đó được ghi riêng trong [QA Changelog](docs/qa/CHANGELOG.md). Phiên chạy thử của lần chuẩn bị đã dừng; dùng lệnh trên để khởi động trong Terminal của bạn.
 
 ---
 
-### Bước 1: Clone mã nguồn và Cài đặt Dependencies
+### Bước 1: Cài đặt lại dependencies khi cần / trên máy khác
 
 Mở Terminal và thực thi lệnh sau:
 
@@ -240,12 +264,12 @@ Mở Terminal và thực thi lệnh sau:
 git clone https://github.com/nguyenbathuy/library-management-system.git
 cd library-management-system
 
-# 2. Cài đặt thư viện cho Frontend (Thư mục gốc)
-npm install
+# 2. Cài đúng phiên bản trong lockfile cho Frontend
+npm ci
 
 # 3. Cài đặt thư viện cho Backend (Server)
 cd server
-npm install
+npm ci
 cd ..
 ```
 
@@ -253,17 +277,14 @@ cd ..
 
 ### Bước 2: Cấu hình biến môi trường (.env)
 
-Tạo file `.env` bên trong thư mục `server/` (đã có sẵn file mẫu `.env.example` để tham khảo):
+Nếu `server/.env` đã tồn tại, giữ cấu hình hiện có. Nếu chưa có, tạo file với nội dung tối thiểu sau và đặt `JWT_SECRET` riêng cho môi trường local:
 
 ```env
 # Cổng chạy máy chủ backend
 PORT=5000
 
-# Đường dẫn cơ sở dữ liệu SQLite
-DATABASE_URL="file:./dev.db"
-
 # Chuỗi bí mật mã hóa JWT Token
-JWT_SECRET="super_secret_jwt_key_library_phenikaa_2026"
+JWT_SECRET="replace_with_a_random_local_secret"
 
 # (Tùy chọn) Cấu hình gửi Email thực tế qua Gmail SMTP:
 # SMTP_HOST=smtp.gmail.com
@@ -273,25 +294,35 @@ JWT_SECRET="super_secret_jwt_key_library_phenikaa_2026"
 # SMTP_FROM="Thư Viện PKA <your_email@gmail.com>"
 ```
 
-> 💡 **Ghi chú**: Nếu không cấu hình SMTP thật, hệ thống sẽ tự động chuyển sang dịch vụ giả lập **Ethereal Email** an toàn để kiểm thử mà không phát sinh bất kỳ lỗi nào.
+Đường dẫn SQLite hiện được khai báo trực tiếp là `file:./dev.db` trong `server/prisma/schema.prisma`, tức `server/prisma/dev.db`. Chỉ thêm biến `DATABASE_URL` vào `.env` không thay đổi kết nối với schema hiện tại.
+
+Email không cần thiết để xem giao diện. Khi dùng tính năng email, service dùng SMTP nếu có `SMTP_USER` và `SMTP_PASS`; nếu không, service thử tạo tài khoản Ethereal và cần kết nối mạng. Backend đăng ký cron nhắc hạn lúc 08:00 mỗi ngày theo múi giờ máy; tác vụ này có thể cập nhật trạng thái/phí phạt/thông báo và gửi email theo cấu hình hiện có.
 
 ---
 
-### Bước 3: Khởi tạo Cơ sở dữ liệu & Nạp dữ liệu mẫu (Seed Data)
+### Bước 3: Tạo Prisma Client và kiểm tra database
 
 Di chuyển vào thư mục `server` để chuẩn bị CSDL:
 
 ```bash
 cd server
 
-# Đẩy schema Prisma vào database SQLite
-npx prisma db push
-
-# Nạp dữ liệu mẫu ban đầu (Đầu sách, bản sao vật lý, tài khoản Admin/User)
-npx ts-node src/seed.ts
+# Tạo client và native engine phù hợp với hệ điều hành hiện tại
+npx prisma generate
 
 cd ..
 ```
+
+Nếu `server/prisma/dev.db` đã có dữ liệu, dừng ở đây và chuyển sang Bước 4. Lệnh `prisma generate` không khởi tạo hoặc xóa dữ liệu database.
+
+**Chỉ với một database mới, rỗng dành riêng cho demo**, chạy trong thư mục `server`:
+
+```bash
+npx prisma db push
+npx ts-node src/seed.ts
+```
+
+**Seed hiện tại xóa các bản ghi mượn, bản sao sách, đặt trước và danh mục cũ trước khi tạo dữ liệu mẫu. Không chạy seed trên database cần giữ.**
 
 ---
 
@@ -306,6 +337,23 @@ npm run dev
 Sau khi khởi chạy thành công:
 * 🌐 **Giao diện người dùng (Frontend)**: [http://localhost:5173](http://localhost:5173)
 * 🔌 **Cổng dịch vụ API (Backend)**: [http://localhost:5000](http://localhost:5000)
+
+Frontend hiện gọi cố định API ở `http://localhost:5000/api`, nên giữ cổng backend `5000` khi dùng cấu hình này. Nếu `5173` hoặc `5000` đang được một phiên dự án khác sử dụng, dừng phiên đó bằng Ctrl+C rồi chạy lại. Vite có thể chuyển sang cổng khác khi `5173` bận; dùng đúng URL Vite in ra trong Terminal.
+
+Nếu thiếu lệnh hoặc native module trên Linux:
+
+```bash
+export PATH="$HOME/.local/bin:$PATH"
+node --version
+npm --version
+npm ci
+npm --prefix server ci
+cd server
+npx prisma generate
+cd ..
+```
+
+Không sao chép `node_modules` từ Windows sang Linux; dùng `npm ci` để cài đúng binary của hệ điều hành. Nếu báo `Cannot find module '.prisma/client/default'`, tạo lại Prisma Client trong thư mục `server`. Nếu API báo `Invalid credentials`, kiểm tra mật khẩu đã thay đổi trong database hiện tại; không dùng seed để đặt lại dữ liệu.
 
 ---
 
@@ -368,8 +416,30 @@ Library Management System/
 │   ├── styles/                           # CSS Tokens, Tailwind v4 & Theme Colors
 ├── package.json                          # Cấu hình gói và kịch bản Root
 ├── vite.config.ts                        # Cấu hình Vite Build Tool
+├── vitest.backend.config.ts              # Runner/coverage unit Authentication + Member
+├── AGENTS.md                             # Quy tắc dự án và kiểm tra cuối nhiệm vụ
+├── docs/qa/                              # Baseline, kế hoạch, báo cáo và evidence QA
 └── README.md                             # Tài liệu kỹ thuật & Hướng dẫn sử dụng
 ```
+
+## 9. Quy tắc dự án và kiểm thử
+
+[AGENTS.md](AGENTS.md) quy định phạm vi phát triển/QA, database/Git safety và mục bắt buộc **Rules Maintenance & Documentation Synchronization**. Sau mỗi nhiệm vụ có sửa file, review diff/file mới, đánh giá thay đổi lâu dài, đồng bộ hướng dẫn khi cần và báo `RULES MAINTENANCE CHECK`; nếu quy tắc không đổi thì giữ AGENTS nguyên.
+
+[QA Workflow](docs/qa/QA_WORKFLOW.md) hướng dẫn mocks/isolation, Test ID/oracle, evidence và cách đọc coverage. Chạy unit **từ repository root**, dùng dependency đã cài; không cần khởi động app hoặc seed database:
+
+```bash
+npm test
+npm run test:unit
+npm run test:coverage
+LMS_WB_SCOPE=member npm run test:coverage
+LMS_WB_SCOPE=authentication npm run test:coverage
+./server/node_modules/.bin/tsc --project server/tsconfig.tests.json --noEmit
+```
+
+Runner dùng Vitest/coverage-v8 4.1.0. Mặc định `LMS_WB_SCOPE=all` chạy unit Authentication tại `server/tests/unit/auth/` và Member tại `server/tests/unit/member/`; có thể chọn riêng `authentication` hoặc `member`. Coverage vẫn gồm nguyên `authController.ts`, `middleware/auth.ts`, `authRoutes.ts`, không phải coverage toàn hệ thống. Condition ledger thủ công được báo riêng với branch metric của công cụ. Default output ở `artifacts/qa/whitebox/<scope>/latest/`; dùng `LMS_WB_RUN_DIR` tới thư mục mới khi lưu evidence chính thức để giữ lịch sử.
+
+Xem [Phase 1 Results](docs/qa/whitebox/Whitebox_Phase1_Results.md), [Phase 2 Results](docs/qa/whitebox/Whitebox_Phase2_Results.md), [Phase 3 Results](docs/qa/whitebox/Whitebox_Phase3_Results.md), [Manual baseline v2](docs/qa/output/Manual_Test_Gap_Analysis_v2.md), [QA Changelog](docs/qa/CHANGELOG.md) và [Rules Audit](docs/qa/Rules_Audit.md). Bốn kế hoạch white-box giữ trạng thái thiết kế tại thời điểm tạo; package/config hiện tại và evidence từng run xác định trạng thái triển khai/thực thi. Các báo cáo kỹ thuật cũ trong `docs/` có ghi chú phạm vi; chúng không tự xác nhận defect đã được retest hoặc tính năng đạt production-ready.
 
 <div align="center">
 

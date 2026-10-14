@@ -1,5 +1,7 @@
 # Báo Cáo Sửa Lỗi Quản Lý Sách
 
+> **Ghi chú đối chiếu 12/10/2026:** Đây là báo cáo phát triển trước đây, chưa xác nhận ngày/commit hoặc raw retest cho các kết luận sửa lỗi. Code snippets/checklists bên dưới là mô tả và hướng dẫn lịch sử; đối chiếu source trước dùng, không coi các câu “đã sửa/hoàn toàn hoạt động” là kết quả retest hiện tại. Trạng thái defects của Tester xem [Manual Gap Analysis v2](qa/output/Manual_Test_Gap_Analysis_v2.md); cách lưu kết quả mới xem [QA Workflow](qa/QA_WORKFLOW.md). Nội dung báo cáo được giữ để tham khảo, không thay Expected hoặc đóng lỗi QA.
+
 ## 🎯 Vấn Đề Ban Đầu
 User báo cáo chức năng **thêm, sửa, xóa sách vẫn bị lỗi**.
 
@@ -305,7 +307,7 @@ Password: 123
 ### Files Modified
 
 #### Frontend
-- **[BooksManagement.tsx](file:///e:/zalo/Library%20Management%20System%20UI%20%28Community%29/src/app/components/BooksManagement.tsx)** (+330 lines)
+- **[BooksManagement.tsx](../src/app/components/BooksManagement.tsx)** (+330 lines)
   - Added state management (showModal, editingBook, formData)
   - Implemented 3 mutations (create, update, delete)
   - Added modal dialog with complete form
@@ -313,7 +315,7 @@ Password: 123
   - Added form validation
 
 #### Backend
-- **[bookController.ts](file:///e:/zalo/Library%20Management%20System%20UI%20%28Community%29/server/src/controllers/bookController.ts)** (+94 lines)
+- **[bookController.ts](../server/src/controllers/bookController.ts)** (+94 lines)
   - Added try-catch to all methods
   - Added input validation for all operations
   - Added business logic checks (active loans)

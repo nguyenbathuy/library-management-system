@@ -1,0 +1,71 @@
+{
+  "input_sha256": {
+    "Kiểm thử phần mềm.docx": "c55afa261edf53a115803911433526eec2117fc549fe902d08afb66e41ca277c",
+    "Nhom8-DGVKDCLPM_bao-cao-dang-test.docx": "79ed23a92868a83dad1467d14dc5089673bc8ee5aa994c5621e8d57a046860ab"
+  },
+  "counts": {
+    "total_original": 44,
+    "classified_scope": 37,
+    "pass": 27,
+    "fail": 3,
+    "blocked": 0,
+    "not_run": 7,
+    "needs_review": 7,
+    "executed": 30,
+    "confirmed_defects": 3,
+    "potential_defects": 5,
+    "missing_direct_evidence": 17,
+    "pass_rate": 0.9,
+    "execution_rate_original": 0.6818181818181818,
+    "execution_rate_classified": 0.8108108108108109
+  },
+  "missing_direct_evidence_test_ids": [
+    "AUTH-01",
+    "AUTH-02",
+    "AUTH-04",
+    "AUTH-05",
+    "BOOK-02",
+    "BOOK-05",
+    "BOOK-06",
+    "BOOK-07",
+    "BOOK-08",
+    "BOOK-09",
+    "BOOK-10",
+    "EXCEL-01",
+    "EXCEL-02",
+    "EXCEL-03",
+    "EXCEL-04",
+    "RES-02",
+    "DASH-02"
+  ],
+  "checks": {
+    "44_unique_original_test_ids": true,
+    "xlsx_expected_scenarios_and_notes_preserved": true,
+    "metadata_not_invented": true,
+    "status_totals_and_review_separate": true,
+    "every_fail_linked_to_confirmed_defect": true,
+    "no_fixed_closed_or_fabricated_retest": true,
+    "24_images_byte_identical_to_source": true,
+    "styles_numbering_toc_resources_headers_footers_unchanged": true,
+    "docx_original_test_ids_scenarios_expected_rows_unchanged": true,
+    "chapters_1_2_4_5_6_7_and_other_content_unchanged": true,
+    "chapter_3_matrix_plan_existing_content_unchanged": true,
+    "both_inputs_unchanged": true,
+    "xlsx_docx_opened_by_readers": true,
+    "excel_opened_and_recalculated_by_libreoffice": true,
+    "metrics_formula_results_verified_and_cached": true,
+    "tracked_repository_files_unchanged": true,
+    "no_user_input_documents_modified": true
+  },
+  "changed_docx_package_members": [
+    "word/document.xml"
+  ],
+  "render_check": "DOCX opened and rendered with LibreOffice to 39-page PDF in temporary directory; visually inspected result/review rows and metrics (rendered pages 22,26,27,30,31). XLSX opened and recalculated with LibreOffice; formula results match independent counts. Rendering is artifact validation, not application test evidence.",
+  "artifact_sha256": {
+    "Manual_Test_Source_Extraction.json": "3b2d7deee541c0f3f1c239b564016c686a3399016ddbf96ad86dbc0bbec843bc",
+    "Manual_Test_Results.xlsx": "7a0829301f0c9559981aae644498c1120983d638a9b303ca17b4295156fca42f",
+    "Nhom8-DGVKDCLPM_Manual_Test_Updated.docx": "a4afaf12663716de08937e3e0fa80a6489110e7cba637556782c79f09de7f6c0",
+    "Manual_Test_Gap_Analysis.md": "d6f03645f9b84795607559ab71d84ed3cb4b20592bf96a7682ce1edc5c84d4d5",
+    "Defect_Log.xlsx": "720b0322467b222e2ed7eab8e42ff79adab0ff9cb5bfa80cb9fc96404f79febc"
+  }
+}

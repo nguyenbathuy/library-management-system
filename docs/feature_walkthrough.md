@@ -1,5 +1,7 @@
 # Feature Implementation: Book Details & Dashboard Analytics
 
+> **Ghi chú đối chiếu 12/10/2026:** Đây là mô tả triển khai/hướng dẫn test trước đây; ngày/commit và kết quả execution tương ứng chưa được xác nhận. Những kết luận “fully functional/production-ready” bên dưới không phải evidence retest hiện tại. Hai ảnh thiết kế tham chiếu ngoài repository không có tại workspace; giữ đường dẫn gốc dưới dạng văn bản, không tạo ảnh thay thế. Đối chiếu [Manual Gap Analysis v2](qa/output/Manual_Test_Gap_Analysis_v2.md), [Phase 2 Results](qa/whitebox/Whitebox_Phase2_Results.md) và [QA Workflow](qa/QA_WORKFLOW.md) khi cập nhật kết quả.
+
 ## 🎯 Objective
 Implement two major features to enhance the Library Management System:
 1. **Book Detail Modal** - Detailed view when clicking on a book
@@ -7,9 +9,9 @@ Implement two major features to enhance the Library Management System:
 
 Based on user's reference designs:
 
-![Book Detail Reference](file:///C:/Users/Admin/.gemini/antigravity/brain/18295ecd-a232-412a-b1b0-49de77cdeec0/uploaded_media_0_1770314182356.png)
+Book Detail Reference — ảnh ngoài repository chưa có tại workspace. Đường dẫn gốc: `file:///C:/Users/Admin/.gemini/antigravity/brain/18295ecd-a232-412a-b1b0-49de77cdeec0/uploaded_media_0_1770314182356.png`.
 
-![Dashboard Reference](file:///C:/Users/Admin/.gemini/antigravity/brain/18295ecd-a232-412a-b1b0-49de77cdeec0/uploaded_media_1_1770314182356.png)
+Dashboard Reference — ảnh ngoài repository chưa có tại workspace. Đường dẫn gốc: `file:///C:/Users/Admin/.gemini/antigravity/brain/18295ecd-a232-412a-b1b0-49de77cdeec0/uploaded_media_1_1770314182356.png`.
 
 ## ✅ What Was Implemented
 
@@ -32,7 +34,7 @@ Based on user's reference designs:
 - ✅ Borrow functionality integrated
 
 **Integration:**
-- Added state management in [BooksManagement.tsx](file:///e:/zalo/Library%20Management%20System%20UI%20%28Community%29/src/app/components/BooksManagement.tsx)
+- Added state management in [BooksManagement.tsx](../src/app/components/BooksManagement.tsx)
 - Made book cards clickable with `handleBookClick`
 - Added `stopPropagation` to Edit/Delete/Borrow buttons to prevent modal opening
 
@@ -65,7 +67,7 @@ Based on user's reference designs:
 
 **New Files:**
 
-#### [analyticsController.ts](file:///e:/zalo/Library%20Management%20System%20UI%20%28Community%29/server/src/controllers/analyticsController.ts)
+#### [analyticsController.ts](../server/src/controllers/analyticsController.ts)
 
 **Endpoints:**
 - `GET /api/analytics/stats` - Overall statistics
@@ -99,10 +101,10 @@ Based on user's reference designs:
 - ✅ Prisma query optimization
 - ✅ Authentication required (via `authenticateToken`)
 
-#### [analyticsRoutes.ts](file:///e:/zalo/Library%20Management%20System%20UI%20%28Community%29/server/src/routes/analyticsRoutes.ts)
+#### [analyticsRoutes.ts](../server/src/routes/analyticsRoutes.ts)
 
 - Registered routes with authentication middleware
-- Added to server in [index.ts](file:///e:/zalo/Library%20Management%20System%20UI%20%28Community%29/server/src/index.ts) as `/api/analytics`
+- Added to server in [index.ts](../server/src/index.ts) as `/api/analytics`
 
 ## 📊 Files Changed
 
@@ -110,17 +112,17 @@ Based on user's reference designs:
 
 | File | Status | Lines | Description |
 |------|--------|-------|-------------|
-| [BookDetailModal.tsx](file:///e:/zalo/Library%20Management%20System%20UI%20%28Community%29/src/app/components/BookDetailModal.tsx) | **NEW** | ~200 | Full book detail modal component |
-| [BooksManagement.tsx](file:///e:/zalo/Library%20Management%20System%20UI%20%28Community%29/src/app/components/BooksManagement.tsx) | **MODIFIED** | +30 | Added modal integration & handlers |
-| [Dashboard.tsx](file:///e:/zalo/Library%20Management%20System%20UI%20%28Community%29/src/app/components/Dashboard.tsx) | **MODIFIED** | ~250 | Complete rewrite with analytics |
+| [BookDetailModal.tsx](../src/app/components/BookDetailModal.tsx) | **NEW** | ~200 | Full book detail modal component |
+| [BooksManagement.tsx](../src/app/components/BooksManagement.tsx) | **MODIFIED** | +30 | Added modal integration & handlers |
+| [Dashboard.tsx](../src/app/components/Dashboard.tsx) | **MODIFIED** | ~250 | Complete rewrite with analytics |
 
 ### Backend
 
 | File | Status | Lines | Description |
 |------|--------|-------|-------------|
-| [analyticsController.ts](file:///e:/zalo/Library%20Management%20System%20UI%20%28Community%29/server/src/controllers/analyticsController.ts) | **NEW** | ~160 | Analytics endpoints logic |
-| [analyticsRoutes.ts](file:///e:/zalo/Library%20Management%20System%20UI%20%28Community%29/server/src/routes/analyticsRoutes.ts) | **NEW** | ~15 | Analytics route definitions |
-| [index.ts](file:///e:/zalo/Library%20Management%20System%20UI%20%28Community%29/server/src/index.ts) | **MODIFIED** | +2 | Registered analytics routes |
+| [analyticsController.ts](../server/src/controllers/analyticsController.ts) | **NEW** | ~160 | Analytics endpoints logic |
+| [analyticsRoutes.ts](../server/src/routes/analyticsRoutes.ts) | **NEW** | ~15 | Analytics route definitions |
+| [index.ts](../server/src/index.ts) | **MODIFIED** | +2 | Registered analytics routes |
 
 ## 🧪 Testing Instructions
 

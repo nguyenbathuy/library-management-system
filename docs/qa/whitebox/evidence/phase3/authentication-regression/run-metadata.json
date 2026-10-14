@@ -1,0 +1,51 @@
+{
+  "command": [
+    "npm",
+    "run",
+    "test:unit"
+  ],
+  "executedCommand": [
+    "npm",
+    "run",
+    "test:unit"
+  ],
+  "cwd": "/home/a2ilab/Documents/project/library-management-system",
+  "scope": "authentication",
+  "reportDateClient": "2026-10-12",
+  "clientTimezone": "Asia/Ho_Chi_Minh",
+  "startedAtUtc": "2026-10-12T08:08:14.956237+00:00",
+  "finishedAtUtc": "2026-10-12T08:08:15.773742+00:00",
+  "startedAtClient": "2026-10-12T15:08:14.956237+07:00",
+  "finishedAtClient": "2026-10-12T15:08:15.773742+07:00",
+  "exitCode": 0,
+  "testedCommit": "3623171535cde61d8fb8dd7f02d248da3864e2e5",
+  "workspaceDirty": true,
+  "gitStatusFile": "git-working-tree-status.txt",
+  "node": "v22.23.3",
+  "npm": "10.9.9",
+  "vitest": "4.1.0",
+  "coverageV8": "4.1.0",
+  "sourceConfigAndTestHashes": {
+    "server/src/controllers/authController.ts": "84ee5d75adfaae69e3551e26a66dc623a094bab89534a0ea78fd20b23d684500",
+    "server/src/middleware/auth.ts": "c7b65299af2a7d5bcfaa98f0f0593eee0f528455f3e5831f9d89da0ef43e73c4",
+    "server/src/routes/authRoutes.ts": "4dbac2e7cec3ccf0b71d14a37210f05cdc9ced5a81effa0d8406cdf4a07f7429",
+    "vitest.backend.config.ts": "6b8b899de42fe25ec9dc416cb9c757a1b71e6989c61e24a2ff685abd5ed4177a",
+    "package.json": "cb844374697aef5c6842513f47b6e4575f056fce733bd520a6191b3d94470f74",
+    "package-lock.json": "61598ac2f173f9bf12ce876d5a4cac2b8a1e50d06947dac1bfc680448fd3e631",
+    "server/package.json": "15c4f2f8520f9eb1f52ffe5a3efca74bcecf9711e374cc675bee89b7bd35ca55",
+    "server/package-lock.json": "c09ffe69cc89ded06958c70b1093da98879ce2bb0b42444f9d6ca62532b8e336",
+    "server/tsconfig.tests.json": "2b0ea214bbdb2a3730a33cc2e03911e7c37d800d0cf8037707029d5f56b1fc22",
+    "server/tests/mocks/prismaGuard.ts": "38acb809c068f7afcc25c266072f648e7a48c3e686a2a530509cc606a2da23b4",
+    "server/tests/mocks/http.ts": "b34b68078ed012119510e7f73ec07227ae9ace0a0a4174fcf287b35201782af0",
+    "server/tests/unit/member/memberManagement.phase3.test.ts": "3f494e774dcdb20fe1f6d50fc2f9070bc86105033525e5bd7f80d4a811a415ae",
+    "server/tests/unit/auth/authMiddleware.phase2.test.ts": "3bd009dd0fd1b864f13b238618c191f391a0429005730e27298a0318f6569b5d",
+    "server/tests/unit/auth/authController.test.ts": "a5fd214f90ffe66dee3eab3c384eaf3968bc95521f5071c038764f380f18357e",
+    "server/tests/unit/auth/authController.phase2.test.ts": "d38cc92b6c96833302a959515efe77b50b40033744154bf80d24ab3f4b163391",
+    "server/tests/support/phase2Evidence.ts": "a428b471a47b8598ee8a324d26e175a53ef498de6c40729829e82d82092fe88b",
+    "server/tests/setup/isolation.ts": "8c6a026e284c3268e8571b3c591ce9b8b053d474e19a5fa70eca3b4cd752e75f",
+    "server/tests/fixtures/phase1-cases.json": "175450789834ae30937449dae80126c0b9f0dcc721bca6811e906119e25485a3",
+    "server/tests/fixtures/phase3-cases.json": "ea74472a4d0e98c51de8cc13d3812e3edd62626442b55b7812383f25ce94ac0a",
+    "server/tests/fixtures/auth.ts": "2c40934f5f63ebf70d6346d2d4e35bcf07483559fe81faccd1cd0e51b62d7f43",
+    "server/tests/fixtures/phase2-cases.json": "d954b524e58ba490bd96a14fe72ceb724cd8fc8dbbe36381e727bc01c5c3b65a"
+  }
+}

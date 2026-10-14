@@ -1,0 +1,14 @@
+{
+  "observedAt": "2026-10-12T08:09:01.301Z",
+  "constructorIsMock": true,
+  "constructorCallsAtImport": 1,
+  "factories": {
+    "prisma": true,
+    "bcrypt": true,
+    "jwt": true,
+    "mail": true,
+    "notification": true
+  },
+  "alias": "server/tests/mocks/prismaGuard.ts",
+  "routerImportedWithoutProductionBootstrap": true
+}

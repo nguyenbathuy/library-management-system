@@ -1,5 +1,7 @@
 # Báo Cáo Phân Tích Hệ Thống: Library Management System
 
+> **Ghi chú đối chiếu 12/10/2026:** Tài liệu này giữ mô tả/đề xuất cũ; ngày và commit của lần phân tích ban đầu chưa được xác nhận. Schema, API tables và ví dụ Jest bên dưới không phải contract/cấu hình hiện hành. Schema hiện dùng `Loan.bookItemId`, model `Token` không có `expiresAt`; [authRoutes hiện tại](../server/src/routes/authRoutes.ts) không đăng ký `/logout`. Đối chiếu [schema](../server/prisma/schema.prisma), source liên quan, [AGENTS](../AGENTS.md) và [QA Workflow](qa/QA_WORKFLOW.md) trước áp dụng. Unit runner hiện có là Vitest; kết quả thực thi xem [Phase 2 Results](qa/whitebox/Whitebox_Phase2_Results.md). Các mô tả refresh-token/production hoặc ví dụ test trong tài liệu không xác nhận chúng đã được triển khai/kiểm thử trên source hiện tại.
+
 ## 📋 Tổng Quan Dự Án
 
 **Tên dự án:** Library Management System (Hệ thống Quản lý Thư viện)  

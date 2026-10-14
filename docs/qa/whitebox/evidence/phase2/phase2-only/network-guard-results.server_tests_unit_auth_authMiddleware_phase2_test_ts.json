@@ -1,0 +1,14 @@
+{
+  "testModule": "server/tests/unit/auth/authMiddleware.phase2.test.ts",
+  "guardsInstalled": 8,
+  "attemptedCalls": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ]
+}

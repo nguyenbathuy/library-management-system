@@ -1,0 +1,3647 @@
+{
+  "canonicalRun": "combined-coverage",
+  "newPhase3Cases": [
+    {
+      "id": "WB-RG-03",
+      "module": "Member Management",
+      "function": "register",
+      "inputDesign": "hash rejects before create",
+      "expected": "Promise rejects same injected error; no create/response",
+      "branchCondition": "RG.0 exception before try",
+      "reason": "Hash boundary is outside Prisma catch",
+      "oracle": "S",
+      "originalMatrix": true,
+      "relatedDefects": [],
+      "relatedManualTests": [],
+      "sourceFiles": [
+        "server/src/controllers/authController.ts"
+      ],
+      "status": "passed",
+      "actualInvocations": [
+        {
+          "function": "register",
+          "input": {
+            "name": "Synthetic Member",
+            "email": "member@example.test",
+            "password": "unit-password",
+            "role": "USER"
+          },
+          "params": {
+            "id": "2"
+          },
+          "actor": {
+            "userId": 1,
+            "email": "admin@example.test",
+            "role": "ADMIN"
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured calls",
+            "hash": {
+              "reject": "Error: Simulated hash failure"
+            }
+          },
+          "actual": {
+            "responseWritten": false,
+            "statusCode": null,
+            "payload": null
+          },
+          "rejection": "Error: Simulated hash failure",
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$transaction": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [
+                [
+                  "unit-password",
+                  10
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "rejected",
+                  "error": "Error: Simulated hash failure"
+                }
+              ]
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.verify": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "failureMessages": [],
+      "classification": "PASS within declared unit boundary"
+    },
+    {
+      "id": "WB-RG-04",
+      "module": "Member Management",
+      "function": "register",
+      "inputDesign": "ADMIN context; USER role; membershipTier=LECTURER",
+      "expected": "create data preserves LECTURER; hash(password,10); 201",
+      "branchCondition": "RG.GAP membershipTier",
+      "reason": "Regression of confirmed DEF-002 on manual LECTURER variant",
+      "oracle": "B",
+      "originalMatrix": true,
+      "relatedDefects": [
+        "DEF-002"
+      ],
+      "relatedManualTests": [
+        "MEM-05"
+      ],
+      "sourceFiles": [
+        "server/src/controllers/authController.ts"
+      ],
+      "status": "failed",
+      "actualInvocations": [
+        {
+          "function": "register",
+          "input": {
+            "name": "Synthetic Member",
+            "email": "member@example.test",
+            "password": "unit-password",
+            "role": "USER",
+            "membershipTier": "LECTURER"
+          },
+          "params": {
+            "id": "2"
+          },
+          "actor": {
+            "userId": 1,
+            "email": "admin@example.test",
+            "role": "ADMIN"
+          },
+          "mockConfiguration": {
+            "hash": "unit-test-hash-output",
+            "userCreate": "resolve; no native persistence"
+          },
+          "actual": {
+            "responseWritten": true,
+            "statusCode": 201,
+            "payload": {
+              "message": "User created"
+            }
+          },
+          "rejection": null,
+          "calls": {
+            "user.create": {
+              "arguments": [
+                [
+                  {
+                    "data": {
+                      "email": "member@example.test",
+                      "password": "unit-test-hash-output",
+                      "name": "Synthetic Member",
+                      "role": "USER"
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": {
+                    "id": 1,
+                    "email": "user@example.com",
+                    "name": "Unit Test User",
+                    "password": "unit-test-stored-hash",
+                    "role": "USER",
+                    "membershipTier": "STANDARD",
+                    "isBlacklisted": false,
+                    "resetOtp": "123456",
+                    "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+                    "createdAt": "2026-01-01T00:00:00.000Z"
+                  }
+                }
+              ]
+            },
+            "user.findUnique": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$transaction": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [
+                [
+                  "unit-password",
+                  10
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": "unit-test-hash-output"
+                }
+              ]
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.verify": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "failureMessages": [
+        "AssertionError: expected \"vi.fn()\" to be called once with arguments: [ { data: { …(5) } } ]\n\nReceived:\n\n  1st vi.fn() call:\n\n@@ -1,10 +1,9 @@\n  [\n    {\n      \"data\": {\n        \"email\": \"member@example.test\",\n-       \"membershipTier\": \"LECTURER\",\n        \"name\": \"Synthetic Member\",\n        \"password\": \"unit-test-hash-output\",\n        \"role\": \"USER\",\n      },\n    },\n\n\nNumber of calls: 1\n\n    at Proxy.<anonymous> (file:///home/a2ilab/Documents/project/library-management-system/node_modules/@vitest/expect/dist/index.js:1499:10)\n    at Proxy.<anonymous> (file:///home/a2ilab/Documents/project/library-management-system/node_modules/@vitest/expect/dist/index.js:1151:15)\n    at Proxy.methodWrapper (file:///home/a2ilab/Documents/project/library-management-system/node_modules/chai/index.js:1737:25)\n    at /home/a2ilab/Documents/project/library-management-system/server/tests/unit/member/memberManagement.phase3.test.ts:253:38\n    at processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at file:///home/a2ilab/Documents/project/library-management-system/node_modules/@vitest/runner/dist/index.js:1258:20"
+      ],
+      "classification": "Production Defect — existing DEF-002 controller field omission"
+    },
+    {
+      "id": "WB-RG-05",
+      "module": "Member Management",
+      "function": "register",
+      "inputDesign": "ADMIN context; USER role; membershipTier=PREMIUM",
+      "expected": "create data preserves PREMIUM; hash(password,10); 201",
+      "branchCondition": "RG.GAP membershipTier",
+      "reason": "Original MEM-05 tier scenario, unit expansion of DEF-002",
+      "oracle": "B",
+      "originalMatrix": true,
+      "relatedDefects": [
+        "DEF-002"
+      ],
+      "relatedManualTests": [
+        "MEM-05"
+      ],
+      "sourceFiles": [
+        "server/src/controllers/authController.ts"
+      ],
+      "status": "failed",
+      "actualInvocations": [
+        {
+          "function": "register",
+          "input": {
+            "name": "Synthetic Member",
+            "email": "member@example.test",
+            "password": "unit-password",
+            "role": "USER",
+            "membershipTier": "PREMIUM"
+          },
+          "params": {
+            "id": "2"
+          },
+          "actor": {
+            "userId": 1,
+            "email": "admin@example.test",
+            "role": "ADMIN"
+          },
+          "mockConfiguration": {
+            "hash": "unit-test-hash-output",
+            "userCreate": "resolve; no native persistence"
+          },
+          "actual": {
+            "responseWritten": true,
+            "statusCode": 201,
+            "payload": {
+              "message": "User created"
+            }
+          },
+          "rejection": null,
+          "calls": {
+            "user.create": {
+              "arguments": [
+                [
+                  {
+                    "data": {
+                      "email": "member@example.test",
+                      "password": "unit-test-hash-output",
+                      "name": "Synthetic Member",
+                      "role": "USER"
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": {
+                    "id": 1,
+                    "email": "user@example.com",
+                    "name": "Unit Test User",
+                    "password": "unit-test-stored-hash",
+                    "role": "USER",
+                    "membershipTier": "STANDARD",
+                    "isBlacklisted": false,
+                    "resetOtp": "123456",
+                    "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+                    "createdAt": "2026-01-01T00:00:00.000Z"
+                  }
+                }
+              ]
+            },
+            "user.findUnique": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$transaction": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [
+                [
+                  "unit-password",
+                  10
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": "unit-test-hash-output"
+                }
+              ]
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.verify": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "failureMessages": [
+        "AssertionError: expected \"vi.fn()\" to be called once with arguments: [ { data: { …(5) } } ]\n\nReceived:\n\n  1st vi.fn() call:\n\n@@ -1,10 +1,9 @@\n  [\n    {\n      \"data\": {\n        \"email\": \"member@example.test\",\n-       \"membershipTier\": \"PREMIUM\",\n        \"name\": \"Synthetic Member\",\n        \"password\": \"unit-test-hash-output\",\n        \"role\": \"USER\",\n      },\n    },\n\n\nNumber of calls: 1\n\n    at Proxy.<anonymous> (file:///home/a2ilab/Documents/project/library-management-system/node_modules/@vitest/expect/dist/index.js:1499:10)\n    at Proxy.<anonymous> (file:///home/a2ilab/Documents/project/library-management-system/node_modules/@vitest/expect/dist/index.js:1151:15)\n    at Proxy.methodWrapper (file:///home/a2ilab/Documents/project/library-management-system/node_modules/chai/index.js:1737:25)\n    at /home/a2ilab/Documents/project/library-management-system/server/tests/unit/member/memberManagement.phase3.test.ts:268:38\n    at processTicksAndRejections (node:internal/process/task_queues:103:5)\n    at file:///home/a2ilab/Documents/project/library-management-system/node_modules/@vitest/runner/dist/index.js:1258:20"
+      ],
+      "classification": "Production Defect — existing DEF-002 controller field omission"
+    },
+    {
+      "id": "WB-GU-01",
+      "module": "Member Management",
+      "function": "getAllUsers",
+      "inputDesign": "findMany returns []",
+      "expected": "200 []; safe select; orderBy id asc; no writes",
+      "branchCondition": "GU.1 straight-line",
+      "reason": "Empty boundary",
+      "oracle": "S",
+      "originalMatrix": true,
+      "relatedDefects": [],
+      "relatedManualTests": [
+        "MEM-01"
+      ],
+      "sourceFiles": [
+        "server/src/controllers/authController.ts"
+      ],
+      "status": "passed",
+      "actualInvocations": [
+        {
+          "function": "getAllUsers",
+          "input": {},
+          "params": {
+            "id": "2"
+          },
+          "actor": {
+            "userId": 1,
+            "email": "admin@example.test",
+            "role": "ADMIN"
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured calls",
+            "findMany": []
+          },
+          "actual": {
+            "responseWritten": true,
+            "statusCode": 200,
+            "payload": []
+          },
+          "rejection": null,
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findMany": {
+              "arguments": [
+                [
+                  {
+                    "select": {
+                      "id": true,
+                      "email": true,
+                      "name": true,
+                      "role": true,
+                      "membershipTier": true,
+                      "isBlacklisted": true,
+                      "createdAt": true
+                    },
+                    "orderBy": {
+                      "id": "asc"
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": []
+                }
+              ]
+            },
+            "user.update": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$transaction": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.verify": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "failureMessages": [],
+      "classification": "PASS within declared unit boundary"
+    },
+    {
+      "id": "WB-GU-02",
+      "module": "Member Management",
+      "function": "getAllUsers",
+      "inputDesign": "two DTOs with different role/tier/blacklist",
+      "expected": "200 exact DTOs; select excludes secrets; no writes",
+      "branchCondition": "GU.1 straight-line",
+      "reason": "Field passthrough/privacy query intent",
+      "oracle": "S",
+      "originalMatrix": true,
+      "relatedDefects": [],
+      "relatedManualTests": [
+        "MEM-01"
+      ],
+      "sourceFiles": [
+        "server/src/controllers/authController.ts"
+      ],
+      "status": "passed",
+      "actualInvocations": [
+        {
+          "function": "getAllUsers",
+          "input": {},
+          "params": {
+            "id": "2"
+          },
+          "actor": {
+            "userId": 1,
+            "email": "admin@example.test",
+            "role": "ADMIN"
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured calls",
+            "findMany": [
+              {
+                "id": 2,
+                "email": "member@example.test",
+                "name": "Synthetic Member",
+                "role": "USER",
+                "membershipTier": "LECTURER",
+                "isBlacklisted": false,
+                "createdAt": "2026-01-01T00:00:00.000Z"
+              },
+              {
+                "id": 3,
+                "email": "second@example.test",
+                "name": "Synthetic Member",
+                "role": "ADMIN",
+                "membershipTier": "STANDARD",
+                "isBlacklisted": true,
+                "createdAt": "2026-01-01T00:00:00.000Z"
+              }
+            ]
+          },
+          "actual": {
+            "responseWritten": true,
+            "statusCode": 200,
+            "payload": [
+              {
+                "id": 2,
+                "email": "member@example.test",
+                "name": "Synthetic Member",
+                "role": "USER",
+                "membershipTier": "LECTURER",
+                "isBlacklisted": false,
+                "createdAt": "2026-01-01T00:00:00.000Z"
+              },
+              {
+                "id": 3,
+                "email": "second@example.test",
+                "name": "Synthetic Member",
+                "role": "ADMIN",
+                "membershipTier": "STANDARD",
+                "isBlacklisted": true,
+                "createdAt": "2026-01-01T00:00:00.000Z"
+              }
+            ]
+          },
+          "rejection": null,
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findMany": {
+              "arguments": [
+                [
+                  {
+                    "select": {
+                      "id": true,
+                      "email": true,
+                      "name": true,
+                      "role": true,
+                      "membershipTier": true,
+                      "isBlacklisted": true,
+                      "createdAt": true
+                    },
+                    "orderBy": {
+                      "id": "asc"
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": [
+                    {
+                      "id": 2,
+                      "email": "member@example.test",
+                      "name": "Synthetic Member",
+                      "role": "USER",
+                      "membershipTier": "LECTURER",
+                      "isBlacklisted": false,
+                      "createdAt": "2026-01-01T00:00:00.000Z"
+                    },
+                    {
+                      "id": 3,
+                      "email": "second@example.test",
+                      "name": "Synthetic Member",
+                      "role": "ADMIN",
+                      "membershipTier": "STANDARD",
+                      "isBlacklisted": true,
+                      "createdAt": "2026-01-01T00:00:00.000Z"
+                    }
+                  ]
+                }
+              ]
+            },
+            "user.update": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$transaction": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.verify": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "failureMessages": [],
+      "classification": "PASS within declared unit boundary"
+    },
+    {
+      "id": "WB-GU-03",
+      "module": "Member Management",
+      "function": "getAllUsers",
+      "inputDesign": "findMany rejects injected error",
+      "expected": "Promise rejects same error; responseWritten=false; no writes",
+      "branchCondition": "GU.E uncaught dependency rejection",
+      "reason": "Observe exception boundary; HTTP error contract remains unknown",
+      "oracle": "S",
+      "originalMatrix": false,
+      "relatedDefects": [],
+      "relatedManualTests": [
+        "MEM-01"
+      ],
+      "sourceFiles": [
+        "server/src/controllers/authController.ts"
+      ],
+      "status": "passed",
+      "actualInvocations": [
+        {
+          "function": "getAllUsers",
+          "input": {},
+          "params": {
+            "id": "2"
+          },
+          "actor": {
+            "userId": 1,
+            "email": "admin@example.test",
+            "role": "ADMIN"
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured calls",
+            "findMany": {
+              "reject": "Error: Simulated member list failure"
+            }
+          },
+          "actual": {
+            "responseWritten": false,
+            "statusCode": null,
+            "payload": null
+          },
+          "rejection": "Error: Simulated member list failure",
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findMany": {
+              "arguments": [
+                [
+                  {
+                    "select": {
+                      "id": true,
+                      "email": true,
+                      "name": true,
+                      "role": true,
+                      "membershipTier": true,
+                      "isBlacklisted": true,
+                      "createdAt": true
+                    },
+                    "orderBy": {
+                      "id": "asc"
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "rejected",
+                  "error": "Error: Simulated member list failure"
+                }
+              ]
+            },
+            "user.update": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$transaction": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.verify": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "failureMessages": [],
+      "classification": "PASS within declared unit boundary"
+    },
+    {
+      "id": "WB-ME-01",
+      "module": "Member Management",
+      "function": "getMe",
+      "inputDesign": "req.user absent",
+      "expected": "401 Not authenticated; no query/write",
+      "branchCondition": "ME.1 T",
+      "reason": "Guard before query",
+      "oracle": "S",
+      "originalMatrix": true,
+      "relatedDefects": [],
+      "relatedManualTests": [],
+      "sourceFiles": [
+        "server/src/controllers/authController.ts"
+      ],
+      "status": "passed",
+      "actualInvocations": [
+        {
+          "function": "getMe",
+          "input": {},
+          "params": {
+            "id": "2"
+          },
+          "actor": null,
+          "mockConfiguration": {
+            "default": "deny unconfigured calls"
+          },
+          "actual": {
+            "responseWritten": true,
+            "statusCode": 401,
+            "payload": {
+              "error": "Not authenticated"
+            }
+          },
+          "rejection": null,
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$transaction": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.verify": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "failureMessages": [],
+      "classification": "PASS within declared unit boundary"
+    },
+    {
+      "id": "WB-ME-02",
+      "module": "Member Management",
+      "function": "getMe",
+      "inputDesign": "verified identity; findUnique=null",
+      "expected": "404 User not found; safe select by userId",
+      "branchCondition": "ME.1 F; ME.2 T",
+      "reason": "Identity references missing member",
+      "oracle": "S",
+      "originalMatrix": true,
+      "relatedDefects": [],
+      "relatedManualTests": [],
+      "sourceFiles": [
+        "server/src/controllers/authController.ts"
+      ],
+      "status": "passed",
+      "actualInvocations": [
+        {
+          "function": "getMe",
+          "input": {},
+          "params": {
+            "id": "2"
+          },
+          "actor": {
+            "userId": 2,
+            "email": "member@example.test",
+            "role": "USER"
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured calls",
+            "findUnique": null
+          },
+          "actual": {
+            "responseWritten": true,
+            "statusCode": 404,
+            "payload": {
+              "error": "User not found"
+            }
+          },
+          "rejection": null,
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [
+                [
+                  {
+                    "where": {
+                      "id": 2
+                    },
+                    "select": {
+                      "id": true,
+                      "email": true,
+                      "name": true,
+                      "role": true,
+                      "membershipTier": true,
+                      "isBlacklisted": true,
+                      "createdAt": true
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": null
+                }
+              ]
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$transaction": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.verify": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "failureMessages": [],
+      "classification": "PASS within declared unit boundary"
+    },
+    {
+      "id": "WB-ME-03",
+      "module": "Member Management",
+      "function": "getMe",
+      "inputDesign": "identity USER; findUnique returns member DTO",
+      "expected": "200 selected DTO; select excludes secrets; no writes",
+      "branchCondition": "ME.1 F; ME.2 F",
+      "reason": "Shared Authentication/Member identity DTO",
+      "oracle": "S",
+      "originalMatrix": true,
+      "relatedDefects": [],
+      "relatedManualTests": [],
+      "sourceFiles": [
+        "server/src/controllers/authController.ts"
+      ],
+      "status": "passed",
+      "actualInvocations": [
+        {
+          "function": "getMe",
+          "input": {},
+          "params": {
+            "id": "2"
+          },
+          "actor": {
+            "userId": 2,
+            "email": "member@example.test",
+            "role": "USER"
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured calls",
+            "findUnique": {
+              "id": 2,
+              "email": "member@example.test",
+              "name": "Synthetic Member",
+              "role": "USER",
+              "membershipTier": "LECTURER",
+              "isBlacklisted": false,
+              "createdAt": "2026-01-01T00:00:00.000Z"
+            }
+          },
+          "actual": {
+            "responseWritten": true,
+            "statusCode": 200,
+            "payload": {
+              "id": 2,
+              "email": "member@example.test",
+              "name": "Synthetic Member",
+              "role": "USER",
+              "membershipTier": "LECTURER",
+              "isBlacklisted": false,
+              "createdAt": "2026-01-01T00:00:00.000Z"
+            }
+          },
+          "rejection": null,
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [
+                [
+                  {
+                    "where": {
+                      "id": 2
+                    },
+                    "select": {
+                      "id": true,
+                      "email": true,
+                      "name": true,
+                      "role": true,
+                      "membershipTier": true,
+                      "isBlacklisted": true,
+                      "createdAt": true
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": {
+                    "id": 2,
+                    "email": "member@example.test",
+                    "name": "Synthetic Member",
+                    "role": "USER",
+                    "membershipTier": "LECTURER",
+                    "isBlacklisted": false,
+                    "createdAt": "2026-01-01T00:00:00.000Z"
+                  }
+                }
+              ]
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$transaction": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.verify": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "failureMessages": [],
+      "classification": "PASS within declared unit boundary"
+    },
+    {
+      "id": "WB-ME-04",
+      "module": "Member Management",
+      "function": "getMe",
+      "inputDesign": "identity USER; findUnique rejects",
+      "expected": "Promise rejects same error; responseWritten=false; no writes",
+      "branchCondition": "ME.E uncaught query rejection",
+      "reason": "No invented HTTP 500/message contract",
+      "oracle": "S",
+      "originalMatrix": false,
+      "relatedDefects": [],
+      "relatedManualTests": [],
+      "sourceFiles": [
+        "server/src/controllers/authController.ts"
+      ],
+      "status": "passed",
+      "actualInvocations": [
+        {
+          "function": "getMe",
+          "input": {},
+          "params": {
+            "id": "2"
+          },
+          "actor": {
+            "userId": 2,
+            "email": "member@example.test",
+            "role": "USER"
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured calls",
+            "findUnique": {
+              "reject": "Error: Simulated member identity failure"
+            }
+          },
+          "actual": {
+            "responseWritten": false,
+            "statusCode": null,
+            "payload": null
+          },
+          "rejection": "Error: Simulated member identity failure",
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [
+                [
+                  {
+                    "where": {
+                      "id": 2
+                    },
+                    "select": {
+                      "id": true,
+                      "email": true,
+                      "name": true,
+                      "role": true,
+                      "membershipTier": true,
+                      "isBlacklisted": true,
+                      "createdAt": true
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "rejected",
+                  "error": "Error: Simulated member identity failure"
+                }
+              ]
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$transaction": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.verify": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "failureMessages": [],
+      "classification": "PASS within declared unit boundary"
+    },
+    {
+      "id": "WB-TB-01",
+      "module": "Member Management",
+      "function": "toggleBlacklist",
+      "inputDesign": "target=null",
+      "expected": "404; no update",
+      "branchCondition": "TB.1 T",
+      "reason": "Missing target",
+      "oracle": "S",
+      "originalMatrix": true,
+      "relatedDefects": [],
+      "relatedManualTests": [
+        "MEM-04"
+      ],
+      "sourceFiles": [
+        "server/src/controllers/authController.ts"
+      ],
+      "status": "passed",
+      "actualInvocations": [
+        {
+          "function": "toggleBlacklist",
+          "input": {
+            "isBlacklisted": true
+          },
+          "params": {
+            "id": "2"
+          },
+          "actor": {
+            "userId": 1,
+            "email": "admin@example.test",
+            "role": "ADMIN"
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured calls",
+            "findUnique": null
+          },
+          "actual": {
+            "responseWritten": true,
+            "statusCode": 404,
+            "payload": {
+              "error": "Không tìm thấy người dùng"
+            }
+          },
+          "rejection": null,
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [
+                [
+                  {
+                    "where": {
+                      "id": 2
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": null
+                }
+              ]
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$transaction": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.verify": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "failureMessages": [],
+      "classification": "PASS within declared unit boundary"
+    },
+    {
+      "id": "WB-TB-02",
+      "module": "Member Management",
+      "function": "toggleBlacklist",
+      "inputDesign": "target.id=actor.userId=1",
+      "expected": "400 self operation; no update",
+      "branchCondition": "TB.1 F; TB.2 T",
+      "reason": "Prevent self blacklist",
+      "oracle": "S",
+      "originalMatrix": true,
+      "relatedDefects": [],
+      "relatedManualTests": [
+        "MEM-04"
+      ],
+      "sourceFiles": [
+        "server/src/controllers/authController.ts"
+      ],
+      "status": "passed",
+      "actualInvocations": [
+        {
+          "function": "toggleBlacklist",
+          "input": {
+            "isBlacklisted": true
+          },
+          "params": {
+            "id": "1"
+          },
+          "actor": {
+            "userId": 1,
+            "email": "admin@example.test",
+            "role": "ADMIN"
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured calls",
+            "findUnique": {
+              "id": 1,
+              "email": "admin@example.test",
+              "name": "Synthetic Member",
+              "password": "unit-test-stored-hash",
+              "role": "ADMIN",
+              "membershipTier": "LECTURER",
+              "isBlacklisted": false,
+              "resetOtp": "123456",
+              "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+              "createdAt": "2026-01-01T00:00:00.000Z"
+            }
+          },
+          "actual": {
+            "responseWritten": true,
+            "statusCode": 400,
+            "payload": {
+              "error": "Không thể tự đưa chính tài khoản của bạn vào danh sách đen"
+            }
+          },
+          "rejection": null,
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [
+                [
+                  {
+                    "where": {
+                      "id": 1
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": {
+                    "id": 1,
+                    "email": "admin@example.test",
+                    "name": "Synthetic Member",
+                    "password": "unit-test-stored-hash",
+                    "role": "ADMIN",
+                    "membershipTier": "LECTURER",
+                    "isBlacklisted": false,
+                    "resetOtp": "123456",
+                    "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+                    "createdAt": "2026-01-01T00:00:00.000Z"
+                  }
+                }
+              ]
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$transaction": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.verify": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "failureMessages": [],
+      "classification": "PASS within declared unit boundary"
+    },
+    {
+      "id": "WB-TB-03",
+      "module": "Member Management",
+      "function": "toggleBlacklist",
+      "inputDesign": "old=false; requested=true; ADMIN actor",
+      "expected": "200 update true; blocked message; safe select",
+      "branchCondition": "TB.2 F; TB.3 boolean; TB.4 T",
+      "reason": "Explicit block MEM-04",
+      "oracle": "B",
+      "originalMatrix": true,
+      "relatedDefects": [],
+      "relatedManualTests": [
+        "MEM-04"
+      ],
+      "sourceFiles": [
+        "server/src/controllers/authController.ts"
+      ],
+      "status": "passed",
+      "actualInvocations": [
+        {
+          "function": "toggleBlacklist",
+          "input": {
+            "isBlacklisted": true
+          },
+          "params": {
+            "id": "2"
+          },
+          "actor": {
+            "userId": 1,
+            "email": "admin@example.test",
+            "role": "ADMIN"
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured calls",
+            "findUnique": {
+              "id": 2,
+              "email": "member@example.test",
+              "name": "Synthetic Member",
+              "password": "unit-test-stored-hash",
+              "role": "USER",
+              "membershipTier": "LECTURER",
+              "isBlacklisted": false,
+              "resetOtp": "123456",
+              "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+              "createdAt": "2026-01-01T00:00:00.000Z"
+            },
+            "userUpdate": {
+              "id": 2,
+              "email": "member@example.test",
+              "name": "Synthetic Member",
+              "role": "USER",
+              "membershipTier": "LECTURER",
+              "isBlacklisted": true,
+              "createdAt": "2026-01-01T00:00:00.000Z"
+            }
+          },
+          "actual": {
+            "responseWritten": true,
+            "statusCode": 200,
+            "payload": {
+              "message": "Đã đưa độc giả \"Synthetic Member\" vào Danh sách Đen (chặn mượn sách).",
+              "user": {
+                "id": 2,
+                "email": "member@example.test",
+                "name": "Synthetic Member",
+                "role": "USER",
+                "membershipTier": "LECTURER",
+                "isBlacklisted": true,
+                "createdAt": "2026-01-01T00:00:00.000Z"
+              }
+            }
+          },
+          "rejection": null,
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [
+                [
+                  {
+                    "where": {
+                      "id": 2
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": {
+                    "id": 2,
+                    "email": "member@example.test",
+                    "name": "Synthetic Member",
+                    "password": "unit-test-stored-hash",
+                    "role": "USER",
+                    "membershipTier": "LECTURER",
+                    "isBlacklisted": false,
+                    "resetOtp": "123456",
+                    "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+                    "createdAt": "2026-01-01T00:00:00.000Z"
+                  }
+                }
+              ]
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [
+                [
+                  {
+                    "where": {
+                      "id": 2
+                    },
+                    "data": {
+                      "isBlacklisted": true
+                    },
+                    "select": {
+                      "id": true,
+                      "email": true,
+                      "name": true,
+                      "role": true,
+                      "membershipTier": true,
+                      "isBlacklisted": true,
+                      "createdAt": true
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": {
+                    "id": 2,
+                    "email": "member@example.test",
+                    "name": "Synthetic Member",
+                    "role": "USER",
+                    "membershipTier": "LECTURER",
+                    "isBlacklisted": true,
+                    "createdAt": "2026-01-01T00:00:00.000Z"
+                  }
+                }
+              ]
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$transaction": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.verify": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "failureMessages": [],
+      "classification": "PASS within declared unit boundary"
+    },
+    {
+      "id": "WB-TB-04",
+      "module": "Member Management",
+      "function": "toggleBlacklist",
+      "inputDesign": "old=true; requested=false; ADMIN actor",
+      "expected": "200 update false; unblocked message; safe select",
+      "branchCondition": "TB.3 boolean; TB.4 F",
+      "reason": "Explicit unblock MEM-04",
+      "oracle": "B",
+      "originalMatrix": true,
+      "relatedDefects": [],
+      "relatedManualTests": [
+        "MEM-04"
+      ],
+      "sourceFiles": [
+        "server/src/controllers/authController.ts"
+      ],
+      "status": "passed",
+      "actualInvocations": [
+        {
+          "function": "toggleBlacklist",
+          "input": {
+            "isBlacklisted": false
+          },
+          "params": {
+            "id": "2"
+          },
+          "actor": {
+            "userId": 1,
+            "email": "admin@example.test",
+            "role": "ADMIN"
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured calls",
+            "findUnique": {
+              "id": 2,
+              "email": "member@example.test",
+              "name": "Synthetic Member",
+              "password": "unit-test-stored-hash",
+              "role": "USER",
+              "membershipTier": "LECTURER",
+              "isBlacklisted": true,
+              "resetOtp": "123456",
+              "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+              "createdAt": "2026-01-01T00:00:00.000Z"
+            },
+            "userUpdate": {
+              "id": 2,
+              "email": "member@example.test",
+              "name": "Synthetic Member",
+              "role": "USER",
+              "membershipTier": "LECTURER",
+              "isBlacklisted": false,
+              "createdAt": "2026-01-01T00:00:00.000Z"
+            }
+          },
+          "actual": {
+            "responseWritten": true,
+            "statusCode": 200,
+            "payload": {
+              "message": "Đã mở khóa và gỡ độc giả \"Synthetic Member\" khỏi Danh sách Đen.",
+              "user": {
+                "id": 2,
+                "email": "member@example.test",
+                "name": "Synthetic Member",
+                "role": "USER",
+                "membershipTier": "LECTURER",
+                "isBlacklisted": false,
+                "createdAt": "2026-01-01T00:00:00.000Z"
+              }
+            }
+          },
+          "rejection": null,
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [
+                [
+                  {
+                    "where": {
+                      "id": 2
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": {
+                    "id": 2,
+                    "email": "member@example.test",
+                    "name": "Synthetic Member",
+                    "password": "unit-test-stored-hash",
+                    "role": "USER",
+                    "membershipTier": "LECTURER",
+                    "isBlacklisted": true,
+                    "resetOtp": "123456",
+                    "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+                    "createdAt": "2026-01-01T00:00:00.000Z"
+                  }
+                }
+              ]
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [
+                [
+                  {
+                    "where": {
+                      "id": 2
+                    },
+                    "data": {
+                      "isBlacklisted": false
+                    },
+                    "select": {
+                      "id": true,
+                      "email": true,
+                      "name": true,
+                      "role": true,
+                      "membershipTier": true,
+                      "isBlacklisted": true,
+                      "createdAt": true
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": {
+                    "id": 2,
+                    "email": "member@example.test",
+                    "name": "Synthetic Member",
+                    "role": "USER",
+                    "membershipTier": "LECTURER",
+                    "isBlacklisted": false,
+                    "createdAt": "2026-01-01T00:00:00.000Z"
+                  }
+                }
+              ]
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$transaction": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.verify": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "failureMessages": [],
+      "classification": "PASS within declared unit boundary"
+    },
+    {
+      "id": "WB-TB-05",
+      "module": "Member Management",
+      "function": "toggleBlacklist",
+      "inputDesign": "old=false; requested flag omitted",
+      "expected": "200 update true; safe select",
+      "branchCondition": "TB.3 nonboolean; !old T; TB.4 T",
+      "reason": "Fallback toggle from active",
+      "oracle": "S",
+      "originalMatrix": true,
+      "relatedDefects": [],
+      "relatedManualTests": [
+        "MEM-04"
+      ],
+      "sourceFiles": [
+        "server/src/controllers/authController.ts"
+      ],
+      "status": "passed",
+      "actualInvocations": [
+        {
+          "function": "toggleBlacklist",
+          "input": {},
+          "params": {
+            "id": "2"
+          },
+          "actor": {
+            "userId": 1,
+            "email": "admin@example.test",
+            "role": "ADMIN"
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured calls",
+            "findUnique": {
+              "id": 2,
+              "email": "member@example.test",
+              "name": "Synthetic Member",
+              "password": "unit-test-stored-hash",
+              "role": "USER",
+              "membershipTier": "LECTURER",
+              "isBlacklisted": false,
+              "resetOtp": "123456",
+              "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+              "createdAt": "2026-01-01T00:00:00.000Z"
+            },
+            "userUpdate": {
+              "id": 2,
+              "email": "member@example.test",
+              "name": "Synthetic Member",
+              "role": "USER",
+              "membershipTier": "LECTURER",
+              "isBlacklisted": true,
+              "createdAt": "2026-01-01T00:00:00.000Z"
+            }
+          },
+          "actual": {
+            "responseWritten": true,
+            "statusCode": 200,
+            "payload": {
+              "message": "Đã đưa độc giả \"Synthetic Member\" vào Danh sách Đen (chặn mượn sách).",
+              "user": {
+                "id": 2,
+                "email": "member@example.test",
+                "name": "Synthetic Member",
+                "role": "USER",
+                "membershipTier": "LECTURER",
+                "isBlacklisted": true,
+                "createdAt": "2026-01-01T00:00:00.000Z"
+              }
+            }
+          },
+          "rejection": null,
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [
+                [
+                  {
+                    "where": {
+                      "id": 2
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": {
+                    "id": 2,
+                    "email": "member@example.test",
+                    "name": "Synthetic Member",
+                    "password": "unit-test-stored-hash",
+                    "role": "USER",
+                    "membershipTier": "LECTURER",
+                    "isBlacklisted": false,
+                    "resetOtp": "123456",
+                    "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+                    "createdAt": "2026-01-01T00:00:00.000Z"
+                  }
+                }
+              ]
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [
+                [
+                  {
+                    "where": {
+                      "id": 2
+                    },
+                    "data": {
+                      "isBlacklisted": true
+                    },
+                    "select": {
+                      "id": true,
+                      "email": true,
+                      "name": true,
+                      "role": true,
+                      "membershipTier": true,
+                      "isBlacklisted": true,
+                      "createdAt": true
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": {
+                    "id": 2,
+                    "email": "member@example.test",
+                    "name": "Synthetic Member",
+                    "role": "USER",
+                    "membershipTier": "LECTURER",
+                    "isBlacklisted": true,
+                    "createdAt": "2026-01-01T00:00:00.000Z"
+                  }
+                }
+              ]
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$transaction": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.verify": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "failureMessages": [],
+      "classification": "PASS within declared unit boundary"
+    },
+    {
+      "id": "WB-TB-06",
+      "module": "Member Management",
+      "function": "toggleBlacklist",
+      "inputDesign": "old=true; requested flag omitted",
+      "expected": "200 update false; safe select",
+      "branchCondition": "TB.3 nonboolean; !old F; TB.4 F",
+      "reason": "Fallback toggle from blacklisted",
+      "oracle": "S",
+      "originalMatrix": true,
+      "relatedDefects": [],
+      "relatedManualTests": [
+        "MEM-04"
+      ],
+      "sourceFiles": [
+        "server/src/controllers/authController.ts"
+      ],
+      "status": "passed",
+      "actualInvocations": [
+        {
+          "function": "toggleBlacklist",
+          "input": {},
+          "params": {
+            "id": "2"
+          },
+          "actor": {
+            "userId": 1,
+            "email": "admin@example.test",
+            "role": "ADMIN"
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured calls",
+            "findUnique": {
+              "id": 2,
+              "email": "member@example.test",
+              "name": "Synthetic Member",
+              "password": "unit-test-stored-hash",
+              "role": "USER",
+              "membershipTier": "LECTURER",
+              "isBlacklisted": true,
+              "resetOtp": "123456",
+              "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+              "createdAt": "2026-01-01T00:00:00.000Z"
+            },
+            "userUpdate": {
+              "id": 2,
+              "email": "member@example.test",
+              "name": "Synthetic Member",
+              "role": "USER",
+              "membershipTier": "LECTURER",
+              "isBlacklisted": false,
+              "createdAt": "2026-01-01T00:00:00.000Z"
+            }
+          },
+          "actual": {
+            "responseWritten": true,
+            "statusCode": 200,
+            "payload": {
+              "message": "Đã mở khóa và gỡ độc giả \"Synthetic Member\" khỏi Danh sách Đen.",
+              "user": {
+                "id": 2,
+                "email": "member@example.test",
+                "name": "Synthetic Member",
+                "role": "USER",
+                "membershipTier": "LECTURER",
+                "isBlacklisted": false,
+                "createdAt": "2026-01-01T00:00:00.000Z"
+              }
+            }
+          },
+          "rejection": null,
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [
+                [
+                  {
+                    "where": {
+                      "id": 2
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": {
+                    "id": 2,
+                    "email": "member@example.test",
+                    "name": "Synthetic Member",
+                    "password": "unit-test-stored-hash",
+                    "role": "USER",
+                    "membershipTier": "LECTURER",
+                    "isBlacklisted": true,
+                    "resetOtp": "123456",
+                    "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+                    "createdAt": "2026-01-01T00:00:00.000Z"
+                  }
+                }
+              ]
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [
+                [
+                  {
+                    "where": {
+                      "id": 2
+                    },
+                    "data": {
+                      "isBlacklisted": false
+                    },
+                    "select": {
+                      "id": true,
+                      "email": true,
+                      "name": true,
+                      "role": true,
+                      "membershipTier": true,
+                      "isBlacklisted": true,
+                      "createdAt": true
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": {
+                    "id": 2,
+                    "email": "member@example.test",
+                    "name": "Synthetic Member",
+                    "role": "USER",
+                    "membershipTier": "LECTURER",
+                    "isBlacklisted": false,
+                    "createdAt": "2026-01-01T00:00:00.000Z"
+                  }
+                }
+              ]
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$transaction": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.verify": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "failureMessages": [],
+      "classification": "PASS within declared unit boundary"
+    },
+    {
+      "id": "WB-TB-08",
+      "module": "Member Management",
+      "function": "toggleBlacklist",
+      "inputDesign": "target found; update rejects",
+      "expected": "500 blacklist error; exact attempted update",
+      "branchCondition": "TB.E catch after update",
+      "reason": "Prisma update fault injection",
+      "oracle": "S",
+      "originalMatrix": true,
+      "relatedDefects": [],
+      "relatedManualTests": [
+        "MEM-04"
+      ],
+      "sourceFiles": [
+        "server/src/controllers/authController.ts"
+      ],
+      "status": "passed",
+      "actualInvocations": [
+        {
+          "function": "toggleBlacklist",
+          "input": {
+            "isBlacklisted": true
+          },
+          "params": {
+            "id": "2"
+          },
+          "actor": {
+            "userId": 1,
+            "email": "admin@example.test",
+            "role": "ADMIN"
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured calls",
+            "findUnique": {
+              "id": 2,
+              "email": "member@example.test",
+              "name": "Synthetic Member",
+              "password": "unit-test-stored-hash",
+              "role": "USER",
+              "membershipTier": "LECTURER",
+              "isBlacklisted": false,
+              "resetOtp": "123456",
+              "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+              "createdAt": "2026-01-01T00:00:00.000Z"
+            },
+            "userUpdate": {
+              "reject": "Simulated blacklist update failure"
+            }
+          },
+          "actual": {
+            "responseWritten": true,
+            "statusCode": 500,
+            "payload": {
+              "error": "Không thể cập nhật trạng thái danh sách đen"
+            }
+          },
+          "rejection": null,
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [
+                [
+                  {
+                    "where": {
+                      "id": 2
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": {
+                    "id": 2,
+                    "email": "member@example.test",
+                    "name": "Synthetic Member",
+                    "password": "unit-test-stored-hash",
+                    "role": "USER",
+                    "membershipTier": "LECTURER",
+                    "isBlacklisted": false,
+                    "resetOtp": "123456",
+                    "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+                    "createdAt": "2026-01-01T00:00:00.000Z"
+                  }
+                }
+              ]
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [
+                [
+                  {
+                    "where": {
+                      "id": 2
+                    },
+                    "data": {
+                      "isBlacklisted": true
+                    },
+                    "select": {
+                      "id": true,
+                      "email": true,
+                      "name": true,
+                      "role": true,
+                      "membershipTier": true,
+                      "isBlacklisted": true,
+                      "createdAt": true
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "rejected",
+                  "error": "Error: Simulated blacklist update failure"
+                }
+              ]
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$transaction": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.verify": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "failureMessages": [],
+      "classification": "PASS within declared unit boundary"
+    },
+    {
+      "id": "WB-TB-09",
+      "module": "Member Management",
+      "function": "toggleBlacklist",
+      "inputDesign": "findUnique rejects",
+      "expected": "500 blacklist error; no update",
+      "branchCondition": "TB.E catch before target condition",
+      "reason": "Prisma lookup fault injection",
+      "oracle": "S",
+      "originalMatrix": false,
+      "relatedDefects": [],
+      "relatedManualTests": [
+        "MEM-04"
+      ],
+      "sourceFiles": [
+        "server/src/controllers/authController.ts"
+      ],
+      "status": "passed",
+      "actualInvocations": [
+        {
+          "function": "toggleBlacklist",
+          "input": {
+            "isBlacklisted": true
+          },
+          "params": {
+            "id": "2"
+          },
+          "actor": {
+            "userId": 1,
+            "email": "admin@example.test",
+            "role": "ADMIN"
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured calls",
+            "findUnique": {
+              "reject": "Simulated blacklist lookup failure"
+            }
+          },
+          "actual": {
+            "responseWritten": true,
+            "statusCode": 500,
+            "payload": {
+              "error": "Không thể cập nhật trạng thái danh sách đen"
+            }
+          },
+          "rejection": null,
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [
+                [
+                  {
+                    "where": {
+                      "id": 2
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "rejected",
+                  "error": "Error: Simulated blacklist lookup failure"
+                }
+              ]
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$transaction": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.verify": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "failureMessages": [],
+      "classification": "PASS within declared unit boundary"
+    },
+    {
+      "id": "WB-MR-01",
+      "module": "Member Management",
+      "function": "authenticateToken → authorizeAdmin → getAllUsers",
+      "inputDesign": "registered GET /users; no header",
+      "expected": "401; only authenticateToken runs; no query/write",
+      "branchCondition": "AT.1 F; AT.2 T",
+      "reason": "Member list authentication boundary",
+      "oracle": "S",
+      "originalMatrix": false,
+      "relatedDefects": [],
+      "relatedManualTests": [
+        "MEM-01"
+      ],
+      "sourceFiles": [
+        "server/src/routes/authRoutes.ts",
+        "server/src/middleware/auth.ts",
+        "server/src/controllers/authController.ts"
+      ],
+      "status": "passed",
+      "actualInvocations": [
+        {
+          "function": "GET /users",
+          "input": {},
+          "params": {
+            "id": "2"
+          },
+          "authorization": null,
+          "actorAfter": null,
+          "registeredHandlers": [
+            "authenticateToken",
+            "authorizeAdmin",
+            "getAllUsers"
+          ],
+          "executedHandlers": [
+            "authenticateToken"
+          ],
+          "nextCalls": {
+            "authenticateToken": 0
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured calls"
+          },
+          "actual": {
+            "responseWritten": true,
+            "statusCode": 401,
+            "payload": null
+          },
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$transaction": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.verify": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "failureMessages": [],
+      "classification": "PASS within declared unit boundary"
+    },
+    {
+      "id": "WB-MR-02",
+      "module": "Member Management",
+      "function": "authenticateToken → authorizeAdmin → getAllUsers",
+      "inputDesign": "GET /users; JWT verify callback error",
+      "expected": "403; no authorize/controller/query/write",
+      "branchCondition": "AT.2 F; AT.3 T",
+      "reason": "Invalid authentication boundary",
+      "oracle": "S",
+      "originalMatrix": false,
+      "relatedDefects": [],
+      "relatedManualTests": [
+        "MEM-01"
+      ],
+      "sourceFiles": [
+        "server/src/routes/authRoutes.ts",
+        "server/src/middleware/auth.ts",
+        "server/src/controllers/authController.ts"
+      ],
+      "status": "passed",
+      "actualInvocations": [
+        {
+          "function": "GET /users",
+          "input": {},
+          "params": {
+            "id": "2"
+          },
+          "authorization": "Bearer unit-member-token",
+          "actorAfter": null,
+          "registeredHandlers": [
+            "authenticateToken",
+            "authorizeAdmin",
+            "getAllUsers"
+          ],
+          "executedHandlers": [
+            "authenticateToken"
+          ],
+          "nextCalls": {
+            "authenticateToken": 0
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured calls",
+            "verify": {
+              "reject": "Error: Simulated invalid member JWT"
+            }
+          },
+          "actual": {
+            "responseWritten": true,
+            "statusCode": 403,
+            "payload": null
+          },
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$transaction": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.verify": {
+              "arguments": [
+                [
+                  "unit-member-token",
+                  "unit-test-secret-never-used-for-real-tokens",
+                  "[callback]"
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": {
+                    "status": "[callback]",
+                    "json": "[callback]",
+                    "sendStatus": "[callback]"
+                  }
+                }
+              ]
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "failureMessages": [],
+      "classification": "PASS within declared unit boundary"
+    },
+    {
+      "id": "WB-MR-03",
+      "module": "Member Management",
+      "function": "authenticateToken → authorizeAdmin → getAllUsers",
+      "inputDesign": "GET /users; decoded role=USER",
+      "expected": "403 Forbidden; controller/query not reached",
+      "branchCondition": "AT.3 F; AA.1 T",
+      "reason": "Member list authorization denial",
+      "oracle": "S",
+      "originalMatrix": false,
+      "relatedDefects": [],
+      "relatedManualTests": [
+        "MEM-01"
+      ],
+      "sourceFiles": [
+        "server/src/routes/authRoutes.ts",
+        "server/src/middleware/auth.ts",
+        "server/src/controllers/authController.ts"
+      ],
+      "status": "passed",
+      "actualInvocations": [
+        {
+          "function": "GET /users",
+          "input": {},
+          "params": {
+            "id": "2"
+          },
+          "authorization": "Bearer unit-member-token",
+          "actorAfter": {
+            "userId": 2,
+            "email": "member@example.test",
+            "role": "USER"
+          },
+          "registeredHandlers": [
+            "authenticateToken",
+            "authorizeAdmin",
+            "getAllUsers"
+          ],
+          "executedHandlers": [
+            "authenticateToken",
+            "authorizeAdmin"
+          ],
+          "nextCalls": {
+            "authenticateToken": 1,
+            "authorizeAdmin": 0
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured calls",
+            "verify": {
+              "error": null,
+              "decodedUser": {
+                "userId": 2,
+                "email": "member@example.test",
+                "role": "USER"
+              }
+            }
+          },
+          "actual": {
+            "responseWritten": true,
+            "statusCode": 403,
+            "payload": {
+              "message": "Forbidden"
+            }
+          },
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$transaction": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.verify": {
+              "arguments": [
+                [
+                  "unit-member-token",
+                  "unit-test-secret-never-used-for-real-tokens",
+                  "[callback]"
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled"
+                }
+              ]
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "failureMessages": [],
+      "classification": "PASS within declared unit boundary"
+    },
+    {
+      "id": "WB-MR-04",
+      "module": "Member Management",
+      "function": "authenticateToken → authorizeAdmin → getAllUsers",
+      "inputDesign": "GET /users; decoded role=ADMIN; DTO list",
+      "expected": "200 DTOs; correct source handler order; one query",
+      "branchCondition": "AT.3 F; AA.1 F; GU.1",
+      "reason": "Authorized list access through actual registrations",
+      "oracle": "S",
+      "originalMatrix": false,
+      "relatedDefects": [],
+      "relatedManualTests": [
+        "MEM-01"
+      ],
+      "sourceFiles": [
+        "server/src/routes/authRoutes.ts",
+        "server/src/middleware/auth.ts",
+        "server/src/controllers/authController.ts"
+      ],
+      "status": "passed",
+      "actualInvocations": [
+        {
+          "function": "GET /users",
+          "input": {},
+          "params": {
+            "id": "2"
+          },
+          "authorization": "Bearer unit-member-token",
+          "actorAfter": {
+            "userId": 1,
+            "email": "admin@example.test",
+            "role": "ADMIN"
+          },
+          "registeredHandlers": [
+            "authenticateToken",
+            "authorizeAdmin",
+            "getAllUsers"
+          ],
+          "executedHandlers": [
+            "authenticateToken",
+            "authorizeAdmin",
+            "getAllUsers"
+          ],
+          "nextCalls": {
+            "authenticateToken": 1,
+            "authorizeAdmin": 1,
+            "getAllUsers": 0
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured calls",
+            "verify": {
+              "error": null,
+              "decodedUser": {
+                "userId": 1,
+                "email": "admin@example.test",
+                "role": "ADMIN"
+              }
+            },
+            "findMany": [
+              {
+                "id": 2,
+                "email": "member@example.test",
+                "name": "Synthetic Member",
+                "role": "USER",
+                "membershipTier": "LECTURER",
+                "isBlacklisted": false,
+                "createdAt": "2026-01-01T00:00:00.000Z"
+              }
+            ]
+          },
+          "actual": {
+            "responseWritten": true,
+            "statusCode": 200,
+            "payload": [
+              {
+                "id": 2,
+                "email": "member@example.test",
+                "name": "Synthetic Member",
+                "role": "USER",
+                "membershipTier": "LECTURER",
+                "isBlacklisted": false,
+                "createdAt": "2026-01-01T00:00:00.000Z"
+              }
+            ]
+          },
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findMany": {
+              "arguments": [
+                [
+                  {
+                    "select": {
+                      "id": true,
+                      "email": true,
+                      "name": true,
+                      "role": true,
+                      "membershipTier": true,
+                      "isBlacklisted": true,
+                      "createdAt": true
+                    },
+                    "orderBy": {
+                      "id": "asc"
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": [
+                    {
+                      "id": 2,
+                      "email": "member@example.test",
+                      "name": "Synthetic Member",
+                      "role": "USER",
+                      "membershipTier": "LECTURER",
+                      "isBlacklisted": false,
+                      "createdAt": "2026-01-01T00:00:00.000Z"
+                    }
+                  ]
+                }
+              ]
+            },
+            "user.update": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$transaction": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.verify": {
+              "arguments": [
+                [
+                  "unit-member-token",
+                  "unit-test-secret-never-used-for-real-tokens",
+                  "[callback]"
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled"
+                }
+              ]
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "failureMessages": [],
+      "classification": "PASS within declared unit boundary"
+    },
+    {
+      "id": "WB-MR-05",
+      "module": "Member Management",
+      "function": "authenticateToken → authorizeAdmin → toggleBlacklist",
+      "inputDesign": "PATCH /users/:id/blacklist; decoded USER",
+      "expected": "403 Forbidden; no lookup/update",
+      "branchCondition": "AT.3 F; AA.1 T",
+      "reason": "Protect member write path",
+      "oracle": "S",
+      "originalMatrix": false,
+      "relatedDefects": [],
+      "relatedManualTests": [
+        "MEM-04"
+      ],
+      "sourceFiles": [
+        "server/src/routes/authRoutes.ts",
+        "server/src/middleware/auth.ts",
+        "server/src/controllers/authController.ts"
+      ],
+      "status": "passed",
+      "actualInvocations": [
+        {
+          "function": "PATCH /users/:id/blacklist",
+          "input": {
+            "isBlacklisted": true
+          },
+          "params": {
+            "id": "2"
+          },
+          "authorization": "Bearer unit-member-token",
+          "actorAfter": {
+            "userId": 2,
+            "email": "member@example.test",
+            "role": "USER"
+          },
+          "registeredHandlers": [
+            "authenticateToken",
+            "authorizeAdmin",
+            "toggleBlacklist"
+          ],
+          "executedHandlers": [
+            "authenticateToken",
+            "authorizeAdmin"
+          ],
+          "nextCalls": {
+            "authenticateToken": 1,
+            "authorizeAdmin": 0
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured calls",
+            "verify": {
+              "error": null,
+              "decodedUser": {
+                "userId": 2,
+                "email": "member@example.test",
+                "role": "USER"
+              }
+            }
+          },
+          "actual": {
+            "responseWritten": true,
+            "statusCode": 403,
+            "payload": {
+              "message": "Forbidden"
+            }
+          },
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$transaction": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.verify": {
+              "arguments": [
+                [
+                  "unit-member-token",
+                  "unit-test-secret-never-used-for-real-tokens",
+                  "[callback]"
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled"
+                }
+              ]
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "failureMessages": [],
+      "classification": "PASS within declared unit boundary"
+    },
+    {
+      "id": "WB-MR-06",
+      "module": "Member Management",
+      "function": "authenticateToken → authorizeAdmin → toggleBlacklist",
+      "inputDesign": "PATCH blacklist; ADMIN; target id=2; requested=true",
+      "expected": "200; controller reached; exact update true",
+      "branchCondition": "AT.3 F; AA.1 F; TB.3 boolean; TB.4 T",
+      "reason": "Authorized blacklist write through source registrations",
+      "oracle": "S",
+      "originalMatrix": false,
+      "relatedDefects": [],
+      "relatedManualTests": [
+        "MEM-04"
+      ],
+      "sourceFiles": [
+        "server/src/routes/authRoutes.ts",
+        "server/src/middleware/auth.ts",
+        "server/src/controllers/authController.ts"
+      ],
+      "status": "passed",
+      "actualInvocations": [
+        {
+          "function": "PATCH /users/:id/blacklist",
+          "input": {
+            "isBlacklisted": true
+          },
+          "params": {
+            "id": "2"
+          },
+          "authorization": "Bearer unit-member-token",
+          "actorAfter": {
+            "userId": 1,
+            "email": "admin@example.test",
+            "role": "ADMIN"
+          },
+          "registeredHandlers": [
+            "authenticateToken",
+            "authorizeAdmin",
+            "toggleBlacklist"
+          ],
+          "executedHandlers": [
+            "authenticateToken",
+            "authorizeAdmin",
+            "toggleBlacklist"
+          ],
+          "nextCalls": {
+            "authenticateToken": 1,
+            "authorizeAdmin": 1,
+            "toggleBlacklist": 0
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured calls",
+            "verify": {
+              "error": null,
+              "decodedUser": {
+                "userId": 1,
+                "email": "admin@example.test",
+                "role": "ADMIN"
+              }
+            },
+            "findUnique": {
+              "id": 2,
+              "email": "member@example.test",
+              "name": "Synthetic Member",
+              "password": "unit-test-stored-hash",
+              "role": "USER",
+              "membershipTier": "LECTURER",
+              "isBlacklisted": false,
+              "resetOtp": "123456",
+              "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+              "createdAt": "2026-01-01T00:00:00.000Z"
+            },
+            "userUpdate": {
+              "id": 2,
+              "email": "member@example.test",
+              "name": "Synthetic Member",
+              "role": "USER",
+              "membershipTier": "LECTURER",
+              "isBlacklisted": true,
+              "createdAt": "2026-01-01T00:00:00.000Z"
+            }
+          },
+          "actual": {
+            "responseWritten": true,
+            "statusCode": 200,
+            "payload": {
+              "message": "Đã đưa độc giả \"Synthetic Member\" vào Danh sách Đen (chặn mượn sách).",
+              "user": {
+                "id": 2,
+                "email": "member@example.test",
+                "name": "Synthetic Member",
+                "role": "USER",
+                "membershipTier": "LECTURER",
+                "isBlacklisted": true,
+                "createdAt": "2026-01-01T00:00:00.000Z"
+              }
+            }
+          },
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [
+                [
+                  {
+                    "where": {
+                      "id": 2
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": {
+                    "id": 2,
+                    "email": "member@example.test",
+                    "name": "Synthetic Member",
+                    "password": "unit-test-stored-hash",
+                    "role": "USER",
+                    "membershipTier": "LECTURER",
+                    "isBlacklisted": false,
+                    "resetOtp": "123456",
+                    "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+                    "createdAt": "2026-01-01T00:00:00.000Z"
+                  }
+                }
+              ]
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [
+                [
+                  {
+                    "where": {
+                      "id": 2
+                    },
+                    "data": {
+                      "isBlacklisted": true
+                    },
+                    "select": {
+                      "id": true,
+                      "email": true,
+                      "name": true,
+                      "role": true,
+                      "membershipTier": true,
+                      "isBlacklisted": true,
+                      "createdAt": true
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": {
+                    "id": 2,
+                    "email": "member@example.test",
+                    "name": "Synthetic Member",
+                    "role": "USER",
+                    "membershipTier": "LECTURER",
+                    "isBlacklisted": true,
+                    "createdAt": "2026-01-01T00:00:00.000Z"
+                  }
+                }
+              ]
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$transaction": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.verify": {
+              "arguments": [
+                [
+                  "unit-member-token",
+                  "unit-test-secret-never-used-for-real-tokens",
+                  "[callback]"
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled"
+                }
+              ]
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "failureMessages": [],
+      "classification": "PASS within declared unit boundary"
+    },
+    {
+      "id": "WB-MR-07",
+      "module": "Member Management",
+      "function": "authenticateToken → authorizeAdmin → toggleBlacklist",
+      "inputDesign": "PATCH blacklist; no header",
+      "expected": "401; no JWT/lookup/update",
+      "branchCondition": "AT.1 F; AT.2 T",
+      "reason": "Anonymous write denied before data access",
+      "oracle": "S",
+      "originalMatrix": false,
+      "relatedDefects": [],
+      "relatedManualTests": [
+        "MEM-04"
+      ],
+      "sourceFiles": [
+        "server/src/routes/authRoutes.ts",
+        "server/src/middleware/auth.ts",
+        "server/src/controllers/authController.ts"
+      ],
+      "status": "passed",
+      "actualInvocations": [
+        {
+          "function": "PATCH /users/:id/blacklist",
+          "input": {
+            "isBlacklisted": true
+          },
+          "params": {
+            "id": "2"
+          },
+          "authorization": null,
+          "actorAfter": null,
+          "registeredHandlers": [
+            "authenticateToken",
+            "authorizeAdmin",
+            "toggleBlacklist"
+          ],
+          "executedHandlers": [
+            "authenticateToken"
+          ],
+          "nextCalls": {
+            "authenticateToken": 0
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured calls"
+          },
+          "actual": {
+            "responseWritten": true,
+            "statusCode": 401,
+            "payload": null
+          },
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$transaction": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.verify": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "failureMessages": [],
+      "classification": "PASS within declared unit boundary"
+    }
+  ],
+  "totalUniqueCases": 65,
+  "member": {
+    "total": 25,
+    "pass": 23,
+    "fail": 2,
+    "skipped": 0,
+    "todo": 0
+  },
+  "authenticationRegression": {
+    "total": 40,
+    "pass": 40,
+    "fail": 0,
+    "skipped": 0,
+    "todo": 0
+  },
+  "combined": {
+    "total": 65,
+    "pass": 63,
+    "fail": 2,
+    "skipped": 0,
+    "todo": 0
+  }
+}

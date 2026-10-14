@@ -1,0 +1,1799 @@
+{
+  "kind": "Manual condition ledger, separate from coverage-v8",
+  "sourceHashes": {
+    "server/src/controllers/authController.ts": "84ee5d75adfaae69e3551e26a66dc623a094bab89534a0ea78fd20b23d684500",
+    "server/src/middleware/auth.ts": "c7b65299af2a7d5bcfaa98f0f0593eee0f528455f3e5831f9d89da0ef43e73c4"
+  },
+  "phase1ComparableScope": {
+    "conditions": 19,
+    "phase1Covered": 28,
+    "totalOutcomes": 38,
+    "phase2Covered": 38,
+    "phase2Percent": 100.0,
+    "differenceOutcomes": 10
+  },
+  "expandedScope": {
+    "conditions": 30,
+    "totalOutcomes": 60,
+    "covered": 58,
+    "percent": 96.67,
+    "notComparableToPhase1Percent": true
+  },
+  "fullAuthenticationConditionCoverage": "NOT DETERMINED",
+  "directAutomaticAtomicInstrumentation": false,
+  "neIsFalse": false,
+  "summary": [
+    {
+      "id": "LG.A",
+      "function": "login",
+      "source": "server/src/controllers/authController.ts",
+      "line": 34,
+      "expression": "!user",
+      "observedCheckedOutcomes": [
+        "T",
+        "F"
+      ],
+      "missingOutcomes": [],
+      "examples": {
+        "T": [
+          "WB-LG-01"
+        ],
+        "F": [
+          "WB-LG-02",
+          "WB-LG-03",
+          "WB-LG-04"
+        ],
+        "NE": []
+      },
+      "verification": "Manual trace/source review; consequences asserted; atomic operator evaluation not instrumented"
+    },
+    {
+      "id": "LG.B",
+      "function": "login",
+      "source": "server/src/controllers/authController.ts",
+      "line": 34,
+      "expression": "!(await bcrypt.compare(password, user.password))",
+      "observedCheckedOutcomes": [
+        "T",
+        "F"
+      ],
+      "missingOutcomes": [],
+      "examples": {
+        "T": [
+          "WB-LG-02"
+        ],
+        "F": [
+          "WB-LG-03",
+          "WB-LG-04"
+        ],
+        "NE": [
+          "WB-LG-01"
+        ]
+      },
+      "verification": "Manual trace/source review; consequences asserted; atomic operator evaluation not instrumented"
+    },
+    {
+      "id": "CP.1",
+      "function": "changePassword",
+      "source": "server/src/controllers/authController.ts",
+      "line": 142,
+      "expression": "!userId",
+      "observedCheckedOutcomes": [
+        "T",
+        "F"
+      ],
+      "missingOutcomes": [],
+      "examples": {
+        "T": [
+          "WB-CP-01"
+        ],
+        "F": [
+          "WB-CP-02",
+          "WB-CP-03",
+          "WB-CP-04",
+          "WB-CP-08",
+          "WB-CP-09",
+          "WB-CP-05",
+          "WB-CP-06",
+          "WB-CP-07"
+        ],
+        "NE": []
+      },
+      "verification": "Manual trace/source review; consequences asserted; atomic operator evaluation not instrumented"
+    },
+    {
+      "id": "CP.2A",
+      "function": "changePassword",
+      "source": "server/src/controllers/authController.ts",
+      "line": 148,
+      "expression": "!currentPassword",
+      "observedCheckedOutcomes": [
+        "T",
+        "F"
+      ],
+      "missingOutcomes": [],
+      "examples": {
+        "T": [
+          "WB-CP-02"
+        ],
+        "F": [
+          "WB-CP-03",
+          "WB-CP-04",
+          "WB-CP-08",
+          "WB-CP-09",
+          "WB-CP-05",
+          "WB-CP-06",
+          "WB-CP-07"
+        ],
+        "NE": [
+          "WB-CP-01"
+        ]
+      },
+      "verification": "Manual trace/source review; consequences asserted; atomic operator evaluation not instrumented"
+    },
+    {
+      "id": "CP.2B",
+      "function": "changePassword",
+      "source": "server/src/controllers/authController.ts",
+      "line": 148,
+      "expression": "!newPassword",
+      "observedCheckedOutcomes": [
+        "T",
+        "F"
+      ],
+      "missingOutcomes": [],
+      "examples": {
+        "T": [
+          "WB-CP-03"
+        ],
+        "F": [
+          "WB-CP-04",
+          "WB-CP-08",
+          "WB-CP-09",
+          "WB-CP-05",
+          "WB-CP-06",
+          "WB-CP-07"
+        ],
+        "NE": [
+          "WB-CP-01",
+          "WB-CP-02"
+        ]
+      },
+      "verification": "Manual trace/source review; consequences asserted; atomic operator evaluation not instrumented"
+    },
+    {
+      "id": "CP.3",
+      "function": "changePassword",
+      "source": "server/src/controllers/authController.ts",
+      "line": 152,
+      "expression": "newPassword.length < 6",
+      "observedCheckedOutcomes": [
+        "T",
+        "F"
+      ],
+      "missingOutcomes": [],
+      "examples": {
+        "T": [
+          "WB-CP-04"
+        ],
+        "F": [
+          "WB-CP-08",
+          "WB-CP-09",
+          "WB-CP-05",
+          "WB-CP-06",
+          "WB-CP-07"
+        ],
+        "NE": [
+          "WB-CP-01",
+          "WB-CP-02",
+          "WB-CP-03"
+        ]
+      },
+      "verification": "Manual trace/source review; consequences asserted; atomic operator evaluation not instrumented"
+    },
+    {
+      "id": "CP.4",
+      "function": "changePassword",
+      "source": "server/src/controllers/authController.ts",
+      "line": 160,
+      "expression": "!user",
+      "observedCheckedOutcomes": [
+        "T",
+        "F"
+      ],
+      "missingOutcomes": [],
+      "examples": {
+        "T": [
+          "WB-CP-05"
+        ],
+        "F": [
+          "WB-CP-08",
+          "WB-CP-09",
+          "WB-CP-06",
+          "WB-CP-07"
+        ],
+        "NE": [
+          "WB-CP-01",
+          "WB-CP-02",
+          "WB-CP-03",
+          "WB-CP-04"
+        ]
+      },
+      "verification": "Manual trace/source review; consequences asserted; atomic operator evaluation not instrumented"
+    },
+    {
+      "id": "CP.5",
+      "function": "changePassword",
+      "source": "server/src/controllers/authController.ts",
+      "line": 166,
+      "expression": "!isMatch",
+      "observedCheckedOutcomes": [
+        "T",
+        "F"
+      ],
+      "missingOutcomes": [],
+      "examples": {
+        "T": [
+          "WB-CP-06"
+        ],
+        "F": [
+          "WB-CP-08",
+          "WB-CP-09",
+          "WB-CP-07"
+        ],
+        "NE": [
+          "WB-CP-01",
+          "WB-CP-02",
+          "WB-CP-03",
+          "WB-CP-04",
+          "WB-CP-05"
+        ]
+      },
+      "verification": "Manual trace/source review; consequences asserted; atomic operator evaluation not instrumented"
+    },
+    {
+      "id": "CP.6",
+      "function": "changePassword",
+      "source": "server/src/controllers/authController.ts",
+      "line": 171,
+      "expression": "currentPassword === newPassword",
+      "observedCheckedOutcomes": [
+        "T",
+        "F"
+      ],
+      "missingOutcomes": [],
+      "examples": {
+        "T": [
+          "WB-CP-07"
+        ],
+        "F": [
+          "WB-CP-08",
+          "WB-CP-09"
+        ],
+        "NE": [
+          "WB-CP-01",
+          "WB-CP-02",
+          "WB-CP-03",
+          "WB-CP-04",
+          "WB-CP-05",
+          "WB-CP-06"
+        ]
+      },
+      "verification": "Manual trace/source review; consequences asserted; atomic operator evaluation not instrumented"
+    },
+    {
+      "id": "RP.1A",
+      "function": "resetPassword",
+      "source": "server/src/controllers/authController.ts",
+      "line": 249,
+      "expression": "!email",
+      "observedCheckedOutcomes": [
+        "T",
+        "F"
+      ],
+      "missingOutcomes": [],
+      "examples": {
+        "T": [
+          "WB-RP-01"
+        ],
+        "F": [
+          "WB-RP-04",
+          "WB-RP-08",
+          "WB-RP-10",
+          "WB-RP-12",
+          "WB-RP-02",
+          "WB-RP-03",
+          "WB-RP-05",
+          "WB-RP-06",
+          "WB-RP-09",
+          "WB-RP-15",
+          "WB-RP-15#2"
+        ],
+        "NE": []
+      },
+      "verification": "Manual trace/source review; consequences asserted; atomic operator evaluation not instrumented"
+    },
+    {
+      "id": "RP.1B",
+      "function": "resetPassword",
+      "source": "server/src/controllers/authController.ts",
+      "line": 249,
+      "expression": "!otp",
+      "observedCheckedOutcomes": [
+        "T",
+        "F"
+      ],
+      "missingOutcomes": [],
+      "examples": {
+        "T": [
+          "WB-RP-02"
+        ],
+        "F": [
+          "WB-RP-04",
+          "WB-RP-08",
+          "WB-RP-10",
+          "WB-RP-12",
+          "WB-RP-03",
+          "WB-RP-05",
+          "WB-RP-06",
+          "WB-RP-09",
+          "WB-RP-15",
+          "WB-RP-15#2"
+        ],
+        "NE": [
+          "WB-RP-01"
+        ]
+      },
+      "verification": "Manual trace/source review; consequences asserted; atomic operator evaluation not instrumented"
+    },
+    {
+      "id": "RP.1C",
+      "function": "resetPassword",
+      "source": "server/src/controllers/authController.ts",
+      "line": 249,
+      "expression": "!newPassword",
+      "observedCheckedOutcomes": [
+        "T",
+        "F"
+      ],
+      "missingOutcomes": [],
+      "examples": {
+        "T": [
+          "WB-RP-03"
+        ],
+        "F": [
+          "WB-RP-04",
+          "WB-RP-08",
+          "WB-RP-10",
+          "WB-RP-12",
+          "WB-RP-05",
+          "WB-RP-06",
+          "WB-RP-09",
+          "WB-RP-15",
+          "WB-RP-15#2"
+        ],
+        "NE": [
+          "WB-RP-01",
+          "WB-RP-02"
+        ]
+      },
+      "verification": "Manual trace/source review; consequences asserted; atomic operator evaluation not instrumented"
+    },
+    {
+      "id": "RP.2A",
+      "function": "resetPassword",
+      "source": "server/src/controllers/authController.ts",
+      "line": 253,
+      "expression": "typeof newPassword !== 'string'",
+      "observedCheckedOutcomes": [
+        "T",
+        "F"
+      ],
+      "missingOutcomes": [],
+      "examples": {
+        "T": [
+          "WB-RP-04"
+        ],
+        "F": [
+          "WB-RP-08",
+          "WB-RP-10",
+          "WB-RP-12",
+          "WB-RP-05",
+          "WB-RP-06",
+          "WB-RP-09",
+          "WB-RP-15",
+          "WB-RP-15#2"
+        ],
+        "NE": [
+          "WB-RP-01",
+          "WB-RP-02",
+          "WB-RP-03"
+        ]
+      },
+      "verification": "Manual trace/source review; consequences asserted; atomic operator evaluation not instrumented"
+    },
+    {
+      "id": "RP.2B",
+      "function": "resetPassword",
+      "source": "server/src/controllers/authController.ts",
+      "line": 253,
+      "expression": "newPassword.length < 6",
+      "observedCheckedOutcomes": [
+        "T",
+        "F"
+      ],
+      "missingOutcomes": [],
+      "examples": {
+        "T": [
+          "WB-RP-05"
+        ],
+        "F": [
+          "WB-RP-08",
+          "WB-RP-10",
+          "WB-RP-12",
+          "WB-RP-06",
+          "WB-RP-09",
+          "WB-RP-15",
+          "WB-RP-15#2"
+        ],
+        "NE": [
+          "WB-RP-04",
+          "WB-RP-01",
+          "WB-RP-02",
+          "WB-RP-03"
+        ]
+      },
+      "verification": "Manual trace/source review; consequences asserted; atomic operator evaluation not instrumented"
+    },
+    {
+      "id": "RP.3",
+      "function": "resetPassword",
+      "source": "server/src/controllers/authController.ts",
+      "line": 264,
+      "expression": "!user",
+      "observedCheckedOutcomes": [
+        "T",
+        "F"
+      ],
+      "missingOutcomes": [],
+      "examples": {
+        "T": [
+          "WB-RP-06"
+        ],
+        "F": [
+          "WB-RP-08",
+          "WB-RP-10",
+          "WB-RP-12",
+          "WB-RP-09",
+          "WB-RP-15",
+          "WB-RP-15#2"
+        ],
+        "NE": [
+          "WB-RP-04",
+          "WB-RP-01",
+          "WB-RP-02",
+          "WB-RP-03",
+          "WB-RP-05"
+        ]
+      },
+      "verification": "Manual trace/source review; consequences asserted; atomic operator evaluation not instrumented"
+    },
+    {
+      "id": "RP.4A",
+      "function": "resetPassword",
+      "source": "server/src/controllers/authController.ts",
+      "line": 268,
+      "expression": "!user.resetOtp",
+      "observedCheckedOutcomes": [
+        "T",
+        "F"
+      ],
+      "missingOutcomes": [],
+      "examples": {
+        "T": [
+          "WB-RP-15#2"
+        ],
+        "F": [
+          "WB-RP-08",
+          "WB-RP-10",
+          "WB-RP-12",
+          "WB-RP-09",
+          "WB-RP-15"
+        ],
+        "NE": [
+          "WB-RP-04",
+          "WB-RP-01",
+          "WB-RP-02",
+          "WB-RP-03",
+          "WB-RP-05",
+          "WB-RP-06"
+        ]
+      },
+      "verification": "Manual trace/source review; consequences asserted; atomic operator evaluation not instrumented"
+    },
+    {
+      "id": "RP.4B",
+      "function": "resetPassword",
+      "source": "server/src/controllers/authController.ts",
+      "line": 268,
+      "expression": "user.resetOtp !== cleanOtp",
+      "observedCheckedOutcomes": [
+        "T",
+        "F"
+      ],
+      "missingOutcomes": [],
+      "examples": {
+        "T": [
+          "WB-RP-08"
+        ],
+        "F": [
+          "WB-RP-10",
+          "WB-RP-12",
+          "WB-RP-09",
+          "WB-RP-15"
+        ],
+        "NE": [
+          "WB-RP-04",
+          "WB-RP-01",
+          "WB-RP-02",
+          "WB-RP-03",
+          "WB-RP-05",
+          "WB-RP-06",
+          "WB-RP-15#2"
+        ]
+      },
+      "verification": "Manual trace/source review; consequences asserted; atomic operator evaluation not instrumented"
+    },
+    {
+      "id": "RP.5A",
+      "function": "resetPassword",
+      "source": "server/src/controllers/authController.ts",
+      "line": 272,
+      "expression": "!user.resetOtpExpiry",
+      "observedCheckedOutcomes": [
+        "T",
+        "F"
+      ],
+      "missingOutcomes": [],
+      "examples": {
+        "T": [
+          "WB-RP-09"
+        ],
+        "F": [
+          "WB-RP-10",
+          "WB-RP-12",
+          "WB-RP-15"
+        ],
+        "NE": [
+          "WB-RP-04",
+          "WB-RP-08",
+          "WB-RP-01",
+          "WB-RP-02",
+          "WB-RP-03",
+          "WB-RP-05",
+          "WB-RP-06",
+          "WB-RP-15#2"
+        ]
+      },
+      "verification": "Manual trace/source review; consequences asserted; atomic operator evaluation not instrumented"
+    },
+    {
+      "id": "RP.5B",
+      "function": "resetPassword",
+      "source": "server/src/controllers/authController.ts",
+      "line": 272,
+      "expression": "new Date(user.resetOtpExpiry) < new Date()",
+      "observedCheckedOutcomes": [
+        "T",
+        "F"
+      ],
+      "missingOutcomes": [],
+      "examples": {
+        "T": [
+          "WB-RP-10"
+        ],
+        "F": [
+          "WB-RP-12",
+          "WB-RP-15"
+        ],
+        "NE": [
+          "WB-RP-04",
+          "WB-RP-08",
+          "WB-RP-01",
+          "WB-RP-02",
+          "WB-RP-03",
+          "WB-RP-05",
+          "WB-RP-06",
+          "WB-RP-09",
+          "WB-RP-15#2"
+        ]
+      },
+      "verification": "Manual trace/source review; consequences asserted; atomic operator evaluation not instrumented"
+    },
+    {
+      "id": "FP.1A",
+      "function": "forgotPassword",
+      "source": "server/src/controllers/authController.ts",
+      "line": 200,
+      "expression": "!email",
+      "observedCheckedOutcomes": [
+        "T",
+        "F"
+      ],
+      "missingOutcomes": [],
+      "examples": {
+        "T": [
+          "WB-FP-01"
+        ],
+        "F": [
+          "WB-FP-03",
+          "WB-FP-04",
+          "WB-FP-07"
+        ],
+        "NE": []
+      },
+      "verification": "Manual trace/source review; consequences asserted; atomic operator evaluation not instrumented"
+    },
+    {
+      "id": "FP.1B",
+      "function": "forgotPassword",
+      "source": "server/src/controllers/authController.ts",
+      "line": 200,
+      "expression": "typeof email !== 'string'",
+      "observedCheckedOutcomes": [
+        "F"
+      ],
+      "missingOutcomes": [
+        "T"
+      ],
+      "examples": {
+        "T": [],
+        "F": [
+          "WB-FP-03",
+          "WB-FP-04",
+          "WB-FP-07"
+        ],
+        "NE": [
+          "WB-FP-01"
+        ]
+      },
+      "verification": "Manual trace/source review; consequences asserted; atomic operator evaluation not instrumented"
+    },
+    {
+      "id": "FP.2",
+      "function": "forgotPassword",
+      "source": "server/src/controllers/authController.ts",
+      "line": 209,
+      "expression": "!user",
+      "observedCheckedOutcomes": [
+        "T",
+        "F"
+      ],
+      "missingOutcomes": [],
+      "examples": {
+        "T": [
+          "WB-FP-03"
+        ],
+        "F": [
+          "WB-FP-04",
+          "WB-FP-07"
+        ],
+        "NE": [
+          "WB-FP-01"
+        ]
+      },
+      "verification": "Manual trace/source review; consequences asserted; atomic operator evaluation not instrumented"
+    },
+    {
+      "id": "FP.P",
+      "function": "forgotPassword",
+      "source": "server/src/controllers/authController.ts",
+      "line": 237,
+      "expression": "mailResult.previewUrl",
+      "observedCheckedOutcomes": [
+        "T"
+      ],
+      "missingOutcomes": [
+        "F"
+      ],
+      "examples": {
+        "T": [
+          "WB-FP-04"
+        ],
+        "F": [],
+        "NE": [
+          "WB-FP-01",
+          "WB-FP-03",
+          "WB-FP-07"
+        ]
+      },
+      "verification": "Manual trace/source review; consequences asserted; atomic operator evaluation not instrumented"
+    },
+    {
+      "id": "AT.H",
+      "function": "authenticateToken",
+      "source": "server/src/middleware/auth.ts",
+      "line": 14,
+      "expression": "authHeader",
+      "observedCheckedOutcomes": [
+        "T",
+        "F"
+      ],
+      "missingOutcomes": [],
+      "examples": {
+        "T": [
+          "WB-AT-02",
+          "WB-AT-03",
+          "WB-AT-03#2",
+          "WB-AT-04"
+        ],
+        "F": [
+          "WB-AT-01"
+        ],
+        "NE": []
+      },
+      "verification": "Manual trace/source review; consequences asserted; atomic operator evaluation not instrumented"
+    },
+    {
+      "id": "AT.T",
+      "function": "authenticateToken",
+      "source": "server/src/middleware/auth.ts",
+      "line": 16,
+      "expression": "!token",
+      "observedCheckedOutcomes": [
+        "T",
+        "F"
+      ],
+      "missingOutcomes": [],
+      "examples": {
+        "T": [
+          "WB-AT-01",
+          "WB-AT-02"
+        ],
+        "F": [
+          "WB-AT-03",
+          "WB-AT-03#2",
+          "WB-AT-04"
+        ],
+        "NE": []
+      },
+      "verification": "Manual trace/source review; consequences asserted; atomic operator evaluation not instrumented"
+    },
+    {
+      "id": "AT.E",
+      "function": "authenticateToken",
+      "source": "server/src/middleware/auth.ts",
+      "line": 19,
+      "expression": "err",
+      "observedCheckedOutcomes": [
+        "T",
+        "F"
+      ],
+      "missingOutcomes": [],
+      "examples": {
+        "T": [
+          "WB-AT-03",
+          "WB-AT-03#2"
+        ],
+        "F": [
+          "WB-AT-04"
+        ],
+        "NE": [
+          "WB-AT-01",
+          "WB-AT-02"
+        ]
+      },
+      "verification": "Manual trace/source review; consequences asserted; atomic operator evaluation not instrumented"
+    },
+    {
+      "id": "AA.R",
+      "function": "authorizeAdmin",
+      "source": "server/src/middleware/auth.ts",
+      "line": 26,
+      "expression": "req.user?.role !== 'ADMIN'",
+      "observedCheckedOutcomes": [
+        "T",
+        "F"
+      ],
+      "missingOutcomes": [],
+      "examples": {
+        "T": [
+          "WB-AA-01",
+          "WB-AA-02"
+        ],
+        "F": [
+          "WB-AA-03"
+        ],
+        "NE": []
+      },
+      "verification": "Manual trace/source review; consequences asserted; atomic operator evaluation not instrumented"
+    },
+    {
+      "id": "OA.H",
+      "function": "optionalAuthenticateToken",
+      "source": "server/src/middleware/auth.ts",
+      "line": 34,
+      "expression": "authHeader",
+      "observedCheckedOutcomes": [
+        "T",
+        "F"
+      ],
+      "missingOutcomes": [],
+      "examples": {
+        "T": [
+          "WB-OA-02",
+          "WB-OA-03"
+        ],
+        "F": [
+          "WB-OA-01"
+        ],
+        "NE": []
+      },
+      "verification": "Manual trace/source review; consequences asserted; atomic operator evaluation not instrumented"
+    },
+    {
+      "id": "OA.T",
+      "function": "optionalAuthenticateToken",
+      "source": "server/src/middleware/auth.ts",
+      "line": 36,
+      "expression": "!token",
+      "observedCheckedOutcomes": [
+        "T",
+        "F"
+      ],
+      "missingOutcomes": [],
+      "examples": {
+        "T": [
+          "WB-OA-01"
+        ],
+        "F": [
+          "WB-OA-02",
+          "WB-OA-03"
+        ],
+        "NE": []
+      },
+      "verification": "Manual trace/source review; consequences asserted; atomic operator evaluation not instrumented"
+    },
+    {
+      "id": "OA.U",
+      "function": "optionalAuthenticateToken",
+      "source": "server/src/middleware/auth.ts",
+      "line": 39,
+      "expression": "user",
+      "observedCheckedOutcomes": [
+        "T",
+        "F"
+      ],
+      "missingOutcomes": [],
+      "examples": {
+        "T": [
+          "WB-OA-03"
+        ],
+        "F": [
+          "WB-OA-02"
+        ],
+        "NE": [
+          "WB-OA-01"
+        ]
+      },
+      "verification": "Manual trace/source review; consequences asserted; atomic operator evaluation not instrumented"
+    }
+  ],
+  "observations": [
+    {
+      "testId": "WB-RG-01",
+      "invocation": 1,
+      "trace": "coverage/case-traces.json",
+      "conditions": {},
+      "actual": {
+        "statusCode": 201,
+        "payload": {
+          "message": "User created"
+        }
+      },
+      "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+      "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+    },
+    {
+      "testId": "WB-RG-02",
+      "invocation": 1,
+      "trace": "coverage/case-traces.json",
+      "conditions": {},
+      "actual": {
+        "statusCode": 400,
+        "payload": {
+          "error": "User already exists"
+        }
+      },
+      "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+      "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+    },
+    {
+      "testId": "WB-LG-01",
+      "invocation": 1,
+      "trace": "coverage/case-traces.json",
+      "conditions": {
+        "LG.A": "T",
+        "LG.B": "NE"
+      },
+      "actual": {
+        "statusCode": 401,
+        "payload": {
+          "error": "Invalid credentials"
+        }
+      },
+      "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+      "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+    },
+    {
+      "testId": "WB-LG-02",
+      "invocation": 1,
+      "trace": "coverage/case-traces.json",
+      "conditions": {
+        "LG.A": "F",
+        "LG.B": "T"
+      },
+      "actual": {
+        "statusCode": 401,
+        "payload": {
+          "error": "Invalid credentials"
+        }
+      },
+      "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+      "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+    },
+    {
+      "testId": "WB-LG-03",
+      "invocation": 1,
+      "trace": "coverage/case-traces.json",
+      "conditions": {
+        "LG.A": "F",
+        "LG.B": "F"
+      },
+      "actual": {
+        "statusCode": 200,
+        "payload": {
+          "token": "unit-test-jwt-output",
+          "user": {
+            "id": 1,
+            "email": "user@example.com",
+            "name": "Unit Test User",
+            "role": "USER",
+            "membershipTier": "STANDARD",
+            "isBlacklisted": false
+          }
+        }
+      },
+      "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+      "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+    },
+    {
+      "testId": "WB-CP-01",
+      "invocation": 1,
+      "trace": "coverage/case-traces.json",
+      "conditions": {
+        "CP.1": "T",
+        "CP.2A": "NE",
+        "CP.2B": "NE",
+        "CP.3": "NE",
+        "CP.4": "NE",
+        "CP.5": "NE",
+        "CP.6": "NE"
+      },
+      "actual": {
+        "statusCode": 401,
+        "payload": {
+          "error": "Unauthorized"
+        }
+      },
+      "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+      "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+    },
+    {
+      "testId": "WB-CP-02",
+      "invocation": 1,
+      "trace": "coverage/case-traces.json",
+      "conditions": {
+        "CP.1": "F",
+        "CP.2A": "T",
+        "CP.2B": "NE",
+        "CP.3": "NE",
+        "CP.4": "NE",
+        "CP.5": "NE",
+        "CP.6": "NE"
+      },
+      "actual": {
+        "statusCode": 400,
+        "payload": {
+          "error": "Vui lòng điền đầy đủ mật khẩu hiện tại và mật khẩu mới"
+        }
+      },
+      "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+      "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+    },
+    {
+      "testId": "WB-CP-03",
+      "invocation": 1,
+      "trace": "coverage/case-traces.json",
+      "conditions": {
+        "CP.1": "F",
+        "CP.2A": "F",
+        "CP.2B": "T",
+        "CP.3": "NE",
+        "CP.4": "NE",
+        "CP.5": "NE",
+        "CP.6": "NE"
+      },
+      "actual": {
+        "statusCode": 400,
+        "payload": {
+          "error": "Vui lòng điền đầy đủ mật khẩu hiện tại và mật khẩu mới"
+        }
+      },
+      "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+      "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+    },
+    {
+      "testId": "WB-CP-04",
+      "invocation": 1,
+      "trace": "coverage/case-traces.json",
+      "conditions": {
+        "CP.1": "F",
+        "CP.2A": "F",
+        "CP.2B": "F",
+        "CP.3": "T",
+        "CP.4": "NE",
+        "CP.5": "NE",
+        "CP.6": "NE"
+      },
+      "actual": {
+        "statusCode": 400,
+        "payload": {
+          "error": "Mật khẩu mới phải có độ dài tối thiểu 6 ký tự"
+        }
+      },
+      "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+      "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+    },
+    {
+      "testId": "WB-CP-08",
+      "invocation": 1,
+      "trace": "coverage/case-traces.json",
+      "conditions": {
+        "CP.1": "F",
+        "CP.2A": "F",
+        "CP.2B": "F",
+        "CP.3": "F",
+        "CP.4": "F",
+        "CP.5": "F",
+        "CP.6": "F"
+      },
+      "actual": {
+        "statusCode": 200,
+        "payload": {
+          "message": "Đổi mật khẩu thành công!"
+        }
+      },
+      "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+      "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+    },
+    {
+      "testId": "WB-CP-09",
+      "invocation": 1,
+      "trace": "coverage/case-traces.json",
+      "conditions": {
+        "CP.1": "F",
+        "CP.2A": "F",
+        "CP.2B": "F",
+        "CP.3": "F",
+        "CP.4": "F",
+        "CP.5": "F",
+        "CP.6": "F"
+      },
+      "actual": {
+        "statusCode": 500,
+        "payload": {
+          "error": "Không thể cập nhật mật khẩu, vui lòng thử lại sau"
+        }
+      },
+      "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+      "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+    },
+    {
+      "testId": "WB-RP-04",
+      "invocation": 1,
+      "trace": "coverage/case-traces.json",
+      "conditions": {
+        "RP.1A": "F",
+        "RP.1B": "F",
+        "RP.1C": "F",
+        "RP.2A": "T",
+        "RP.2B": "NE",
+        "RP.3": "NE",
+        "RP.4A": "NE",
+        "RP.4B": "NE",
+        "RP.5A": "NE",
+        "RP.5B": "NE"
+      },
+      "actual": {
+        "statusCode": 400,
+        "payload": {
+          "error": "Mật khẩu mới phải có tối thiểu 6 ký tự"
+        }
+      },
+      "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+      "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+    },
+    {
+      "testId": "WB-RP-08",
+      "invocation": 1,
+      "trace": "coverage/case-traces.json",
+      "conditions": {
+        "RP.1A": "F",
+        "RP.1B": "F",
+        "RP.1C": "F",
+        "RP.2A": "F",
+        "RP.2B": "F",
+        "RP.3": "F",
+        "RP.4A": "F",
+        "RP.4B": "T",
+        "RP.5A": "NE",
+        "RP.5B": "NE"
+      },
+      "actual": {
+        "statusCode": 400,
+        "payload": {
+          "error": "Mã OTP không chính xác"
+        }
+      },
+      "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+      "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+    },
+    {
+      "testId": "WB-RP-10",
+      "invocation": 1,
+      "trace": "coverage/case-traces.json",
+      "conditions": {
+        "RP.1A": "F",
+        "RP.1B": "F",
+        "RP.1C": "F",
+        "RP.2A": "F",
+        "RP.2B": "F",
+        "RP.3": "F",
+        "RP.4A": "F",
+        "RP.4B": "F",
+        "RP.5A": "F",
+        "RP.5B": "T"
+      },
+      "actual": {
+        "statusCode": 400,
+        "payload": {
+          "error": "Mã OTP đã hết hạn, vui lòng yêu cầu gửi lại mã mới"
+        }
+      },
+      "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+      "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+    },
+    {
+      "testId": "WB-RP-12",
+      "invocation": 1,
+      "trace": "coverage/case-traces.json",
+      "conditions": {
+        "RP.1A": "F",
+        "RP.1B": "F",
+        "RP.1C": "F",
+        "RP.2A": "F",
+        "RP.2B": "F",
+        "RP.3": "F",
+        "RP.4A": "F",
+        "RP.4B": "F",
+        "RP.5A": "F",
+        "RP.5B": "F"
+      },
+      "actual": {
+        "statusCode": 200,
+        "payload": {
+          "message": "Đặt lại mật khẩu thành công! Bạn có thể đăng nhập bằng mật khẩu mới."
+        }
+      },
+      "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+      "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+    },
+    {
+      "testId": "WB-LG-04",
+      "invocation": 1,
+      "trace": "coverage/phase2-controller-traces.json",
+      "conditions": {
+        "LG.A": "F",
+        "LG.B": "F"
+      },
+      "actual": {
+        "statusCode": 200,
+        "payload": {
+          "token": "unit-test-jwt-output",
+          "user": {
+            "id": 1,
+            "email": "user@example.com",
+            "name": "Unit Test User",
+            "role": "ADMIN",
+            "membershipTier": "STANDARD",
+            "isBlacklisted": false
+          }
+        }
+      },
+      "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+      "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+    },
+    {
+      "testId": "WB-CP-05",
+      "invocation": 1,
+      "trace": "coverage/phase2-controller-traces.json",
+      "conditions": {
+        "CP.1": "F",
+        "CP.2A": "F",
+        "CP.2B": "F",
+        "CP.3": "F",
+        "CP.4": "T",
+        "CP.5": "NE",
+        "CP.6": "NE"
+      },
+      "actual": {
+        "statusCode": 404,
+        "payload": {
+          "error": "Không tìm thấy thông tin người dùng"
+        }
+      },
+      "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+      "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+    },
+    {
+      "testId": "WB-CP-06",
+      "invocation": 1,
+      "trace": "coverage/phase2-controller-traces.json",
+      "conditions": {
+        "CP.1": "F",
+        "CP.2A": "F",
+        "CP.2B": "F",
+        "CP.3": "F",
+        "CP.4": "F",
+        "CP.5": "T",
+        "CP.6": "NE"
+      },
+      "actual": {
+        "statusCode": 400,
+        "payload": {
+          "error": "Mật khẩu hiện tại không chính xác"
+        }
+      },
+      "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+      "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+    },
+    {
+      "testId": "WB-CP-07",
+      "invocation": 1,
+      "trace": "coverage/phase2-controller-traces.json",
+      "conditions": {
+        "CP.1": "F",
+        "CP.2A": "F",
+        "CP.2B": "F",
+        "CP.3": "F",
+        "CP.4": "F",
+        "CP.5": "F",
+        "CP.6": "T"
+      },
+      "actual": {
+        "statusCode": 400,
+        "payload": {
+          "error": "Mật khẩu mới không được trùng với mật khẩu hiện tại"
+        }
+      },
+      "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+      "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+    },
+    {
+      "testId": "WB-FP-01",
+      "invocation": 1,
+      "trace": "coverage/phase2-controller-traces.json",
+      "conditions": {
+        "FP.1A": "T",
+        "FP.1B": "NE",
+        "FP.2": "NE",
+        "FP.P": "NE"
+      },
+      "actual": {
+        "statusCode": 400,
+        "payload": {
+          "error": "Vui lòng cung cấp địa chỉ email hợp lệ"
+        }
+      },
+      "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+      "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+    },
+    {
+      "testId": "WB-FP-03",
+      "invocation": 1,
+      "trace": "coverage/phase2-controller-traces.json",
+      "conditions": {
+        "FP.1A": "F",
+        "FP.1B": "F",
+        "FP.2": "T",
+        "FP.P": "NE"
+      },
+      "actual": {
+        "statusCode": 404,
+        "payload": {
+          "error": "Email không tồn tại trong hệ thống"
+        }
+      },
+      "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+      "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+    },
+    {
+      "testId": "WB-FP-04",
+      "invocation": 1,
+      "trace": "coverage/phase2-controller-traces.json",
+      "conditions": {
+        "FP.1A": "F",
+        "FP.1B": "F",
+        "FP.2": "F",
+        "FP.P": "T"
+      },
+      "actual": {
+        "statusCode": 200,
+        "payload": {
+          "message": "Mã xác thực OTP đã được gửi đến email của bạn. Vui lòng kiểm tra hộp thư (kể cả hòm thư rác/spam).",
+          "previewUrl": "https://example.test/unit-preview"
+        }
+      },
+      "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+      "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+    },
+    {
+      "testId": "WB-FP-07",
+      "invocation": 1,
+      "trace": "coverage/phase2-controller-traces.json",
+      "conditions": {
+        "FP.1A": "F",
+        "FP.1B": "F",
+        "FP.2": "F",
+        "FP.P": "NE"
+      },
+      "actual": {
+        "statusCode": 500,
+        "payload": {
+          "error": "Không thể gửi mã xác nhận OTP, vui lòng thử lại sau"
+        }
+      },
+      "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+      "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+    },
+    {
+      "testId": "WB-RP-01",
+      "invocation": 1,
+      "trace": "coverage/phase2-controller-traces.json",
+      "conditions": {
+        "RP.1A": "T",
+        "RP.1B": "NE",
+        "RP.1C": "NE",
+        "RP.2A": "NE",
+        "RP.2B": "NE",
+        "RP.3": "NE",
+        "RP.4A": "NE",
+        "RP.4B": "NE",
+        "RP.5A": "NE",
+        "RP.5B": "NE"
+      },
+      "actual": {
+        "statusCode": 400,
+        "payload": {
+          "error": "Vui lòng cung cấp đầy đủ email, mã OTP và mật khẩu mới"
+        }
+      },
+      "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+      "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+    },
+    {
+      "testId": "WB-RP-02",
+      "invocation": 1,
+      "trace": "coverage/phase2-controller-traces.json",
+      "conditions": {
+        "RP.1A": "F",
+        "RP.1B": "T",
+        "RP.1C": "NE",
+        "RP.2A": "NE",
+        "RP.2B": "NE",
+        "RP.3": "NE",
+        "RP.4A": "NE",
+        "RP.4B": "NE",
+        "RP.5A": "NE",
+        "RP.5B": "NE"
+      },
+      "actual": {
+        "statusCode": 400,
+        "payload": {
+          "error": "Vui lòng cung cấp đầy đủ email, mã OTP và mật khẩu mới"
+        }
+      },
+      "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+      "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+    },
+    {
+      "testId": "WB-RP-03",
+      "invocation": 1,
+      "trace": "coverage/phase2-controller-traces.json",
+      "conditions": {
+        "RP.1A": "F",
+        "RP.1B": "F",
+        "RP.1C": "T",
+        "RP.2A": "NE",
+        "RP.2B": "NE",
+        "RP.3": "NE",
+        "RP.4A": "NE",
+        "RP.4B": "NE",
+        "RP.5A": "NE",
+        "RP.5B": "NE"
+      },
+      "actual": {
+        "statusCode": 400,
+        "payload": {
+          "error": "Vui lòng cung cấp đầy đủ email, mã OTP và mật khẩu mới"
+        }
+      },
+      "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+      "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+    },
+    {
+      "testId": "WB-RP-05",
+      "invocation": 1,
+      "trace": "coverage/phase2-controller-traces.json",
+      "conditions": {
+        "RP.1A": "F",
+        "RP.1B": "F",
+        "RP.1C": "F",
+        "RP.2A": "F",
+        "RP.2B": "T",
+        "RP.3": "NE",
+        "RP.4A": "NE",
+        "RP.4B": "NE",
+        "RP.5A": "NE",
+        "RP.5B": "NE"
+      },
+      "actual": {
+        "statusCode": 400,
+        "payload": {
+          "error": "Mật khẩu mới phải có tối thiểu 6 ký tự"
+        }
+      },
+      "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+      "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+    },
+    {
+      "testId": "WB-RP-06",
+      "invocation": 1,
+      "trace": "coverage/phase2-controller-traces.json",
+      "conditions": {
+        "RP.1A": "F",
+        "RP.1B": "F",
+        "RP.1C": "F",
+        "RP.2A": "F",
+        "RP.2B": "F",
+        "RP.3": "T",
+        "RP.4A": "NE",
+        "RP.4B": "NE",
+        "RP.5A": "NE",
+        "RP.5B": "NE"
+      },
+      "actual": {
+        "statusCode": 404,
+        "payload": {
+          "error": "Người dùng không tồn tại"
+        }
+      },
+      "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+      "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+    },
+    {
+      "testId": "WB-RP-09",
+      "invocation": 1,
+      "trace": "coverage/phase2-controller-traces.json",
+      "conditions": {
+        "RP.1A": "F",
+        "RP.1B": "F",
+        "RP.1C": "F",
+        "RP.2A": "F",
+        "RP.2B": "F",
+        "RP.3": "F",
+        "RP.4A": "F",
+        "RP.4B": "F",
+        "RP.5A": "T",
+        "RP.5B": "NE"
+      },
+      "actual": {
+        "statusCode": 400,
+        "payload": {
+          "error": "Mã OTP đã hết hạn, vui lòng yêu cầu gửi lại mã mới"
+        }
+      },
+      "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+      "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+    },
+    {
+      "testId": "WB-RP-15",
+      "invocation": 1,
+      "trace": "coverage/phase2-controller-traces.json",
+      "conditions": {
+        "RP.1A": "F",
+        "RP.1B": "F",
+        "RP.1C": "F",
+        "RP.2A": "F",
+        "RP.2B": "F",
+        "RP.3": "F",
+        "RP.4A": "F",
+        "RP.4B": "F",
+        "RP.5A": "F",
+        "RP.5B": "F"
+      },
+      "actual": {
+        "statusCode": 200,
+        "payload": {
+          "message": "Đặt lại mật khẩu thành công! Bạn có thể đăng nhập bằng mật khẩu mới."
+        }
+      },
+      "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+      "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+    },
+    {
+      "testId": "WB-RP-15",
+      "invocation": 2,
+      "trace": "coverage/phase2-controller-traces.json",
+      "conditions": {
+        "RP.1A": "F",
+        "RP.1B": "F",
+        "RP.1C": "F",
+        "RP.2A": "F",
+        "RP.2B": "F",
+        "RP.3": "F",
+        "RP.4A": "T",
+        "RP.4B": "NE",
+        "RP.5A": "NE",
+        "RP.5B": "NE"
+      },
+      "actual": {
+        "statusCode": 400,
+        "payload": {
+          "error": "Mã OTP không chính xác"
+        }
+      },
+      "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+      "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+    },
+    {
+      "testId": "WB-AT-01",
+      "invocation": 1,
+      "trace": "coverage/phase2-middleware-traces.json",
+      "conditions": {
+        "AT.H": "F",
+        "AT.T": "T",
+        "AT.E": "NE"
+      },
+      "actual": {
+        "responseWritten": true,
+        "statusCode": 401,
+        "payload": null,
+        "nextCalls": 0,
+        "user": null
+      },
+      "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+      "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+    },
+    {
+      "testId": "WB-AT-02",
+      "invocation": 1,
+      "trace": "coverage/phase2-middleware-traces.json",
+      "conditions": {
+        "AT.H": "T",
+        "AT.T": "T",
+        "AT.E": "NE"
+      },
+      "actual": {
+        "responseWritten": true,
+        "statusCode": 401,
+        "payload": null,
+        "nextCalls": 0,
+        "user": null
+      },
+      "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+      "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+    },
+    {
+      "testId": "WB-AT-03",
+      "invocation": 1,
+      "trace": "coverage/phase2-middleware-traces.json",
+      "conditions": {
+        "AT.H": "T",
+        "AT.T": "F",
+        "AT.E": "T"
+      },
+      "actual": {
+        "responseWritten": true,
+        "statusCode": 403,
+        "payload": null,
+        "nextCalls": 0,
+        "user": null
+      },
+      "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+      "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+    },
+    {
+      "testId": "WB-AT-03",
+      "invocation": 2,
+      "trace": "coverage/phase2-middleware-traces.json",
+      "conditions": {
+        "AT.H": "T",
+        "AT.T": "F",
+        "AT.E": "T"
+      },
+      "actual": {
+        "responseWritten": true,
+        "statusCode": 403,
+        "payload": null,
+        "nextCalls": 0,
+        "user": null
+      },
+      "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+      "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+    },
+    {
+      "testId": "WB-AT-04",
+      "invocation": 1,
+      "trace": "coverage/phase2-middleware-traces.json",
+      "conditions": {
+        "AT.H": "T",
+        "AT.T": "F",
+        "AT.E": "F"
+      },
+      "actual": {
+        "responseWritten": false,
+        "statusCode": null,
+        "payload": null,
+        "nextCalls": 1,
+        "user": {
+          "userId": 1,
+          "email": "user@example.com",
+          "role": "USER"
+        }
+      },
+      "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+      "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+    },
+    {
+      "testId": "WB-AA-01",
+      "invocation": 1,
+      "trace": "coverage/phase2-middleware-traces.json",
+      "conditions": {
+        "AA.R": "T"
+      },
+      "actual": {
+        "responseWritten": true,
+        "statusCode": 403,
+        "payload": {
+          "message": "Forbidden"
+        },
+        "nextCalls": 0,
+        "user": null
+      },
+      "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+      "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+    },
+    {
+      "testId": "WB-AA-02",
+      "invocation": 1,
+      "trace": "coverage/phase2-middleware-traces.json",
+      "conditions": {
+        "AA.R": "T"
+      },
+      "actual": {
+        "responseWritten": true,
+        "statusCode": 403,
+        "payload": {
+          "message": "Forbidden"
+        },
+        "nextCalls": 0,
+        "user": {
+          "userId": 1,
+          "email": "user@example.com",
+          "role": "USER"
+        }
+      },
+      "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+      "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+    },
+    {
+      "testId": "WB-AA-03",
+      "invocation": 1,
+      "trace": "coverage/phase2-middleware-traces.json",
+      "conditions": {
+        "AA.R": "F"
+      },
+      "actual": {
+        "responseWritten": false,
+        "statusCode": null,
+        "payload": null,
+        "nextCalls": 1,
+        "user": {
+          "userId": 1,
+          "email": "user@example.com",
+          "role": "ADMIN"
+        }
+      },
+      "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+      "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+    },
+    {
+      "testId": "WB-OA-01",
+      "invocation": 1,
+      "trace": "coverage/phase2-middleware-traces.json",
+      "conditions": {
+        "OA.H": "F",
+        "OA.T": "T",
+        "OA.U": "NE"
+      },
+      "actual": {
+        "responseWritten": false,
+        "statusCode": null,
+        "payload": null,
+        "nextCalls": 1,
+        "user": null
+      },
+      "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+      "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+    },
+    {
+      "testId": "WB-OA-02",
+      "invocation": 1,
+      "trace": "coverage/phase2-middleware-traces.json",
+      "conditions": {
+        "OA.H": "T",
+        "OA.T": "F",
+        "OA.U": "F"
+      },
+      "actual": {
+        "responseWritten": false,
+        "statusCode": null,
+        "payload": null,
+        "nextCalls": 1,
+        "user": null
+      },
+      "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+      "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+    },
+    {
+      "testId": "WB-OA-03",
+      "invocation": 1,
+      "trace": "coverage/phase2-middleware-traces.json",
+      "conditions": {
+        "OA.H": "T",
+        "OA.T": "F",
+        "OA.U": "T"
+      },
+      "actual": {
+        "responseWritten": false,
+        "statusCode": null,
+        "payload": null,
+        "nextCalls": 1,
+        "user": {
+          "userId": 1,
+          "email": "user@example.com",
+          "role": "USER"
+        }
+      },
+      "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+      "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+    }
+  ],
+  "notExecutedSourcePredicates": {
+    "getMe": "Not tested; no T/F claim",
+    "toggleBlacklist": "Not tested; no T/F claim",
+    "optionalChaining": "Not completely catalogued as independent atomic predicates"
+  }
+}

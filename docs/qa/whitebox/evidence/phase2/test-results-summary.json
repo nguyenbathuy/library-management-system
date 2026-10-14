@@ -1,0 +1,5354 @@
+{
+  "reportDateClient": "2026-10-12",
+  "newTestCases": 25,
+  "totalTestCases": 40,
+  "pass": 40,
+  "fail": 0,
+  "skipped": 0,
+  "todo": 0,
+  "testedCommit": "3623171535cde61d8fb8dd7f02d248da3864e2e5",
+  "sourceConfigAndTestHashes": {
+    "server/src/controllers/authController.ts": "84ee5d75adfaae69e3551e26a66dc623a094bab89534a0ea78fd20b23d684500",
+    "server/src/middleware/auth.ts": "c7b65299af2a7d5bcfaa98f0f0593eee0f528455f3e5831f9d89da0ef43e73c4",
+    "server/src/routes/authRoutes.ts": "4dbac2e7cec3ccf0b71d14a37210f05cdc9ced5a81effa0d8406cdf4a07f7429",
+    "vitest.backend.config.ts": "90aaecde7fadbb740e87eefa668b726a0a8205de1137eb295c79c50276d9d178",
+    "package.json": "cb844374697aef5c6842513f47b6e4575f056fce733bd520a6191b3d94470f74",
+    "package-lock.json": "61598ac2f173f9bf12ce876d5a4cac2b8a1e50d06947dac1bfc680448fd3e631",
+    "server/tsconfig.tests.json": "2b0ea214bbdb2a3730a33cc2e03911e7c37d800d0cf8037707029d5f56b1fc22",
+    "server/tests/mocks/prismaGuard.ts": "38acb809c068f7afcc25c266072f648e7a48c3e686a2a530509cc606a2da23b4",
+    "server/tests/mocks/http.ts": "b34b68078ed012119510e7f73ec07227ae9ace0a0a4174fcf287b35201782af0",
+    "server/tests/unit/auth/authMiddleware.phase2.test.ts": "3bd009dd0fd1b864f13b238618c191f391a0429005730e27298a0318f6569b5d",
+    "server/tests/unit/auth/authController.test.ts": "a5fd214f90ffe66dee3eab3c384eaf3968bc95521f5071c038764f380f18357e",
+    "server/tests/unit/auth/authController.phase2.test.ts": "d38cc92b6c96833302a959515efe77b50b40033744154bf80d24ab3f4b163391",
+    "server/tests/support/phase2Evidence.ts": "a428b471a47b8598ee8a324d26e175a53ef498de6c40729829e82d82092fe88b",
+    "server/tests/setup/isolation.ts": "8c6a026e284c3268e8571b3c591ce9b8b053d474e19a5fa70eca3b4cd752e75f",
+    "server/tests/fixtures/phase1-cases.json": "175450789834ae30937449dae80126c0b9f0dcc721bca6811e906119e25485a3",
+    "server/tests/fixtures/auth.ts": "2c40934f5f63ebf70d6346d2d4e35bcf07483559fe81faccd1cd0e51b62d7f43",
+    "server/tests/fixtures/phase2-cases.json": "d954b524e58ba490bd96a14fe72ceb724cd8fc8dbbe36381e727bc01c5c3b65a"
+  },
+  "executionTimestampClient": "2026-10-12T13:38:11.892430+07:00",
+  "executionTimestampUtc": "2026-10-12T06:38:11.892430+00:00",
+  "node": "v22.23.3",
+  "vitest": "4.1.0",
+  "coverageV8": "4.1.0",
+  "coverage": {
+    "lines": {
+      "total": 128,
+      "covered": 98,
+      "skipped": 0,
+      "pct": 76.56
+    },
+    "statements": {
+      "total": 133,
+      "covered": 101,
+      "skipped": 0,
+      "pct": 75.93
+    },
+    "functions": {
+      "total": 13,
+      "covered": 10,
+      "skipped": 0,
+      "pct": 76.92
+    },
+    "branches": {
+      "total": 71,
+      "covered": 58,
+      "skipped": 0,
+      "pct": 81.69
+    },
+    "branchesTrue": {
+      "total": 0,
+      "covered": 0,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "coverageComparison": {
+    "sameFileScope": true,
+    "sameSourceHash": true,
+    "identicalCoverageMaps": true,
+    "sameDenominators": true,
+    "metrics": [
+      {
+        "metric": "statements",
+        "phase1": {
+          "total": 133,
+          "covered": 58,
+          "skipped": 0,
+          "pct": 43.6
+        },
+        "phase2Combined": {
+          "total": 133,
+          "covered": 101,
+          "skipped": 0,
+          "pct": 75.93
+        },
+        "percentagePointDifference": 32.33,
+        "newlyCovered": 43
+      },
+      {
+        "metric": "branches",
+        "phase1": {
+          "total": 71,
+          "covered": 32,
+          "skipped": 0,
+          "pct": 45.07
+        },
+        "phase2Combined": {
+          "total": 71,
+          "covered": 58,
+          "skipped": 0,
+          "pct": 81.69
+        },
+        "percentagePointDifference": 36.62,
+        "newlyCovered": 26
+      },
+      {
+        "metric": "functions",
+        "phase1": {
+          "total": 13,
+          "covered": 4,
+          "skipped": 0,
+          "pct": 30.76
+        },
+        "phase2Combined": {
+          "total": 13,
+          "covered": 10,
+          "skipped": 0,
+          "pct": 76.92
+        },
+        "percentagePointDifference": 46.16,
+        "newlyCovered": 6
+      },
+      {
+        "metric": "lines",
+        "phase1": {
+          "total": 128,
+          "covered": 58,
+          "skipped": 0,
+          "pct": 45.31
+        },
+        "phase2Combined": {
+          "total": 128,
+          "covered": 98,
+          "skipped": 0,
+          "pct": 76.56
+        },
+        "percentagePointDifference": 31.25,
+        "newlyCovered": 40
+      }
+    ]
+  },
+  "conditionComparable19": {
+    "conditions": 19,
+    "phase1Covered": 28,
+    "totalOutcomes": 38,
+    "phase2Covered": 38,
+    "phase2Percent": 100.0,
+    "differenceOutcomes": 10
+  },
+  "conditionExpanded30": {
+    "conditions": 30,
+    "totalOutcomes": 60,
+    "covered": 58,
+    "percent": 96.67,
+    "notComparableToPhase1Percent": true
+  },
+  "conditionWholeAuthentication": "NOT DETERMINED",
+  "newProductionDefectsInExecutedCases": 0,
+  "testHarnessFindings": [
+    {
+      "classification": "Mock Configuration Error / test harness hook compatibility",
+      "initialRun": "initial-hook-error/execution.log",
+      "initialExitCode": 1,
+      "initialTestBodiesPassed": 15,
+      "initialSuiteFailed": 1,
+      "reason": "Vitest 4 fixture hook parser requires object destructuring for first callback parameter; named _context caused FixtureParseError in shared afterAll",
+      "fix": "Only test setup hook changed to afterAll(({}, suite) => ...); no production edits, Expected/assertion changes",
+      "initialOutputPath": "phase1-regression (archived intact as initial-hook-error before rerun)"
+    }
+  ],
+  "cases": [
+    {
+      "testId": "WB-LG-01",
+      "phase": 1,
+      "targetFunction": "login",
+      "originalMatrixModule": "Authentication",
+      "oracle": "S",
+      "expectedResult": "401 Invalid credentials; không compare/sign",
+      "coveredBranchInference": "LG.1: T/NE",
+      "executionStatus": "passed",
+      "durationMs": 0.5976730000000146,
+      "failureMessages": [],
+      "actualInvocations": [
+        {
+          "input": {
+            "email": "user@example.com",
+            "password": "oldpass"
+          },
+          "actor": null,
+          "actual": {
+            "statusCode": 401,
+            "payload": {
+              "error": "Invalid credentials"
+            }
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured calls",
+            "findUnique": null
+          },
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [
+                [
+                  {
+                    "where": {
+                      "email": "user@example.com"
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": null
+                }
+              ]
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "conditionEvidence": [
+        {
+          "testId": "WB-LG-01",
+          "invocation": 1,
+          "trace": "coverage/case-traces.json",
+          "conditions": {
+            "LG.A": "T",
+            "LG.B": "NE"
+          },
+          "actual": {
+            "statusCode": 401,
+            "payload": {
+              "error": "Invalid credentials"
+            }
+          },
+          "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+          "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+        }
+      ]
+    },
+    {
+      "testId": "WB-LG-02",
+      "phase": 1,
+      "targetFunction": "login",
+      "originalMatrixModule": "Authentication",
+      "oracle": "S",
+      "expectedResult": "401; không sign",
+      "coveredBranchInference": "LG.1: F/T",
+      "executionStatus": "passed",
+      "durationMs": 0.41403099999999426,
+      "failureMessages": [],
+      "actualInvocations": [
+        {
+          "input": {
+            "email": "user@example.com",
+            "password": "wrongpass"
+          },
+          "actor": null,
+          "actual": {
+            "statusCode": 401,
+            "payload": {
+              "error": "Invalid credentials"
+            }
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured calls",
+            "findUnique": {
+              "id": 1,
+              "email": "user@example.com",
+              "name": "Unit Test User",
+              "password": "unit-test-stored-hash",
+              "role": "USER",
+              "membershipTier": "STANDARD",
+              "isBlacklisted": false,
+              "resetOtp": "123456",
+              "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+              "createdAt": "2026-01-01T00:00:00.000Z"
+            },
+            "bcryptCompare": false
+          },
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [
+                [
+                  {
+                    "where": {
+                      "email": "user@example.com"
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": {
+                    "id": 1,
+                    "email": "user@example.com",
+                    "name": "Unit Test User",
+                    "password": "unit-test-stored-hash",
+                    "role": "USER",
+                    "membershipTier": "STANDARD",
+                    "isBlacklisted": false,
+                    "resetOtp": "123456",
+                    "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+                    "createdAt": "2026-01-01T00:00:00.000Z"
+                  }
+                }
+              ]
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.compare": {
+              "arguments": [
+                [
+                  "wrongpass",
+                  "unit-test-stored-hash"
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": false
+                }
+              ]
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "conditionEvidence": [
+        {
+          "testId": "WB-LG-02",
+          "invocation": 1,
+          "trace": "coverage/case-traces.json",
+          "conditions": {
+            "LG.A": "F",
+            "LG.B": "T"
+          },
+          "actual": {
+            "statusCode": 401,
+            "payload": {
+              "error": "Invalid credentials"
+            }
+          },
+          "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+          "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+        }
+      ]
+    },
+    {
+      "testId": "WB-LG-03",
+      "phase": 1,
+      "targetFunction": "login",
+      "originalMatrixModule": "Authentication",
+      "oracle": "B",
+      "expectedResult": "200 token; JWT claims id/email/role, expiresIn=1h; DTO đúng tier, không password",
+      "coveredBranchInference": "LG.1: F/F",
+      "executionStatus": "passed",
+      "durationMs": 0.881699999999995,
+      "failureMessages": [],
+      "actualInvocations": [
+        {
+          "input": {
+            "email": "user@example.com",
+            "password": "oldpass"
+          },
+          "actor": null,
+          "actual": {
+            "statusCode": 200,
+            "payload": {
+              "token": "unit-test-jwt-output",
+              "user": {
+                "id": 1,
+                "email": "user@example.com",
+                "name": "Unit Test User",
+                "role": "USER",
+                "membershipTier": "STANDARD",
+                "isBlacklisted": false
+              }
+            }
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured calls",
+            "findUnique": {
+              "id": 1,
+              "email": "user@example.com",
+              "name": "Unit Test User",
+              "password": "unit-test-stored-hash",
+              "role": "USER",
+              "membershipTier": "STANDARD",
+              "isBlacklisted": false,
+              "resetOtp": "123456",
+              "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+              "createdAt": "2026-01-01T00:00:00.000Z"
+            },
+            "bcryptCompare": true,
+            "jwtSign": "unit-test-jwt-output"
+          },
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [
+                [
+                  {
+                    "where": {
+                      "email": "user@example.com"
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": {
+                    "id": 1,
+                    "email": "user@example.com",
+                    "name": "Unit Test User",
+                    "password": "unit-test-stored-hash",
+                    "role": "USER",
+                    "membershipTier": "STANDARD",
+                    "isBlacklisted": false,
+                    "resetOtp": "123456",
+                    "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+                    "createdAt": "2026-01-01T00:00:00.000Z"
+                  }
+                }
+              ]
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.compare": {
+              "arguments": [
+                [
+                  "oldpass",
+                  "unit-test-stored-hash"
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": true
+                }
+              ]
+            },
+            "jwt.sign": {
+              "arguments": [
+                [
+                  {
+                    "userId": 1,
+                    "email": "user@example.com",
+                    "role": "USER"
+                  },
+                  "unit-test-secret-never-used-for-real-tokens",
+                  {
+                    "expiresIn": "1h"
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": "unit-test-jwt-output"
+                }
+              ]
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "conditionEvidence": [
+        {
+          "testId": "WB-LG-03",
+          "invocation": 1,
+          "trace": "coverage/case-traces.json",
+          "conditions": {
+            "LG.A": "F",
+            "LG.B": "F"
+          },
+          "actual": {
+            "statusCode": 200,
+            "payload": {
+              "token": "unit-test-jwt-output",
+              "user": {
+                "id": 1,
+                "email": "user@example.com",
+                "name": "Unit Test User",
+                "role": "USER",
+                "membershipTier": "STANDARD",
+                "isBlacklisted": false
+              }
+            }
+          },
+          "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+          "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+        }
+      ]
+    },
+    {
+      "testId": "WB-CP-01",
+      "phase": 1,
+      "targetFunction": "changePassword",
+      "originalMatrixModule": "Authentication",
+      "oracle": "S",
+      "expectedResult": "401; không hash/update",
+      "coveredBranchInference": "CP.1 T",
+      "executionStatus": "passed",
+      "durationMs": 0.528209999999973,
+      "failureMessages": [],
+      "actualInvocations": [
+        {
+          "input": {
+            "currentPassword": "oldpass",
+            "newPassword": "abcdef"
+          },
+          "actor": null,
+          "actual": {
+            "statusCode": 401,
+            "payload": {
+              "error": "Unauthorized"
+            }
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured calls"
+          },
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "conditionEvidence": [
+        {
+          "testId": "WB-CP-01",
+          "invocation": 1,
+          "trace": "coverage/case-traces.json",
+          "conditions": {
+            "CP.1": "T",
+            "CP.2A": "NE",
+            "CP.2B": "NE",
+            "CP.3": "NE",
+            "CP.4": "NE",
+            "CP.5": "NE",
+            "CP.6": "NE"
+          },
+          "actual": {
+            "statusCode": 401,
+            "payload": {
+              "error": "Unauthorized"
+            }
+          },
+          "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+          "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+        }
+      ]
+    },
+    {
+      "testId": "WB-CP-02",
+      "phase": 1,
+      "targetFunction": "changePassword",
+      "originalMatrixModule": "Authentication",
+      "oracle": "S",
+      "expectedResult": "400; không DB",
+      "coveredBranchInference": "CP.2: T/NE",
+      "executionStatus": "passed",
+      "durationMs": 0.3836170000000152,
+      "failureMessages": [],
+      "actualInvocations": [
+        {
+          "input": {
+            "currentPassword": "",
+            "newPassword": "abcdef"
+          },
+          "actor": {
+            "userId": 1,
+            "email": "user@example.com",
+            "role": "USER"
+          },
+          "actual": {
+            "statusCode": 400,
+            "payload": {
+              "error": "Vui lòng điền đầy đủ mật khẩu hiện tại và mật khẩu mới"
+            }
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured calls"
+          },
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "conditionEvidence": [
+        {
+          "testId": "WB-CP-02",
+          "invocation": 1,
+          "trace": "coverage/case-traces.json",
+          "conditions": {
+            "CP.1": "F",
+            "CP.2A": "T",
+            "CP.2B": "NE",
+            "CP.3": "NE",
+            "CP.4": "NE",
+            "CP.5": "NE",
+            "CP.6": "NE"
+          },
+          "actual": {
+            "statusCode": 400,
+            "payload": {
+              "error": "Vui lòng điền đầy đủ mật khẩu hiện tại và mật khẩu mới"
+            }
+          },
+          "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+          "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+        }
+      ]
+    },
+    {
+      "testId": "WB-CP-03",
+      "phase": 1,
+      "targetFunction": "changePassword",
+      "originalMatrixModule": "Authentication",
+      "oracle": "S",
+      "expectedResult": "400; không DB",
+      "coveredBranchInference": "CP.2: F/T",
+      "executionStatus": "passed",
+      "durationMs": 0.42100399999998217,
+      "failureMessages": [],
+      "actualInvocations": [
+        {
+          "input": {
+            "currentPassword": "oldpass",
+            "newPassword": ""
+          },
+          "actor": {
+            "userId": 1,
+            "email": "user@example.com",
+            "role": "USER"
+          },
+          "actual": {
+            "statusCode": 400,
+            "payload": {
+              "error": "Vui lòng điền đầy đủ mật khẩu hiện tại và mật khẩu mới"
+            }
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured calls"
+          },
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "conditionEvidence": [
+        {
+          "testId": "WB-CP-03",
+          "invocation": 1,
+          "trace": "coverage/case-traces.json",
+          "conditions": {
+            "CP.1": "F",
+            "CP.2A": "F",
+            "CP.2B": "T",
+            "CP.3": "NE",
+            "CP.4": "NE",
+            "CP.5": "NE",
+            "CP.6": "NE"
+          },
+          "actual": {
+            "statusCode": 400,
+            "payload": {
+              "error": "Vui lòng điền đầy đủ mật khẩu hiện tại và mật khẩu mới"
+            }
+          },
+          "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+          "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+        }
+      ]
+    },
+    {
+      "testId": "WB-CP-04",
+      "phase": 1,
+      "targetFunction": "changePassword",
+      "originalMatrixModule": "Authentication",
+      "oracle": "S",
+      "expectedResult": "400; không lookup",
+      "coveredBranchInference": "CP.2 F/F; CP.3 T",
+      "executionStatus": "passed",
+      "durationMs": 0.34599000000000046,
+      "failureMessages": [],
+      "actualInvocations": [
+        {
+          "input": {
+            "currentPassword": "oldpass",
+            "newPassword": "abcde"
+          },
+          "actor": {
+            "userId": 1,
+            "email": "user@example.com",
+            "role": "USER"
+          },
+          "actual": {
+            "statusCode": 400,
+            "payload": {
+              "error": "Mật khẩu mới phải có độ dài tối thiểu 6 ký tự"
+            }
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured calls"
+          },
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "conditionEvidence": [
+        {
+          "testId": "WB-CP-04",
+          "invocation": 1,
+          "trace": "coverage/case-traces.json",
+          "conditions": {
+            "CP.1": "F",
+            "CP.2A": "F",
+            "CP.2B": "F",
+            "CP.3": "T",
+            "CP.4": "NE",
+            "CP.5": "NE",
+            "CP.6": "NE"
+          },
+          "actual": {
+            "statusCode": 400,
+            "payload": {
+              "error": "Mật khẩu mới phải có độ dài tối thiểu 6 ký tự"
+            }
+          },
+          "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+          "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+        }
+      ]
+    },
+    {
+      "testId": "WB-CP-08",
+      "phase": 1,
+      "targetFunction": "changePassword",
+      "originalMatrixModule": "Authentication",
+      "oracle": "B",
+      "expectedResult": "200; hash(new,10), update đúng userId; notification một lần",
+      "coveredBranchInference": "CP.3 F tại 6; CP.6 F; CP.E success",
+      "executionStatus": "passed",
+      "durationMs": 0.6850280000000168,
+      "failureMessages": [],
+      "actualInvocations": [
+        {
+          "input": {
+            "currentPassword": "oldpass",
+            "newPassword": "abcdef"
+          },
+          "actor": {
+            "userId": 1,
+            "email": "user@example.com",
+            "role": "USER"
+          },
+          "actual": {
+            "statusCode": 200,
+            "payload": {
+              "message": "Đổi mật khẩu thành công!"
+            }
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured calls",
+            "findUnique": {
+              "id": 1,
+              "email": "user@example.com",
+              "name": "Unit Test User",
+              "password": "unit-test-stored-hash",
+              "role": "USER",
+              "membershipTier": "STANDARD",
+              "isBlacklisted": false,
+              "resetOtp": "123456",
+              "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+              "createdAt": "2026-01-01T00:00:00.000Z"
+            },
+            "bcryptCompare": true,
+            "bcryptHash": "unit-test-hash-output",
+            "userUpdate": "resolve",
+            "notification": "resolve"
+          },
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [
+                [
+                  {
+                    "where": {
+                      "id": 1
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": {
+                    "id": 1,
+                    "email": "user@example.com",
+                    "name": "Unit Test User",
+                    "password": "unit-test-stored-hash",
+                    "role": "USER",
+                    "membershipTier": "STANDARD",
+                    "isBlacklisted": false,
+                    "resetOtp": "123456",
+                    "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+                    "createdAt": "2026-01-01T00:00:00.000Z"
+                  }
+                }
+              ]
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [
+                [
+                  {
+                    "where": {
+                      "id": 1
+                    },
+                    "data": {
+                      "password": "unit-test-hash-output"
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": {
+                    "id": 1,
+                    "email": "user@example.com",
+                    "name": "Unit Test User",
+                    "password": "unit-test-stored-hash",
+                    "role": "USER",
+                    "membershipTier": "STANDARD",
+                    "isBlacklisted": false,
+                    "resetOtp": "123456",
+                    "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+                    "createdAt": "2026-01-01T00:00:00.000Z"
+                  }
+                }
+              ]
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [
+                [
+                  "abcdef",
+                  10
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": "unit-test-hash-output"
+                }
+              ]
+            },
+            "bcrypt.compare": {
+              "arguments": [
+                [
+                  "oldpass",
+                  "unit-test-stored-hash"
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": true
+                }
+              ]
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [
+                [
+                  {
+                    "userId": 1,
+                    "title": "Đổi mật khẩu thành công",
+                    "message": "Mật khẩu tài khoản của bạn vừa được cập nhật thành công."
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": {
+                    "id": 1
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "conditionEvidence": [
+        {
+          "testId": "WB-CP-08",
+          "invocation": 1,
+          "trace": "coverage/case-traces.json",
+          "conditions": {
+            "CP.1": "F",
+            "CP.2A": "F",
+            "CP.2B": "F",
+            "CP.3": "F",
+            "CP.4": "F",
+            "CP.5": "F",
+            "CP.6": "F"
+          },
+          "actual": {
+            "statusCode": 200,
+            "payload": {
+              "message": "Đổi mật khẩu thành công!"
+            }
+          },
+          "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+          "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+        }
+      ]
+    },
+    {
+      "testId": "WB-CP-09",
+      "phase": 1,
+      "targetFunction": "changePassword",
+      "originalMatrixModule": "Authentication",
+      "oracle": "S",
+      "expectedResult": "500; không notification",
+      "coveredBranchInference": "CP.3 F tại 7; CP.E catch",
+      "executionStatus": "passed",
+      "durationMs": 0.5751720000000091,
+      "failureMessages": [],
+      "actualInvocations": [
+        {
+          "input": {
+            "currentPassword": "oldpass",
+            "newPassword": "abcdefg"
+          },
+          "actor": {
+            "userId": 1,
+            "email": "user@example.com",
+            "role": "USER"
+          },
+          "actual": {
+            "statusCode": 500,
+            "payload": {
+              "error": "Không thể cập nhật mật khẩu, vui lòng thử lại sau"
+            }
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured calls",
+            "findUnique": {
+              "id": 1,
+              "email": "user@example.com",
+              "name": "Unit Test User",
+              "password": "unit-test-stored-hash",
+              "role": "USER",
+              "membershipTier": "STANDARD",
+              "isBlacklisted": false,
+              "resetOtp": "123456",
+              "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+              "createdAt": "2026-01-01T00:00:00.000Z"
+            },
+            "bcryptCompare": true,
+            "bcryptHash": "unit-test-hash-output",
+            "userUpdate": {
+              "reject": "Simulated unit update failure"
+            }
+          },
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [
+                [
+                  {
+                    "where": {
+                      "id": 1
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": {
+                    "id": 1,
+                    "email": "user@example.com",
+                    "name": "Unit Test User",
+                    "password": "unit-test-stored-hash",
+                    "role": "USER",
+                    "membershipTier": "STANDARD",
+                    "isBlacklisted": false,
+                    "resetOtp": "123456",
+                    "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+                    "createdAt": "2026-01-01T00:00:00.000Z"
+                  }
+                }
+              ]
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [
+                [
+                  {
+                    "where": {
+                      "id": 1
+                    },
+                    "data": {
+                      "password": "unit-test-hash-output"
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "rejected",
+                  "error": "Error: Simulated unit update failure"
+                }
+              ]
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [
+                [
+                  "abcdefg",
+                  10
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": "unit-test-hash-output"
+                }
+              ]
+            },
+            "bcrypt.compare": {
+              "arguments": [
+                [
+                  "oldpass",
+                  "unit-test-stored-hash"
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": true
+                }
+              ]
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "conditionEvidence": [
+        {
+          "testId": "WB-CP-09",
+          "invocation": 1,
+          "trace": "coverage/case-traces.json",
+          "conditions": {
+            "CP.1": "F",
+            "CP.2A": "F",
+            "CP.2B": "F",
+            "CP.3": "F",
+            "CP.4": "F",
+            "CP.5": "F",
+            "CP.6": "F"
+          },
+          "actual": {
+            "statusCode": 500,
+            "payload": {
+              "error": "Không thể cập nhật mật khẩu, vui lòng thử lại sau"
+            }
+          },
+          "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+          "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+        }
+      ]
+    },
+    {
+      "testId": "WB-RP-04",
+      "phase": 1,
+      "targetFunction": "resetPassword",
+      "originalMatrixModule": "Authentication",
+      "oracle": "S",
+      "expectedResult": "400; không lookup",
+      "coveredBranchInference": "RP.1 F/F/F; RP.2 T/NE",
+      "executionStatus": "passed",
+      "durationMs": 0.503122999999988,
+      "failureMessages": [],
+      "actualInvocations": [
+        {
+          "input": {
+            "email": "user@example.com",
+            "otp": "123456",
+            "newPassword": 123456
+          },
+          "actor": null,
+          "actual": {
+            "statusCode": 400,
+            "payload": {
+              "error": "Mật khẩu mới phải có tối thiểu 6 ký tự"
+            }
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured calls"
+          },
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "conditionEvidence": [
+        {
+          "testId": "WB-RP-04",
+          "invocation": 1,
+          "trace": "coverage/case-traces.json",
+          "conditions": {
+            "RP.1A": "F",
+            "RP.1B": "F",
+            "RP.1C": "F",
+            "RP.2A": "T",
+            "RP.2B": "NE",
+            "RP.3": "NE",
+            "RP.4A": "NE",
+            "RP.4B": "NE",
+            "RP.5A": "NE",
+            "RP.5B": "NE"
+          },
+          "actual": {
+            "statusCode": 400,
+            "payload": {
+              "error": "Mật khẩu mới phải có tối thiểu 6 ký tự"
+            }
+          },
+          "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+          "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+        }
+      ]
+    },
+    {
+      "testId": "WB-RP-08",
+      "phase": 1,
+      "targetFunction": "resetPassword",
+      "originalMatrixModule": "Authentication",
+      "oracle": "B",
+      "expectedResult": "400; không hash/update",
+      "coveredBranchInference": "RP.4: F/T",
+      "executionStatus": "passed",
+      "durationMs": 0.43425200000001496,
+      "failureMessages": [],
+      "actualInvocations": [
+        {
+          "input": {
+            "email": "user@example.com",
+            "otp": "999999",
+            "newPassword": "abcdef"
+          },
+          "actor": null,
+          "actual": {
+            "statusCode": 400,
+            "payload": {
+              "error": "Mã OTP không chính xác"
+            }
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured calls",
+            "findUnique": {
+              "id": 1,
+              "email": "user@example.com",
+              "name": "Unit Test User",
+              "password": "unit-test-stored-hash",
+              "role": "USER",
+              "membershipTier": "STANDARD",
+              "isBlacklisted": false,
+              "resetOtp": "123456",
+              "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+              "createdAt": "2026-01-01T00:00:00.000Z"
+            }
+          },
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [
+                [
+                  {
+                    "where": {
+                      "email": "user@example.com"
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": {
+                    "id": 1,
+                    "email": "user@example.com",
+                    "name": "Unit Test User",
+                    "password": "unit-test-stored-hash",
+                    "role": "USER",
+                    "membershipTier": "STANDARD",
+                    "isBlacklisted": false,
+                    "resetOtp": "123456",
+                    "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+                    "createdAt": "2026-01-01T00:00:00.000Z"
+                  }
+                }
+              ]
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "conditionEvidence": [
+        {
+          "testId": "WB-RP-08",
+          "invocation": 1,
+          "trace": "coverage/case-traces.json",
+          "conditions": {
+            "RP.1A": "F",
+            "RP.1B": "F",
+            "RP.1C": "F",
+            "RP.2A": "F",
+            "RP.2B": "F",
+            "RP.3": "F",
+            "RP.4A": "F",
+            "RP.4B": "T",
+            "RP.5A": "NE",
+            "RP.5B": "NE"
+          },
+          "actual": {
+            "statusCode": 400,
+            "payload": {
+              "error": "Mã OTP không chính xác"
+            }
+          },
+          "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+          "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+        }
+      ]
+    },
+    {
+      "testId": "WB-RP-10",
+      "phase": 1,
+      "targetFunction": "resetPassword",
+      "originalMatrixModule": "Authentication",
+      "oracle": "S",
+      "expectedResult": "400 expired; không hash/update",
+      "coveredBranchInference": "RP.5: F/T",
+      "executionStatus": "passed",
+      "durationMs": 1.541468000000009,
+      "failureMessages": [],
+      "actualInvocations": [
+        {
+          "input": {
+            "email": "user@example.com",
+            "otp": "123456",
+            "newPassword": "abcdef"
+          },
+          "actor": null,
+          "actual": {
+            "statusCode": 400,
+            "payload": {
+              "error": "Mã OTP đã hết hạn, vui lòng yêu cầu gửi lại mã mới"
+            }
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured calls",
+            "clock": "2026-10-11T00:00:00.000Z",
+            "findUnique": {
+              "id": 1,
+              "email": "user@example.com",
+              "name": "Unit Test User",
+              "password": "unit-test-stored-hash",
+              "role": "USER",
+              "membershipTier": "STANDARD",
+              "isBlacklisted": false,
+              "resetOtp": "123456",
+              "resetOtpExpiry": "2026-10-10T23:59:59.999Z",
+              "createdAt": "2026-01-01T00:00:00.000Z"
+            }
+          },
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [
+                [
+                  {
+                    "where": {
+                      "email": "user@example.com"
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": {
+                    "id": 1,
+                    "email": "user@example.com",
+                    "name": "Unit Test User",
+                    "password": "unit-test-stored-hash",
+                    "role": "USER",
+                    "membershipTier": "STANDARD",
+                    "isBlacklisted": false,
+                    "resetOtp": "123456",
+                    "resetOtpExpiry": "2026-10-10T23:59:59.999Z",
+                    "createdAt": "2026-01-01T00:00:00.000Z"
+                  }
+                }
+              ]
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "conditionEvidence": [
+        {
+          "testId": "WB-RP-10",
+          "invocation": 1,
+          "trace": "coverage/case-traces.json",
+          "conditions": {
+            "RP.1A": "F",
+            "RP.1B": "F",
+            "RP.1C": "F",
+            "RP.2A": "F",
+            "RP.2B": "F",
+            "RP.3": "F",
+            "RP.4A": "F",
+            "RP.4B": "F",
+            "RP.5A": "F",
+            "RP.5B": "T"
+          },
+          "actual": {
+            "statusCode": 400,
+            "payload": {
+              "error": "Mã OTP đã hết hạn, vui lòng yêu cầu gửi lại mã mới"
+            }
+          },
+          "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+          "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+        }
+      ]
+    },
+    {
+      "testId": "WB-RP-12",
+      "phase": 1,
+      "targetFunction": "resetPassword",
+      "originalMatrixModule": "Authentication",
+      "oracle": "B",
+      "expectedResult": "200; lookup lower/trim; hash(new,10); update password, xóa OTP+expiry; notification",
+      "coveredBranchInference": "RP.2 F/F; RP.4 F/F; RP.5 F/F",
+      "executionStatus": "passed",
+      "durationMs": 0.819281999999987,
+      "failureMessages": [],
+      "actualInvocations": [
+        {
+          "input": {
+            "email": " USER@EXAMPLE.COM ",
+            "otp": " 123456 ",
+            "newPassword": "abcdef"
+          },
+          "actor": null,
+          "actual": {
+            "statusCode": 200,
+            "payload": {
+              "message": "Đặt lại mật khẩu thành công! Bạn có thể đăng nhập bằng mật khẩu mới."
+            }
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured calls",
+            "clock": "2026-10-11T00:00:00.000Z",
+            "findUnique": {
+              "id": 1,
+              "email": "user@example.com",
+              "name": "Unit Test User",
+              "password": "unit-test-stored-hash",
+              "role": "USER",
+              "membershipTier": "STANDARD",
+              "isBlacklisted": false,
+              "resetOtp": "123456",
+              "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+              "createdAt": "2026-01-01T00:00:00.000Z"
+            },
+            "bcryptHash": "unit-test-hash-output",
+            "userUpdate": "resolve",
+            "notification": "resolve"
+          },
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [
+                [
+                  {
+                    "where": {
+                      "email": "user@example.com"
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": {
+                    "id": 1,
+                    "email": "user@example.com",
+                    "name": "Unit Test User",
+                    "password": "unit-test-stored-hash",
+                    "role": "USER",
+                    "membershipTier": "STANDARD",
+                    "isBlacklisted": false,
+                    "resetOtp": "123456",
+                    "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+                    "createdAt": "2026-01-01T00:00:00.000Z"
+                  }
+                }
+              ]
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [
+                [
+                  {
+                    "where": {
+                      "id": 1
+                    },
+                    "data": {
+                      "password": "unit-test-hash-output",
+                      "resetOtp": null,
+                      "resetOtpExpiry": null
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": {
+                    "id": 1,
+                    "email": "user@example.com",
+                    "name": "Unit Test User",
+                    "password": "unit-test-stored-hash",
+                    "role": "USER",
+                    "membershipTier": "STANDARD",
+                    "isBlacklisted": false,
+                    "resetOtp": "123456",
+                    "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+                    "createdAt": "2026-01-01T00:00:00.000Z"
+                  }
+                }
+              ]
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [
+                [
+                  "abcdef",
+                  10
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": "unit-test-hash-output"
+                }
+              ]
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [
+                [
+                  {
+                    "userId": 1,
+                    "title": "Đặt lại mật khẩu thành công",
+                    "message": "Mật khẩu tài khoản của bạn đã được đặt lại thành công qua mã xác thực OTP."
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": {
+                    "id": 1
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "conditionEvidence": [
+        {
+          "testId": "WB-RP-12",
+          "invocation": 1,
+          "trace": "coverage/case-traces.json",
+          "conditions": {
+            "RP.1A": "F",
+            "RP.1B": "F",
+            "RP.1C": "F",
+            "RP.2A": "F",
+            "RP.2B": "F",
+            "RP.3": "F",
+            "RP.4A": "F",
+            "RP.4B": "F",
+            "RP.5A": "F",
+            "RP.5B": "F"
+          },
+          "actual": {
+            "statusCode": 200,
+            "payload": {
+              "message": "Đặt lại mật khẩu thành công! Bạn có thể đăng nhập bằng mật khẩu mới."
+            }
+          },
+          "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+          "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+        }
+      ]
+    },
+    {
+      "testId": "WB-RG-01",
+      "phase": 1,
+      "targetFunction": "register",
+      "originalMatrixModule": "Member Management",
+      "oracle": "B",
+      "expectedResult": "201; create nhận email/name/HASH/role USER; không plaintext",
+      "coveredBranchInference": "RG.1 success",
+      "executionStatus": "passed",
+      "durationMs": 3.035519000000022,
+      "failureMessages": [],
+      "actualInvocations": [
+        {
+          "input": {
+            "email": "user@example.com",
+            "name": "Unit Test User",
+            "password": "oldpass"
+          },
+          "actor": null,
+          "actual": {
+            "statusCode": 201,
+            "payload": {
+              "message": "User created"
+            }
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured calls",
+            "bcryptHash": "unit-test-hash-output",
+            "userCreate": "resolve"
+          },
+          "calls": {
+            "user.create": {
+              "arguments": [
+                [
+                  {
+                    "data": {
+                      "email": "user@example.com",
+                      "password": "unit-test-hash-output",
+                      "name": "Unit Test User",
+                      "role": "USER"
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": {
+                    "id": 1,
+                    "email": "user@example.com",
+                    "name": "Unit Test User",
+                    "password": "unit-test-stored-hash",
+                    "role": "USER",
+                    "membershipTier": "STANDARD",
+                    "isBlacklisted": false,
+                    "resetOtp": "123456",
+                    "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+                    "createdAt": "2026-01-01T00:00:00.000Z"
+                  }
+                }
+              ]
+            },
+            "user.findUnique": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [
+                [
+                  "oldpass",
+                  10
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": "unit-test-hash-output"
+                }
+              ]
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "conditionEvidence": [
+        {
+          "testId": "WB-RG-01",
+          "invocation": 1,
+          "trace": "coverage/case-traces.json",
+          "conditions": {},
+          "actual": {
+            "statusCode": 201,
+            "payload": {
+              "message": "User created"
+            }
+          },
+          "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+          "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+        }
+      ]
+    },
+    {
+      "testId": "WB-RG-02",
+      "phase": 1,
+      "targetFunction": "register",
+      "originalMatrixModule": "Member Management",
+      "oracle": "B",
+      "expectedResult": "400 User already exists",
+      "coveredBranchInference": "RG.1 catch",
+      "executionStatus": "passed",
+      "durationMs": 0.5522899999999993,
+      "failureMessages": [],
+      "actualInvocations": [
+        {
+          "input": {
+            "email": "user@example.com",
+            "name": "Unit Test User",
+            "password": "oldpass"
+          },
+          "actor": null,
+          "actual": {
+            "statusCode": 400,
+            "payload": {
+              "error": "User already exists"
+            }
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured calls",
+            "bcryptHash": "unit-test-hash-output",
+            "userCreate": {
+              "reject": "P2002"
+            }
+          },
+          "calls": {
+            "user.create": {
+              "arguments": [
+                [
+                  {
+                    "data": {
+                      "email": "user@example.com",
+                      "password": "unit-test-hash-output",
+                      "name": "Unit Test User",
+                      "role": "USER"
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "rejected",
+                  "error": "Error: Simulated duplicate email",
+                  "code": "P2002"
+                }
+              ]
+            },
+            "user.findUnique": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [
+                [
+                  "oldpass",
+                  10
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": "unit-test-hash-output"
+                }
+              ]
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "conditionEvidence": [
+        {
+          "testId": "WB-RG-02",
+          "invocation": 1,
+          "trace": "coverage/case-traces.json",
+          "conditions": {},
+          "actual": {
+            "statusCode": 400,
+            "payload": {
+              "error": "User already exists"
+            }
+          },
+          "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+          "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+        }
+      ]
+    },
+    {
+      "testId": "WB-AT-01",
+      "phase": 2,
+      "targetFunction": "authenticateToken",
+      "originalMatrixModule": "Authentication",
+      "oracle": "S",
+      "expectedResult": "401; verify/next không gọi",
+      "coveredBranchInference": "AT.1 F; AT.2 T",
+      "executionStatus": "passed",
+      "durationMs": 2.6304429999999854,
+      "failureMessages": [],
+      "actualInvocations": [
+        {
+          "function": "authenticateToken",
+          "input": {
+            "authorization": null,
+            "user": null
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured JWT calls"
+          },
+          "actual": {
+            "responseWritten": true,
+            "statusCode": 401,
+            "payload": null,
+            "nextCalls": 0,
+            "user": null
+          },
+          "calls": {
+            "jwt.verify": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "conditionEvidence": [
+        {
+          "testId": "WB-AT-01",
+          "invocation": 1,
+          "trace": "coverage/phase2-middleware-traces.json",
+          "conditions": {
+            "AT.H": "F",
+            "AT.T": "T",
+            "AT.E": "NE"
+          },
+          "actual": {
+            "responseWritten": true,
+            "statusCode": 401,
+            "payload": null,
+            "nextCalls": 0,
+            "user": null
+          },
+          "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+          "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+        }
+      ]
+    },
+    {
+      "testId": "WB-AT-02",
+      "phase": 2,
+      "targetFunction": "authenticateToken",
+      "originalMatrixModule": "Authentication",
+      "oracle": "S",
+      "expectedResult": "401; next không gọi",
+      "coveredBranchInference": "AT.1 T; AT.2 T",
+      "executionStatus": "passed",
+      "durationMs": 0.43755400000000577,
+      "failureMessages": [],
+      "actualInvocations": [
+        {
+          "function": "authenticateToken",
+          "input": {
+            "authorization": "Bearer",
+            "user": null
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured JWT calls"
+          },
+          "actual": {
+            "responseWritten": true,
+            "statusCode": 401,
+            "payload": null,
+            "nextCalls": 0,
+            "user": null
+          },
+          "calls": {
+            "jwt.verify": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "conditionEvidence": [
+        {
+          "testId": "WB-AT-02",
+          "invocation": 1,
+          "trace": "coverage/phase2-middleware-traces.json",
+          "conditions": {
+            "AT.H": "T",
+            "AT.T": "T",
+            "AT.E": "NE"
+          },
+          "actual": {
+            "responseWritten": true,
+            "statusCode": 401,
+            "payload": null,
+            "nextCalls": 0,
+            "user": null
+          },
+          "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+          "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+        }
+      ]
+    },
+    {
+      "testId": "WB-AT-03",
+      "phase": 2,
+      "targetFunction": "authenticateToken",
+      "originalMatrixModule": "Authentication",
+      "oracle": "S",
+      "expectedResult": "403; next không gọi",
+      "coveredBranchInference": "AT.2 F; AT.3 T",
+      "executionStatus": "passed",
+      "durationMs": 0.9781199999999899,
+      "failureMessages": [],
+      "actualInvocations": [
+        {
+          "function": "authenticateToken",
+          "input": {
+            "authorization": "Bearer x",
+            "user": null
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured JWT calls",
+            "verify": {
+              "error": {
+                "name": "JsonWebTokenError",
+                "message": "Simulated JsonWebTokenError"
+              },
+              "decodedUser": null
+            }
+          },
+          "actual": {
+            "responseWritten": true,
+            "statusCode": 403,
+            "payload": null,
+            "nextCalls": 0,
+            "user": null
+          },
+          "calls": {
+            "jwt.verify": {
+              "arguments": [
+                [
+                  "x",
+                  "unit-test-secret-never-used-for-real-tokens",
+                  "[callback]"
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": {
+                    "status": "[callback]",
+                    "json": "[callback]",
+                    "sendStatus": "[callback]"
+                  }
+                }
+              ]
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        },
+        {
+          "function": "authenticateToken",
+          "input": {
+            "authorization": "Bearer x",
+            "user": null
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured JWT calls",
+            "verify": {
+              "error": {
+                "name": "TokenExpiredError",
+                "message": "Simulated TokenExpiredError"
+              },
+              "decodedUser": null
+            }
+          },
+          "actual": {
+            "responseWritten": true,
+            "statusCode": 403,
+            "payload": null,
+            "nextCalls": 0,
+            "user": null
+          },
+          "calls": {
+            "jwt.verify": {
+              "arguments": [
+                [
+                  "x",
+                  "unit-test-secret-never-used-for-real-tokens",
+                  "[callback]"
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": {
+                    "status": "[callback]",
+                    "json": "[callback]",
+                    "sendStatus": "[callback]"
+                  }
+                }
+              ]
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "conditionEvidence": [
+        {
+          "testId": "WB-AT-03",
+          "invocation": 1,
+          "trace": "coverage/phase2-middleware-traces.json",
+          "conditions": {
+            "AT.H": "T",
+            "AT.T": "F",
+            "AT.E": "T"
+          },
+          "actual": {
+            "responseWritten": true,
+            "statusCode": 403,
+            "payload": null,
+            "nextCalls": 0,
+            "user": null
+          },
+          "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+          "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+        },
+        {
+          "testId": "WB-AT-03",
+          "invocation": 2,
+          "trace": "coverage/phase2-middleware-traces.json",
+          "conditions": {
+            "AT.H": "T",
+            "AT.T": "F",
+            "AT.E": "T"
+          },
+          "actual": {
+            "responseWritten": true,
+            "statusCode": 403,
+            "payload": null,
+            "nextCalls": 0,
+            "user": null
+          },
+          "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+          "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+        }
+      ]
+    },
+    {
+      "testId": "WB-AT-04",
+      "phase": 2,
+      "targetFunction": "authenticateToken",
+      "originalMatrixModule": "Authentication",
+      "oracle": "S",
+      "expectedResult": "req.user=jwtUser; next một lần",
+      "coveredBranchInference": "AT.3 F",
+      "executionStatus": "passed",
+      "durationMs": 0.5858729999999923,
+      "failureMessages": [],
+      "actualInvocations": [
+        {
+          "function": "authenticateToken",
+          "input": {
+            "authorization": "Bearer x",
+            "user": null
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured JWT calls",
+            "verify": {
+              "error": null,
+              "decodedUser": {
+                "userId": 1,
+                "email": "user@example.com",
+                "role": "USER"
+              }
+            }
+          },
+          "actual": {
+            "responseWritten": false,
+            "statusCode": null,
+            "payload": null,
+            "nextCalls": 1,
+            "user": {
+              "userId": 1,
+              "email": "user@example.com",
+              "role": "USER"
+            }
+          },
+          "calls": {
+            "jwt.verify": {
+              "arguments": [
+                [
+                  "x",
+                  "unit-test-secret-never-used-for-real-tokens",
+                  "[callback]"
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled"
+                }
+              ]
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "conditionEvidence": [
+        {
+          "testId": "WB-AT-04",
+          "invocation": 1,
+          "trace": "coverage/phase2-middleware-traces.json",
+          "conditions": {
+            "AT.H": "T",
+            "AT.T": "F",
+            "AT.E": "F"
+          },
+          "actual": {
+            "responseWritten": false,
+            "statusCode": null,
+            "payload": null,
+            "nextCalls": 1,
+            "user": {
+              "userId": 1,
+              "email": "user@example.com",
+              "role": "USER"
+            }
+          },
+          "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+          "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+        }
+      ]
+    },
+    {
+      "testId": "WB-AA-01",
+      "phase": 2,
+      "targetFunction": "authorizeAdmin",
+      "originalMatrixModule": "Authentication",
+      "oracle": "S",
+      "expectedResult": "403 Forbidden; next không gọi",
+      "coveredBranchInference": "AA.1 T; optional chaining thiếu",
+      "executionStatus": "passed",
+      "durationMs": 0.7842189999999789,
+      "failureMessages": [],
+      "actualInvocations": [
+        {
+          "function": "authorizeAdmin",
+          "input": {
+            "authorization": null,
+            "user": null
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured JWT calls"
+          },
+          "actual": {
+            "responseWritten": true,
+            "statusCode": 403,
+            "payload": {
+              "message": "Forbidden"
+            },
+            "nextCalls": 0,
+            "user": null
+          },
+          "calls": {
+            "jwt.verify": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "conditionEvidence": [
+        {
+          "testId": "WB-AA-01",
+          "invocation": 1,
+          "trace": "coverage/phase2-middleware-traces.json",
+          "conditions": {
+            "AA.R": "T"
+          },
+          "actual": {
+            "responseWritten": true,
+            "statusCode": 403,
+            "payload": {
+              "message": "Forbidden"
+            },
+            "nextCalls": 0,
+            "user": null
+          },
+          "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+          "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+        }
+      ]
+    },
+    {
+      "testId": "WB-AA-02",
+      "phase": 2,
+      "targetFunction": "authorizeAdmin",
+      "originalMatrixModule": "Authentication",
+      "oracle": "S",
+      "expectedResult": "403 Forbidden; next không gọi",
+      "coveredBranchInference": "AA.1 T",
+      "executionStatus": "passed",
+      "durationMs": 0.43780499999999734,
+      "failureMessages": [],
+      "actualInvocations": [
+        {
+          "function": "authorizeAdmin",
+          "input": {
+            "authorization": null,
+            "user": {
+              "userId": 1,
+              "email": "user@example.com",
+              "role": "USER"
+            }
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured JWT calls"
+          },
+          "actual": {
+            "responseWritten": true,
+            "statusCode": 403,
+            "payload": {
+              "message": "Forbidden"
+            },
+            "nextCalls": 0,
+            "user": {
+              "userId": 1,
+              "email": "user@example.com",
+              "role": "USER"
+            }
+          },
+          "calls": {
+            "jwt.verify": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "conditionEvidence": [
+        {
+          "testId": "WB-AA-02",
+          "invocation": 1,
+          "trace": "coverage/phase2-middleware-traces.json",
+          "conditions": {
+            "AA.R": "T"
+          },
+          "actual": {
+            "responseWritten": true,
+            "statusCode": 403,
+            "payload": {
+              "message": "Forbidden"
+            },
+            "nextCalls": 0,
+            "user": {
+              "userId": 1,
+              "email": "user@example.com",
+              "role": "USER"
+            }
+          },
+          "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+          "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+        }
+      ]
+    },
+    {
+      "testId": "WB-AA-03",
+      "phase": 2,
+      "targetFunction": "authorizeAdmin",
+      "originalMatrixModule": "Authentication",
+      "oracle": "S",
+      "expectedResult": "next một lần",
+      "coveredBranchInference": "AA.1 F",
+      "executionStatus": "passed",
+      "durationMs": 0.37045499999999265,
+      "failureMessages": [],
+      "actualInvocations": [
+        {
+          "function": "authorizeAdmin",
+          "input": {
+            "authorization": null,
+            "user": {
+              "userId": 1,
+              "email": "user@example.com",
+              "role": "ADMIN"
+            }
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured JWT calls"
+          },
+          "actual": {
+            "responseWritten": false,
+            "statusCode": null,
+            "payload": null,
+            "nextCalls": 1,
+            "user": {
+              "userId": 1,
+              "email": "user@example.com",
+              "role": "ADMIN"
+            }
+          },
+          "calls": {
+            "jwt.verify": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "conditionEvidence": [
+        {
+          "testId": "WB-AA-03",
+          "invocation": 1,
+          "trace": "coverage/phase2-middleware-traces.json",
+          "conditions": {
+            "AA.R": "F"
+          },
+          "actual": {
+            "responseWritten": false,
+            "statusCode": null,
+            "payload": null,
+            "nextCalls": 1,
+            "user": {
+              "userId": 1,
+              "email": "user@example.com",
+              "role": "ADMIN"
+            }
+          },
+          "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+          "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+        }
+      ]
+    },
+    {
+      "testId": "WB-OA-01",
+      "phase": 2,
+      "targetFunction": "optionalAuthenticateToken",
+      "originalMatrixModule": "Authentication",
+      "oracle": "S",
+      "expectedResult": "next một lần; không verify",
+      "coveredBranchInference": "OA.1 F; OA.2 T",
+      "executionStatus": "passed",
+      "durationMs": 0.3786139999999989,
+      "failureMessages": [],
+      "actualInvocations": [
+        {
+          "function": "optionalAuthenticateToken",
+          "input": {
+            "authorization": null,
+            "user": null
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured JWT calls"
+          },
+          "actual": {
+            "responseWritten": false,
+            "statusCode": null,
+            "payload": null,
+            "nextCalls": 1,
+            "user": null
+          },
+          "calls": {
+            "jwt.verify": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "conditionEvidence": [
+        {
+          "testId": "WB-OA-01",
+          "invocation": 1,
+          "trace": "coverage/phase2-middleware-traces.json",
+          "conditions": {
+            "OA.H": "F",
+            "OA.T": "T",
+            "OA.U": "NE"
+          },
+          "actual": {
+            "responseWritten": false,
+            "statusCode": null,
+            "payload": null,
+            "nextCalls": 1,
+            "user": null
+          },
+          "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+          "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+        }
+      ]
+    },
+    {
+      "testId": "WB-OA-02",
+      "phase": 2,
+      "targetFunction": "optionalAuthenticateToken",
+      "originalMatrixModule": "Authentication",
+      "oracle": "S",
+      "expectedResult": "next; req.user vẫn undefined",
+      "coveredBranchInference": "OA.2 F; OA.3 F",
+      "executionStatus": "passed",
+      "durationMs": 0.4266020000000026,
+      "failureMessages": [],
+      "actualInvocations": [
+        {
+          "function": "optionalAuthenticateToken",
+          "input": {
+            "authorization": "Bearer x",
+            "user": null
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured JWT calls",
+            "verify": {
+              "error": {
+                "name": "JsonWebTokenError"
+              },
+              "decodedUser": null
+            }
+          },
+          "actual": {
+            "responseWritten": false,
+            "statusCode": null,
+            "payload": null,
+            "nextCalls": 1,
+            "user": null
+          },
+          "calls": {
+            "jwt.verify": {
+              "arguments": [
+                [
+                  "x",
+                  "unit-test-secret-never-used-for-real-tokens",
+                  "[callback]"
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled"
+                }
+              ]
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "conditionEvidence": [
+        {
+          "testId": "WB-OA-02",
+          "invocation": 1,
+          "trace": "coverage/phase2-middleware-traces.json",
+          "conditions": {
+            "OA.H": "T",
+            "OA.T": "F",
+            "OA.U": "F"
+          },
+          "actual": {
+            "responseWritten": false,
+            "statusCode": null,
+            "payload": null,
+            "nextCalls": 1,
+            "user": null
+          },
+          "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+          "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+        }
+      ]
+    },
+    {
+      "testId": "WB-OA-03",
+      "phase": 2,
+      "targetFunction": "optionalAuthenticateToken",
+      "originalMatrixModule": "Authentication",
+      "oracle": "S",
+      "expectedResult": "gán user; next một lần",
+      "coveredBranchInference": "OA.3 T",
+      "executionStatus": "passed",
+      "durationMs": 0.3586259999999868,
+      "failureMessages": [],
+      "actualInvocations": [
+        {
+          "function": "optionalAuthenticateToken",
+          "input": {
+            "authorization": "Bearer x",
+            "user": null
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured JWT calls",
+            "verify": {
+              "error": null,
+              "decodedUser": {
+                "userId": 1,
+                "email": "user@example.com",
+                "role": "USER"
+              }
+            }
+          },
+          "actual": {
+            "responseWritten": false,
+            "statusCode": null,
+            "payload": null,
+            "nextCalls": 1,
+            "user": {
+              "userId": 1,
+              "email": "user@example.com",
+              "role": "USER"
+            }
+          },
+          "calls": {
+            "jwt.verify": {
+              "arguments": [
+                [
+                  "x",
+                  "unit-test-secret-never-used-for-real-tokens",
+                  "[callback]"
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled"
+                }
+              ]
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "conditionEvidence": [
+        {
+          "testId": "WB-OA-03",
+          "invocation": 1,
+          "trace": "coverage/phase2-middleware-traces.json",
+          "conditions": {
+            "OA.H": "T",
+            "OA.T": "F",
+            "OA.U": "T"
+          },
+          "actual": {
+            "responseWritten": false,
+            "statusCode": null,
+            "payload": null,
+            "nextCalls": 1,
+            "user": {
+              "userId": 1,
+              "email": "user@example.com",
+              "role": "USER"
+            }
+          },
+          "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+          "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+        }
+      ]
+    },
+    {
+      "testId": "WB-LG-04",
+      "phase": 2,
+      "targetFunction": "login",
+      "originalMatrixModule": "Authentication",
+      "oracle": "B",
+      "expectedResult": "200 token; claims.role=ADMIN, response.role=ADMIN",
+      "coveredBranchInference": "LG.1 F",
+      "executionStatus": "passed",
+      "durationMs": 3.3204839999999933,
+      "failureMessages": [],
+      "actualInvocations": [
+        {
+          "function": "login",
+          "input": {
+            "email": "user@example.com",
+            "password": "oldpass"
+          },
+          "actor": null,
+          "mockConfiguration": {
+            "default": "deny unconfigured calls",
+            "findUnique": {
+              "id": 1,
+              "email": "user@example.com",
+              "name": "Unit Test User",
+              "password": "unit-test-stored-hash",
+              "role": "ADMIN",
+              "membershipTier": "STANDARD",
+              "isBlacklisted": false,
+              "resetOtp": "123456",
+              "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+              "createdAt": "2026-01-01T00:00:00.000Z"
+            },
+            "bcryptCompare": true,
+            "jwtSign": "unit-test-jwt-output"
+          },
+          "actual": {
+            "statusCode": 200,
+            "payload": {
+              "token": "unit-test-jwt-output",
+              "user": {
+                "id": 1,
+                "email": "user@example.com",
+                "name": "Unit Test User",
+                "role": "ADMIN",
+                "membershipTier": "STANDARD",
+                "isBlacklisted": false
+              }
+            }
+          },
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [
+                [
+                  {
+                    "where": {
+                      "email": "user@example.com"
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": {
+                    "id": 1,
+                    "email": "user@example.com",
+                    "name": "Unit Test User",
+                    "password": "unit-test-stored-hash",
+                    "role": "ADMIN",
+                    "membershipTier": "STANDARD",
+                    "isBlacklisted": false,
+                    "resetOtp": "123456",
+                    "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+                    "createdAt": "2026-01-01T00:00:00.000Z"
+                  }
+                }
+              ]
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$transaction": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.compare": {
+              "arguments": [
+                [
+                  "oldpass",
+                  "unit-test-stored-hash"
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": true
+                }
+              ]
+            },
+            "jwt.sign": {
+              "arguments": [
+                [
+                  {
+                    "userId": 1,
+                    "email": "user@example.com",
+                    "role": "ADMIN"
+                  },
+                  "unit-test-secret-never-used-for-real-tokens",
+                  {
+                    "expiresIn": "1h"
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": "unit-test-jwt-output"
+                }
+              ]
+            },
+            "jwt.verify": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "conditionEvidence": [
+        {
+          "testId": "WB-LG-04",
+          "invocation": 1,
+          "trace": "coverage/phase2-controller-traces.json",
+          "conditions": {
+            "LG.A": "F",
+            "LG.B": "F"
+          },
+          "actual": {
+            "statusCode": 200,
+            "payload": {
+              "token": "unit-test-jwt-output",
+              "user": {
+                "id": 1,
+                "email": "user@example.com",
+                "name": "Unit Test User",
+                "role": "ADMIN",
+                "membershipTier": "STANDARD",
+                "isBlacklisted": false
+              }
+            }
+          },
+          "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+          "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+        }
+      ]
+    },
+    {
+      "testId": "WB-CP-05",
+      "phase": 2,
+      "targetFunction": "changePassword",
+      "originalMatrixModule": "Authentication",
+      "oracle": "S",
+      "expectedResult": "404",
+      "coveredBranchInference": "CP.3 F; CP.4 T",
+      "executionStatus": "passed",
+      "durationMs": 0.7902070000000094,
+      "failureMessages": [],
+      "actualInvocations": [
+        {
+          "function": "changePassword",
+          "input": {
+            "currentPassword": "oldpass",
+            "newPassword": "abcdef"
+          },
+          "actor": {
+            "userId": 1,
+            "email": "user@example.com",
+            "role": "USER"
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured calls",
+            "findUnique": null
+          },
+          "actual": {
+            "statusCode": 404,
+            "payload": {
+              "error": "Không tìm thấy thông tin người dùng"
+            }
+          },
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [
+                [
+                  {
+                    "where": {
+                      "id": 1
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": null
+                }
+              ]
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$transaction": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.verify": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "conditionEvidence": [
+        {
+          "testId": "WB-CP-05",
+          "invocation": 1,
+          "trace": "coverage/phase2-controller-traces.json",
+          "conditions": {
+            "CP.1": "F",
+            "CP.2A": "F",
+            "CP.2B": "F",
+            "CP.3": "F",
+            "CP.4": "T",
+            "CP.5": "NE",
+            "CP.6": "NE"
+          },
+          "actual": {
+            "statusCode": 404,
+            "payload": {
+              "error": "Không tìm thấy thông tin người dùng"
+            }
+          },
+          "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+          "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+        }
+      ]
+    },
+    {
+      "testId": "WB-CP-06",
+      "phase": 2,
+      "targetFunction": "changePassword",
+      "originalMatrixModule": "Authentication",
+      "oracle": "B",
+      "expectedResult": "400; không hash/update",
+      "coveredBranchInference": "CP.4 F; CP.5 T",
+      "executionStatus": "passed",
+      "durationMs": 0.5822320000000047,
+      "failureMessages": [],
+      "actualInvocations": [
+        {
+          "function": "changePassword",
+          "input": {
+            "currentPassword": "wrongpass",
+            "newPassword": "abcdef"
+          },
+          "actor": {
+            "userId": 1,
+            "email": "user@example.com",
+            "role": "USER"
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured calls",
+            "findUnique": {
+              "id": 1,
+              "email": "user@example.com",
+              "name": "Unit Test User",
+              "password": "unit-test-stored-hash",
+              "role": "USER",
+              "membershipTier": "STANDARD",
+              "isBlacklisted": false,
+              "resetOtp": "123456",
+              "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+              "createdAt": "2026-01-01T00:00:00.000Z"
+            },
+            "bcryptCompare": false
+          },
+          "actual": {
+            "statusCode": 400,
+            "payload": {
+              "error": "Mật khẩu hiện tại không chính xác"
+            }
+          },
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [
+                [
+                  {
+                    "where": {
+                      "id": 1
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": {
+                    "id": 1,
+                    "email": "user@example.com",
+                    "name": "Unit Test User",
+                    "password": "unit-test-stored-hash",
+                    "role": "USER",
+                    "membershipTier": "STANDARD",
+                    "isBlacklisted": false,
+                    "resetOtp": "123456",
+                    "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+                    "createdAt": "2026-01-01T00:00:00.000Z"
+                  }
+                }
+              ]
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$transaction": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.compare": {
+              "arguments": [
+                [
+                  "wrongpass",
+                  "unit-test-stored-hash"
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": false
+                }
+              ]
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.verify": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "conditionEvidence": [
+        {
+          "testId": "WB-CP-06",
+          "invocation": 1,
+          "trace": "coverage/phase2-controller-traces.json",
+          "conditions": {
+            "CP.1": "F",
+            "CP.2A": "F",
+            "CP.2B": "F",
+            "CP.3": "F",
+            "CP.4": "F",
+            "CP.5": "T",
+            "CP.6": "NE"
+          },
+          "actual": {
+            "statusCode": 400,
+            "payload": {
+              "error": "Mật khẩu hiện tại không chính xác"
+            }
+          },
+          "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+          "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+        }
+      ]
+    },
+    {
+      "testId": "WB-CP-07",
+      "phase": 2,
+      "targetFunction": "changePassword",
+      "originalMatrixModule": "Authentication",
+      "oracle": "S",
+      "expectedResult": "400; không hash/update",
+      "coveredBranchInference": "CP.5 F; CP.6 T",
+      "executionStatus": "passed",
+      "durationMs": 0.5192209999999875,
+      "failureMessages": [],
+      "actualInvocations": [
+        {
+          "function": "changePassword",
+          "input": {
+            "currentPassword": "oldpass",
+            "newPassword": "oldpass"
+          },
+          "actor": {
+            "userId": 1,
+            "email": "user@example.com",
+            "role": "USER"
+          },
+          "mockConfiguration": {
+            "default": "deny unconfigured calls",
+            "findUnique": {
+              "id": 1,
+              "email": "user@example.com",
+              "name": "Unit Test User",
+              "password": "unit-test-stored-hash",
+              "role": "USER",
+              "membershipTier": "STANDARD",
+              "isBlacklisted": false,
+              "resetOtp": "123456",
+              "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+              "createdAt": "2026-01-01T00:00:00.000Z"
+            },
+            "bcryptCompare": true
+          },
+          "actual": {
+            "statusCode": 400,
+            "payload": {
+              "error": "Mật khẩu mới không được trùng với mật khẩu hiện tại"
+            }
+          },
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [
+                [
+                  {
+                    "where": {
+                      "id": 1
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": {
+                    "id": 1,
+                    "email": "user@example.com",
+                    "name": "Unit Test User",
+                    "password": "unit-test-stored-hash",
+                    "role": "USER",
+                    "membershipTier": "STANDARD",
+                    "isBlacklisted": false,
+                    "resetOtp": "123456",
+                    "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+                    "createdAt": "2026-01-01T00:00:00.000Z"
+                  }
+                }
+              ]
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$transaction": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.compare": {
+              "arguments": [
+                [
+                  "oldpass",
+                  "unit-test-stored-hash"
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": true
+                }
+              ]
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.verify": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "conditionEvidence": [
+        {
+          "testId": "WB-CP-07",
+          "invocation": 1,
+          "trace": "coverage/phase2-controller-traces.json",
+          "conditions": {
+            "CP.1": "F",
+            "CP.2A": "F",
+            "CP.2B": "F",
+            "CP.3": "F",
+            "CP.4": "F",
+            "CP.5": "F",
+            "CP.6": "T"
+          },
+          "actual": {
+            "statusCode": 400,
+            "payload": {
+              "error": "Mật khẩu mới không được trùng với mật khẩu hiện tại"
+            }
+          },
+          "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+          "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+        }
+      ]
+    },
+    {
+      "testId": "WB-FP-01",
+      "phase": 2,
+      "targetFunction": "forgotPassword",
+      "originalMatrixModule": "Authentication",
+      "oracle": "S",
+      "expectedResult": "400; không lookup",
+      "coveredBranchInference": "FP.1: T/NE",
+      "executionStatus": "passed",
+      "durationMs": 0.546750000000003,
+      "failureMessages": [],
+      "actualInvocations": [
+        {
+          "function": "forgotPassword",
+          "input": {
+            "email": ""
+          },
+          "actor": null,
+          "mockConfiguration": {
+            "default": "deny unconfigured calls"
+          },
+          "actual": {
+            "statusCode": 400,
+            "payload": {
+              "error": "Vui lòng cung cấp địa chỉ email hợp lệ"
+            }
+          },
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$transaction": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.verify": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "conditionEvidence": [
+        {
+          "testId": "WB-FP-01",
+          "invocation": 1,
+          "trace": "coverage/phase2-controller-traces.json",
+          "conditions": {
+            "FP.1A": "T",
+            "FP.1B": "NE",
+            "FP.2": "NE",
+            "FP.P": "NE"
+          },
+          "actual": {
+            "statusCode": 400,
+            "payload": {
+              "error": "Vui lòng cung cấp địa chỉ email hợp lệ"
+            }
+          },
+          "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+          "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+        }
+      ]
+    },
+    {
+      "testId": "WB-FP-03",
+      "phase": 2,
+      "targetFunction": "forgotPassword",
+      "originalMatrixModule": "Authentication",
+      "oracle": "S",
+      "expectedResult": "lookup user@example.com; 404",
+      "coveredBranchInference": "FP.1 F/F; FP.2 T",
+      "executionStatus": "passed",
+      "durationMs": 0.4989669999999933,
+      "failureMessages": [],
+      "actualInvocations": [
+        {
+          "function": "forgotPassword",
+          "input": {
+            "email": " USER@EXAMPLE.COM "
+          },
+          "actor": null,
+          "mockConfiguration": {
+            "default": "deny unconfigured calls",
+            "findUnique": null
+          },
+          "actual": {
+            "statusCode": 404,
+            "payload": {
+              "error": "Email không tồn tại trong hệ thống"
+            }
+          },
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [
+                [
+                  {
+                    "where": {
+                      "email": "user@example.com"
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": null
+                }
+              ]
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$transaction": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.verify": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "conditionEvidence": [
+        {
+          "testId": "WB-FP-03",
+          "invocation": 1,
+          "trace": "coverage/phase2-controller-traces.json",
+          "conditions": {
+            "FP.1A": "F",
+            "FP.1B": "F",
+            "FP.2": "T",
+            "FP.P": "NE"
+          },
+          "actual": {
+            "statusCode": 404,
+            "payload": {
+              "error": "Email không tồn tại trong hệ thống"
+            }
+          },
+          "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+          "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+        }
+      ]
+    },
+    {
+      "testId": "WB-FP-04",
+      "phase": 2,
+      "targetFunction": "forgotPassword",
+      "originalMatrixModule": "Authentication",
+      "oracle": "S",
+      "expectedResult": "200; OTP=100000; expiry=T+900000; mail(to,otp,15); trả previewUrl",
+      "coveredBranchInference": "FP.2 F; FP.3 T",
+      "executionStatus": "passed",
+      "durationMs": 2.049565000000001,
+      "failureMessages": [],
+      "actualInvocations": [
+        {
+          "function": "forgotPassword",
+          "input": {
+            "email": "user@example.com"
+          },
+          "actor": null,
+          "mockConfiguration": {
+            "default": "deny unconfigured calls",
+            "clock": "2026-10-12T00:00:00.000Z",
+            "random": 0,
+            "findUnique": {
+              "id": 1,
+              "email": "user@example.com",
+              "name": "Unit Test User",
+              "password": "unit-test-stored-hash",
+              "role": "USER",
+              "membershipTier": "STANDARD",
+              "isBlacklisted": false,
+              "resetOtp": "123456",
+              "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+              "createdAt": "2026-01-01T00:00:00.000Z"
+            },
+            "userUpdate": "resolve",
+            "mail": {
+              "resolve": {
+                "previewUrl": "https://example.test/unit-preview"
+              }
+            }
+          },
+          "actual": {
+            "statusCode": 200,
+            "payload": {
+              "message": "Mã xác thực OTP đã được gửi đến email của bạn. Vui lòng kiểm tra hộp thư (kể cả hòm thư rác/spam).",
+              "previewUrl": "https://example.test/unit-preview"
+            }
+          },
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [
+                [
+                  {
+                    "where": {
+                      "email": "user@example.com"
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": {
+                    "id": 1,
+                    "email": "user@example.com",
+                    "name": "Unit Test User",
+                    "password": "unit-test-stored-hash",
+                    "role": "USER",
+                    "membershipTier": "STANDARD",
+                    "isBlacklisted": false,
+                    "resetOtp": "123456",
+                    "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+                    "createdAt": "2026-01-01T00:00:00.000Z"
+                  }
+                }
+              ]
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [
+                [
+                  {
+                    "where": {
+                      "id": 1
+                    },
+                    "data": {
+                      "resetOtp": "100000",
+                      "resetOtpExpiry": "2026-10-12T00:15:00.000Z"
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": {
+                    "id": 1,
+                    "email": "user@example.com",
+                    "name": "Unit Test User",
+                    "password": "unit-test-stored-hash",
+                    "role": "USER",
+                    "membershipTier": "STANDARD",
+                    "isBlacklisted": false,
+                    "resetOtp": "123456",
+                    "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+                    "createdAt": "2026-01-01T00:00:00.000Z"
+                  }
+                }
+              ]
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$transaction": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.verify": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [
+                [
+                  {
+                    "to": "user@example.com",
+                    "userName": "Unit Test User",
+                    "otp": "100000",
+                    "expiryMinutes": 15
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": {
+                    "previewUrl": "https://example.test/unit-preview"
+                  }
+                }
+              ]
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "conditionEvidence": [
+        {
+          "testId": "WB-FP-04",
+          "invocation": 1,
+          "trace": "coverage/phase2-controller-traces.json",
+          "conditions": {
+            "FP.1A": "F",
+            "FP.1B": "F",
+            "FP.2": "F",
+            "FP.P": "T"
+          },
+          "actual": {
+            "statusCode": 200,
+            "payload": {
+              "message": "Mã xác thực OTP đã được gửi đến email của bạn. Vui lòng kiểm tra hộp thư (kể cả hòm thư rác/spam).",
+              "previewUrl": "https://example.test/unit-preview"
+            }
+          },
+          "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+          "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+        }
+      ]
+    },
+    {
+      "testId": "WB-FP-07",
+      "phase": 2,
+      "targetFunction": "forgotPassword",
+      "originalMatrixModule": "Authentication",
+      "oracle": "S",
+      "expectedResult": "500; OTP update đã gọi",
+      "coveredBranchInference": "FP.E catch sau update",
+      "executionStatus": "passed",
+      "durationMs": 1.1363710000000253,
+      "failureMessages": [],
+      "actualInvocations": [
+        {
+          "function": "forgotPassword",
+          "input": {
+            "email": "user@example.com"
+          },
+          "actor": null,
+          "mockConfiguration": {
+            "default": "deny unconfigured calls",
+            "clock": "2026-10-12T00:00:00.000Z",
+            "random": 0,
+            "findUnique": {
+              "id": 1,
+              "email": "user@example.com",
+              "name": "Unit Test User",
+              "password": "unit-test-stored-hash",
+              "role": "USER",
+              "membershipTier": "STANDARD",
+              "isBlacklisted": false,
+              "resetOtp": "123456",
+              "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+              "createdAt": "2026-01-01T00:00:00.000Z"
+            },
+            "userUpdate": "resolve",
+            "mail": {
+              "reject": "Simulated email delivery failure"
+            }
+          },
+          "actual": {
+            "statusCode": 500,
+            "payload": {
+              "error": "Không thể gửi mã xác nhận OTP, vui lòng thử lại sau"
+            }
+          },
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [
+                [
+                  {
+                    "where": {
+                      "email": "user@example.com"
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": {
+                    "id": 1,
+                    "email": "user@example.com",
+                    "name": "Unit Test User",
+                    "password": "unit-test-stored-hash",
+                    "role": "USER",
+                    "membershipTier": "STANDARD",
+                    "isBlacklisted": false,
+                    "resetOtp": "123456",
+                    "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+                    "createdAt": "2026-01-01T00:00:00.000Z"
+                  }
+                }
+              ]
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [
+                [
+                  {
+                    "where": {
+                      "id": 1
+                    },
+                    "data": {
+                      "resetOtp": "100000",
+                      "resetOtpExpiry": "2026-10-12T00:15:00.000Z"
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": {
+                    "id": 1,
+                    "email": "user@example.com",
+                    "name": "Unit Test User",
+                    "password": "unit-test-stored-hash",
+                    "role": "USER",
+                    "membershipTier": "STANDARD",
+                    "isBlacklisted": false,
+                    "resetOtp": "123456",
+                    "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+                    "createdAt": "2026-01-01T00:00:00.000Z"
+                  }
+                }
+              ]
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$transaction": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.verify": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [
+                [
+                  {
+                    "to": "user@example.com",
+                    "userName": "Unit Test User",
+                    "otp": "100000",
+                    "expiryMinutes": 15
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "rejected",
+                  "error": "Error: Simulated email delivery failure"
+                }
+              ]
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "conditionEvidence": [
+        {
+          "testId": "WB-FP-07",
+          "invocation": 1,
+          "trace": "coverage/phase2-controller-traces.json",
+          "conditions": {
+            "FP.1A": "F",
+            "FP.1B": "F",
+            "FP.2": "F",
+            "FP.P": "NE"
+          },
+          "actual": {
+            "statusCode": 500,
+            "payload": {
+              "error": "Không thể gửi mã xác nhận OTP, vui lòng thử lại sau"
+            }
+          },
+          "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+          "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+        }
+      ]
+    },
+    {
+      "testId": "WB-RP-01",
+      "phase": 2,
+      "targetFunction": "resetPassword",
+      "originalMatrixModule": "Authentication",
+      "oracle": "S",
+      "expectedResult": "400; không lookup/hash/update",
+      "coveredBranchInference": "RP.1: T/NE/NE",
+      "executionStatus": "passed",
+      "durationMs": 0.5633060000000114,
+      "failureMessages": [],
+      "actualInvocations": [
+        {
+          "function": "resetPassword",
+          "input": {
+            "email": "",
+            "otp": "123456",
+            "newPassword": "abcdef"
+          },
+          "actor": null,
+          "mockConfiguration": {
+            "default": "deny unconfigured calls"
+          },
+          "actual": {
+            "statusCode": 400,
+            "payload": {
+              "error": "Vui lòng cung cấp đầy đủ email, mã OTP và mật khẩu mới"
+            }
+          },
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$transaction": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.verify": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "conditionEvidence": [
+        {
+          "testId": "WB-RP-01",
+          "invocation": 1,
+          "trace": "coverage/phase2-controller-traces.json",
+          "conditions": {
+            "RP.1A": "T",
+            "RP.1B": "NE",
+            "RP.1C": "NE",
+            "RP.2A": "NE",
+            "RP.2B": "NE",
+            "RP.3": "NE",
+            "RP.4A": "NE",
+            "RP.4B": "NE",
+            "RP.5A": "NE",
+            "RP.5B": "NE"
+          },
+          "actual": {
+            "statusCode": 400,
+            "payload": {
+              "error": "Vui lòng cung cấp đầy đủ email, mã OTP và mật khẩu mới"
+            }
+          },
+          "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+          "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+        }
+      ]
+    },
+    {
+      "testId": "WB-RP-02",
+      "phase": 2,
+      "targetFunction": "resetPassword",
+      "originalMatrixModule": "Authentication",
+      "oracle": "S",
+      "expectedResult": "400; không lookup",
+      "coveredBranchInference": "RP.1: F/T/NE",
+      "executionStatus": "passed",
+      "durationMs": 0.506007000000011,
+      "failureMessages": [],
+      "actualInvocations": [
+        {
+          "function": "resetPassword",
+          "input": {
+            "email": "user@example.com",
+            "otp": "",
+            "newPassword": "abcdef"
+          },
+          "actor": null,
+          "mockConfiguration": {
+            "default": "deny unconfigured calls"
+          },
+          "actual": {
+            "statusCode": 400,
+            "payload": {
+              "error": "Vui lòng cung cấp đầy đủ email, mã OTP và mật khẩu mới"
+            }
+          },
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$transaction": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.verify": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "conditionEvidence": [
+        {
+          "testId": "WB-RP-02",
+          "invocation": 1,
+          "trace": "coverage/phase2-controller-traces.json",
+          "conditions": {
+            "RP.1A": "F",
+            "RP.1B": "T",
+            "RP.1C": "NE",
+            "RP.2A": "NE",
+            "RP.2B": "NE",
+            "RP.3": "NE",
+            "RP.4A": "NE",
+            "RP.4B": "NE",
+            "RP.5A": "NE",
+            "RP.5B": "NE"
+          },
+          "actual": {
+            "statusCode": 400,
+            "payload": {
+              "error": "Vui lòng cung cấp đầy đủ email, mã OTP và mật khẩu mới"
+            }
+          },
+          "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+          "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+        }
+      ]
+    },
+    {
+      "testId": "WB-RP-03",
+      "phase": 2,
+      "targetFunction": "resetPassword",
+      "originalMatrixModule": "Authentication",
+      "oracle": "S",
+      "expectedResult": "400; không lookup",
+      "coveredBranchInference": "RP.1: F/F/T",
+      "executionStatus": "passed",
+      "durationMs": 0.4457659999999919,
+      "failureMessages": [],
+      "actualInvocations": [
+        {
+          "function": "resetPassword",
+          "input": {
+            "email": "user@example.com",
+            "otp": "123456",
+            "newPassword": ""
+          },
+          "actor": null,
+          "mockConfiguration": {
+            "default": "deny unconfigured calls"
+          },
+          "actual": {
+            "statusCode": 400,
+            "payload": {
+              "error": "Vui lòng cung cấp đầy đủ email, mã OTP và mật khẩu mới"
+            }
+          },
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$transaction": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.verify": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "conditionEvidence": [
+        {
+          "testId": "WB-RP-03",
+          "invocation": 1,
+          "trace": "coverage/phase2-controller-traces.json",
+          "conditions": {
+            "RP.1A": "F",
+            "RP.1B": "F",
+            "RP.1C": "T",
+            "RP.2A": "NE",
+            "RP.2B": "NE",
+            "RP.3": "NE",
+            "RP.4A": "NE",
+            "RP.4B": "NE",
+            "RP.5A": "NE",
+            "RP.5B": "NE"
+          },
+          "actual": {
+            "statusCode": 400,
+            "payload": {
+              "error": "Vui lòng cung cấp đầy đủ email, mã OTP và mật khẩu mới"
+            }
+          },
+          "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+          "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+        }
+      ]
+    },
+    {
+      "testId": "WB-RP-05",
+      "phase": 2,
+      "targetFunction": "resetPassword",
+      "originalMatrixModule": "Authentication",
+      "oracle": "S",
+      "expectedResult": "400; không lookup",
+      "coveredBranchInference": "RP.2 F/T",
+      "executionStatus": "passed",
+      "durationMs": 0.3937480000000164,
+      "failureMessages": [],
+      "actualInvocations": [
+        {
+          "function": "resetPassword",
+          "input": {
+            "email": "user@example.com",
+            "otp": "123456",
+            "newPassword": "abcde"
+          },
+          "actor": null,
+          "mockConfiguration": {
+            "default": "deny unconfigured calls"
+          },
+          "actual": {
+            "statusCode": 400,
+            "payload": {
+              "error": "Mật khẩu mới phải có tối thiểu 6 ký tự"
+            }
+          },
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$transaction": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.verify": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "conditionEvidence": [
+        {
+          "testId": "WB-RP-05",
+          "invocation": 1,
+          "trace": "coverage/phase2-controller-traces.json",
+          "conditions": {
+            "RP.1A": "F",
+            "RP.1B": "F",
+            "RP.1C": "F",
+            "RP.2A": "F",
+            "RP.2B": "T",
+            "RP.3": "NE",
+            "RP.4A": "NE",
+            "RP.4B": "NE",
+            "RP.5A": "NE",
+            "RP.5B": "NE"
+          },
+          "actual": {
+            "statusCode": 400,
+            "payload": {
+              "error": "Mật khẩu mới phải có tối thiểu 6 ký tự"
+            }
+          },
+          "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+          "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+        }
+      ]
+    },
+    {
+      "testId": "WB-RP-06",
+      "phase": 2,
+      "targetFunction": "resetPassword",
+      "originalMatrixModule": "Authentication",
+      "oracle": "S",
+      "expectedResult": "404",
+      "coveredBranchInference": "RP.2 F/F; RP.3 T",
+      "executionStatus": "passed",
+      "durationMs": 0.4707339999999931,
+      "failureMessages": [],
+      "actualInvocations": [
+        {
+          "function": "resetPassword",
+          "input": {
+            "email": "user@example.com",
+            "otp": "123456",
+            "newPassword": "abcdef"
+          },
+          "actor": null,
+          "mockConfiguration": {
+            "default": "deny unconfigured calls",
+            "findUnique": null
+          },
+          "actual": {
+            "statusCode": 404,
+            "payload": {
+              "error": "Người dùng không tồn tại"
+            }
+          },
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [
+                [
+                  {
+                    "where": {
+                      "email": "user@example.com"
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": null
+                }
+              ]
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$transaction": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.verify": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "conditionEvidence": [
+        {
+          "testId": "WB-RP-06",
+          "invocation": 1,
+          "trace": "coverage/phase2-controller-traces.json",
+          "conditions": {
+            "RP.1A": "F",
+            "RP.1B": "F",
+            "RP.1C": "F",
+            "RP.2A": "F",
+            "RP.2B": "F",
+            "RP.3": "T",
+            "RP.4A": "NE",
+            "RP.4B": "NE",
+            "RP.5A": "NE",
+            "RP.5B": "NE"
+          },
+          "actual": {
+            "statusCode": 404,
+            "payload": {
+              "error": "Người dùng không tồn tại"
+            }
+          },
+          "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+          "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+        }
+      ]
+    },
+    {
+      "testId": "WB-RP-09",
+      "phase": 2,
+      "targetFunction": "resetPassword",
+      "originalMatrixModule": "Authentication",
+      "oracle": "S",
+      "expectedResult": "400 expired; không hash/update",
+      "coveredBranchInference": "RP.4 F/F; RP.5 T/NE",
+      "executionStatus": "passed",
+      "durationMs": 2.252492000000018,
+      "failureMessages": [],
+      "actualInvocations": [
+        {
+          "function": "resetPassword",
+          "input": {
+            "email": "user@example.com",
+            "otp": "123456",
+            "newPassword": "abcdef"
+          },
+          "actor": null,
+          "mockConfiguration": {
+            "default": "deny unconfigured calls",
+            "findUnique": {
+              "id": 1,
+              "email": "user@example.com",
+              "name": "Unit Test User",
+              "password": "unit-test-stored-hash",
+              "role": "USER",
+              "membershipTier": "STANDARD",
+              "isBlacklisted": false,
+              "resetOtp": "123456",
+              "resetOtpExpiry": null,
+              "createdAt": "2026-01-01T00:00:00.000Z"
+            }
+          },
+          "actual": {
+            "statusCode": 400,
+            "payload": {
+              "error": "Mã OTP đã hết hạn, vui lòng yêu cầu gửi lại mã mới"
+            }
+          },
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [
+                [
+                  {
+                    "where": {
+                      "email": "user@example.com"
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": {
+                    "id": 1,
+                    "email": "user@example.com",
+                    "name": "Unit Test User",
+                    "password": "unit-test-stored-hash",
+                    "role": "USER",
+                    "membershipTier": "STANDARD",
+                    "isBlacklisted": false,
+                    "resetOtp": "123456",
+                    "resetOtpExpiry": null,
+                    "createdAt": "2026-01-01T00:00:00.000Z"
+                  }
+                }
+              ]
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$transaction": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.verify": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "conditionEvidence": [
+        {
+          "testId": "WB-RP-09",
+          "invocation": 1,
+          "trace": "coverage/phase2-controller-traces.json",
+          "conditions": {
+            "RP.1A": "F",
+            "RP.1B": "F",
+            "RP.1C": "F",
+            "RP.2A": "F",
+            "RP.2B": "F",
+            "RP.3": "F",
+            "RP.4A": "F",
+            "RP.4B": "F",
+            "RP.5A": "T",
+            "RP.5B": "NE"
+          },
+          "actual": {
+            "statusCode": 400,
+            "payload": {
+              "error": "Mã OTP đã hết hạn, vui lòng yêu cầu gửi lại mã mới"
+            }
+          },
+          "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+          "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+        }
+      ]
+    },
+    {
+      "testId": "WB-RP-15",
+      "phase": 2,
+      "targetFunction": "resetPassword",
+      "originalMatrixModule": "Authentication",
+      "oracle": "S",
+      "expectedResult": "Lần 2 bị 400; không update lần 2",
+      "coveredBranchInference": "RP.4 T/NE sau success",
+      "executionStatus": "passed",
+      "durationMs": 1.2533800000000497,
+      "failureMessages": [],
+      "actualInvocations": [
+        {
+          "function": "resetPassword",
+          "input": {
+            "email": "user@example.com",
+            "otp": "123456",
+            "newPassword": "abcdef"
+          },
+          "actor": null,
+          "mockConfiguration": {
+            "default": "deny unconfigured calls",
+            "clock": "2026-10-12T00:00:00.000Z",
+            "findUnique": {
+              "id": 1,
+              "email": "user@example.com",
+              "name": "Unit Test User",
+              "password": "unit-test-stored-hash",
+              "role": "USER",
+              "membershipTier": "STANDARD",
+              "isBlacklisted": false,
+              "resetOtp": "123456",
+              "resetOtpExpiry": "2026-10-12T00:00:00.001Z",
+              "createdAt": "2026-01-01T00:00:00.000Z"
+            },
+            "userUpdate": "apply actual update.data to RAM record",
+            "bcryptHash": "unit-test-hash-output",
+            "notification": "resolve"
+          },
+          "actual": {
+            "statusCode": 200,
+            "payload": {
+              "message": "Đặt lại mật khẩu thành công! Bạn có thể đăng nhập bằng mật khẩu mới."
+            }
+          },
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [
+                [
+                  {
+                    "where": {
+                      "email": "user@example.com"
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": {
+                    "id": 1,
+                    "email": "user@example.com",
+                    "name": "Unit Test User",
+                    "password": "unit-test-stored-hash",
+                    "role": "USER",
+                    "membershipTier": "STANDARD",
+                    "isBlacklisted": false,
+                    "resetOtp": "123456",
+                    "resetOtpExpiry": "2026-10-12T00:00:00.001Z",
+                    "createdAt": "2026-01-01T00:00:00.000Z"
+                  }
+                }
+              ]
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [
+                [
+                  {
+                    "where": {
+                      "id": 1
+                    },
+                    "data": {
+                      "password": "unit-test-hash-output",
+                      "resetOtp": null,
+                      "resetOtpExpiry": null
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": {
+                    "id": 1,
+                    "email": "user@example.com",
+                    "name": "Unit Test User",
+                    "password": "unit-test-hash-output",
+                    "role": "USER",
+                    "membershipTier": "STANDARD",
+                    "isBlacklisted": false,
+                    "resetOtp": null,
+                    "resetOtpExpiry": null,
+                    "createdAt": "2026-01-01T00:00:00.000Z"
+                  }
+                }
+              ]
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$transaction": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [
+                [
+                  "abcdef",
+                  10
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": "unit-test-hash-output"
+                }
+              ]
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.verify": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [
+                [
+                  {
+                    "userId": 1,
+                    "title": "Đặt lại mật khẩu thành công",
+                    "message": "Mật khẩu tài khoản của bạn đã được đặt lại thành công qua mã xác thực OTP."
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": {
+                    "id": 1
+                  }
+                }
+              ]
+            }
+          }
+        },
+        {
+          "function": "resetPassword",
+          "input": {
+            "email": "user@example.com",
+            "otp": "123456",
+            "newPassword": "abcdef"
+          },
+          "actor": null,
+          "mockConfiguration": {
+            "default": "deny unconfigured calls",
+            "clock": "2026-10-12T00:00:00.000Z",
+            "findUnique": {
+              "id": 1,
+              "email": "user@example.com",
+              "name": "Unit Test User",
+              "password": "unit-test-hash-output",
+              "role": "USER",
+              "membershipTier": "STANDARD",
+              "isBlacklisted": false,
+              "resetOtp": null,
+              "resetOtpExpiry": null,
+              "createdAt": "2026-01-01T00:00:00.000Z"
+            },
+            "userUpdate": "apply actual update.data to RAM record",
+            "bcryptHash": "unit-test-hash-output",
+            "notification": "resolve"
+          },
+          "actual": {
+            "statusCode": 400,
+            "payload": {
+              "error": "Mã OTP không chính xác"
+            }
+          },
+          "calls": {
+            "user.create": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.findUnique": {
+              "arguments": [
+                [
+                  {
+                    "where": {
+                      "email": "user@example.com"
+                    }
+                  }
+                ]
+              ],
+              "outcomes": [
+                {
+                  "status": "fulfilled",
+                  "value": {
+                    "id": 1,
+                    "email": "user@example.com",
+                    "name": "Unit Test User",
+                    "password": "unit-test-hash-output",
+                    "role": "USER",
+                    "membershipTier": "STANDARD",
+                    "isBlacklisted": false,
+                    "resetOtp": null,
+                    "resetOtpExpiry": null,
+                    "createdAt": "2026-01-01T00:00:00.000Z"
+                  }
+                }
+              ]
+            },
+            "user.findMany": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "user.update": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$connect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$disconnect": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "prisma.$transaction": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.hash": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "bcrypt.compare": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.sign": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "jwt.verify": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "mail.sendPasswordResetOtpEmail": {
+              "arguments": [],
+              "outcomes": []
+            },
+            "notification.createNotification": {
+              "arguments": [],
+              "outcomes": []
+            }
+          }
+        }
+      ],
+      "conditionEvidence": [
+        {
+          "testId": "WB-RP-15",
+          "invocation": 1,
+          "trace": "coverage/phase2-controller-traces.json",
+          "conditions": {
+            "RP.1A": "F",
+            "RP.1B": "F",
+            "RP.1C": "F",
+            "RP.2A": "F",
+            "RP.2B": "F",
+            "RP.3": "F",
+            "RP.4A": "F",
+            "RP.4B": "F",
+            "RP.5A": "F",
+            "RP.5B": "F"
+          },
+          "actual": {
+            "statusCode": 200,
+            "payload": {
+              "message": "Đặt lại mật khẩu thành công! Bạn có thể đăng nhập bằng mật khẩu mới."
+            }
+          },
+          "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+          "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+        },
+        {
+          "testId": "WB-RP-15",
+          "invocation": 2,
+          "trace": "coverage/phase2-controller-traces.json",
+          "conditions": {
+            "RP.1A": "F",
+            "RP.1B": "F",
+            "RP.1C": "F",
+            "RP.2A": "F",
+            "RP.2B": "F",
+            "RP.3": "F",
+            "RP.4A": "T",
+            "RP.4B": "NE",
+            "RP.5A": "NE",
+            "RP.5B": "NE"
+          },
+          "actual": {
+            "statusCode": 400,
+            "payload": {
+              "error": "Mã OTP không chính xác"
+            }
+          },
+          "pathEvidenceStatus": "PASS assertions on response/next/side effects, linked to actual runtime trace",
+          "atomicTruthValueStatus": "INFERRED_FROM_CAPTURED_VALUES_AND_SOURCE_ORDER; manually checked, no direct predicate instrumentation"
+        }
+      ]
+    }
+  ]
+}

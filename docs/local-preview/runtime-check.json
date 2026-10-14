@@ -1,0 +1,56 @@
+{
+  "pageErrors": [],
+  "failedApiResponses": [],
+  "checkedPages": [
+    {
+      "role": "ADMIN",
+      "route": "/",
+      "screenshot": "admin-dashboard.png"
+    },
+    {
+      "role": "ADMIN",
+      "route": "/books",
+      "apiStatus": 200
+    },
+    {
+      "role": "ADMIN",
+      "route": "/members",
+      "apiStatus": 200
+    },
+    {
+      "role": "ADMIN",
+      "route": "/inventory",
+      "apiStatus": 200
+    },
+    {
+      "role": "USER",
+      "route": "/profile",
+      "screenshot": "user-profile.png"
+    }
+  ],
+  "runtime": {
+    "node": "v22.23.3",
+    "npm": "10.9.9"
+  },
+  "checks": {
+    "frontend_production_build": true,
+    "backend_typescript_no_emit": true,
+    "prisma_client_generated": true,
+    "database_quick_check": "ok",
+    "demo_admin_password_verified": true,
+    "demo_user_password_verified": true,
+    "database_unchanged": true,
+    "env_unchanged": true,
+    "previous_qa_files_unchanged": true
+  },
+  "database_backup": "/home/a2ilab/.local/share/library-management-system/backups/dev-before-local-setup.db",
+  "repository_changes": {
+    "application_files": [],
+    "documentation": [
+      "README.md"
+    ],
+    "tracked_dependency_files_changed": 280,
+    "reason": "Replace existing Windows dependencies with Linux dependencies using original lockfiles; repo already tracks node_modules files."
+  },
+  "scope": "Startup and read-only browser checks; not a rerun of the 44 manual testcases. No migration/seed/email action/commit/push."
+}

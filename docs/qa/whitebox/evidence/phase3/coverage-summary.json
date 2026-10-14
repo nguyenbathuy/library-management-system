@@ -1,0 +1,302 @@
+{
+  "member-coverage": {
+    "scopeFiles": [
+      "server/src/controllers/authController.ts",
+      "server/src/middleware/auth.ts",
+      "server/src/routes/authRoutes.ts"
+    ],
+    "total": {
+      "statements": {
+        "covered": 59,
+        "total": 133,
+        "pct": 44.36
+      },
+      "branches": {
+        "covered": 20,
+        "total": 71,
+        "pct": 28.16
+      },
+      "functions": {
+        "covered": 7,
+        "total": 13,
+        "pct": 53.84
+      },
+      "lines": {
+        "covered": 55,
+        "total": 128,
+        "pct": 42.96
+      }
+    },
+    "files": {
+      "server/src/controllers/authController.ts": {
+        "statements": {
+          "covered": 35,
+          "total": 101,
+          "pct": 34.65
+        },
+        "branches": {
+          "covered": 12,
+          "total": 57,
+          "pct": 21.05
+        },
+        "functions": {
+          "covered": 4,
+          "total": 8,
+          "pct": 50
+        },
+        "lines": {
+          "covered": 33,
+          "total": 99,
+          "pct": 33.33
+        }
+      },
+      "server/src/middleware/auth.ts": {
+        "statements": {
+          "covered": 15,
+          "total": 23,
+          "pct": 65.21
+        },
+        "branches": {
+          "covered": 8,
+          "total": 14,
+          "pct": 57.14
+        },
+        "functions": {
+          "covered": 3,
+          "total": 5,
+          "pct": 60
+        },
+        "lines": {
+          "covered": 13,
+          "total": 20,
+          "pct": 65
+        }
+      },
+      "server/src/routes/authRoutes.ts": {
+        "statements": {
+          "covered": 9,
+          "total": 9,
+          "pct": 100
+        },
+        "branches": {
+          "covered": 0,
+          "total": 0,
+          "pct": 100
+        },
+        "functions": {
+          "covered": 0,
+          "total": 0,
+          "pct": 100
+        },
+        "lines": {
+          "covered": 9,
+          "total": 9,
+          "pct": 100
+        }
+      }
+    },
+    "runnerExitCode": 1
+  },
+  "authentication-coverage": {
+    "scopeFiles": [
+      "server/src/controllers/authController.ts",
+      "server/src/middleware/auth.ts",
+      "server/src/routes/authRoutes.ts"
+    ],
+    "total": {
+      "statements": {
+        "covered": 101,
+        "total": 133,
+        "pct": 75.93
+      },
+      "branches": {
+        "covered": 58,
+        "total": 71,
+        "pct": 81.69
+      },
+      "functions": {
+        "covered": 10,
+        "total": 13,
+        "pct": 76.92
+      },
+      "lines": {
+        "covered": 98,
+        "total": 128,
+        "pct": 76.56
+      }
+    },
+    "files": {
+      "server/src/controllers/authController.ts": {
+        "statements": {
+          "covered": 78,
+          "total": 101,
+          "pct": 77.22
+        },
+        "branches": {
+          "covered": 44,
+          "total": 57,
+          "pct": 77.19
+        },
+        "functions": {
+          "covered": 5,
+          "total": 8,
+          "pct": 62.5
+        },
+        "lines": {
+          "covered": 78,
+          "total": 99,
+          "pct": 78.78
+        }
+      },
+      "server/src/middleware/auth.ts": {
+        "statements": {
+          "covered": 23,
+          "total": 23,
+          "pct": 100
+        },
+        "branches": {
+          "covered": 14,
+          "total": 14,
+          "pct": 100
+        },
+        "functions": {
+          "covered": 5,
+          "total": 5,
+          "pct": 100
+        },
+        "lines": {
+          "covered": 20,
+          "total": 20,
+          "pct": 100
+        }
+      },
+      "server/src/routes/authRoutes.ts": {
+        "statements": {
+          "covered": 0,
+          "total": 9,
+          "pct": 0
+        },
+        "branches": {
+          "covered": 0,
+          "total": 0,
+          "pct": 100
+        },
+        "functions": {
+          "covered": 0,
+          "total": 0,
+          "pct": 100
+        },
+        "lines": {
+          "covered": 0,
+          "total": 9,
+          "pct": 0
+        }
+      }
+    },
+    "runnerExitCode": 0
+  },
+  "combined-coverage": {
+    "scopeFiles": [
+      "server/src/controllers/authController.ts",
+      "server/src/middleware/auth.ts",
+      "server/src/routes/authRoutes.ts"
+    ],
+    "total": {
+      "statements": {
+        "covered": 131,
+        "total": 133,
+        "pct": 98.49
+      },
+      "branches": {
+        "covered": 70,
+        "total": 71,
+        "pct": 98.59
+      },
+      "functions": {
+        "covered": 13,
+        "total": 13,
+        "pct": 100
+      },
+      "lines": {
+        "covered": 126,
+        "total": 128,
+        "pct": 98.43
+      }
+    },
+    "files": {
+      "server/src/controllers/authController.ts": {
+        "statements": {
+          "covered": 99,
+          "total": 101,
+          "pct": 98.01
+        },
+        "branches": {
+          "covered": 56,
+          "total": 57,
+          "pct": 98.24
+        },
+        "functions": {
+          "covered": 8,
+          "total": 8,
+          "pct": 100
+        },
+        "lines": {
+          "covered": 97,
+          "total": 99,
+          "pct": 97.97
+        }
+      },
+      "server/src/middleware/auth.ts": {
+        "statements": {
+          "covered": 23,
+          "total": 23,
+          "pct": 100
+        },
+        "branches": {
+          "covered": 14,
+          "total": 14,
+          "pct": 100
+        },
+        "functions": {
+          "covered": 5,
+          "total": 5,
+          "pct": 100
+        },
+        "lines": {
+          "covered": 20,
+          "total": 20,
+          "pct": 100
+        }
+      },
+      "server/src/routes/authRoutes.ts": {
+        "statements": {
+          "covered": 9,
+          "total": 9,
+          "pct": 100
+        },
+        "branches": {
+          "covered": 0,
+          "total": 0,
+          "pct": 100
+        },
+        "functions": {
+          "covered": 0,
+          "total": 0,
+          "pct": 100
+        },
+        "lines": {
+          "covered": 9,
+          "total": 9,
+          "pct": 100
+        }
+      }
+    },
+    "runnerExitCode": 1
+  },
+  "comparison": {
+    "sameSourceAndInstrumentationMapsAsPhase2": true,
+    "authenticationCountersUnchanged": true,
+    "noCoverageIncludesRemoved": true,
+    "warning": "Execution subsets share source files; these are not disjoint module coverages and cannot be averaged."
+  }
+}

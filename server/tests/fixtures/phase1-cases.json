@@ -1,0 +1,167 @@
+[
+  {
+    "id": "WB-LG-01",
+    "key": "LG",
+    "module": "Authentication",
+    "function": "login",
+    "input": "email hợp lệ; findUnique=null",
+    "expected": "401 Invalid credentials; không compare/sign",
+    "branch": "LG.1: T/NE",
+    "reason": "OR short-circuit",
+    "oracle": "S"
+  },
+  {
+    "id": "WB-LG-02",
+    "key": "LG",
+    "module": "Authentication",
+    "function": "login",
+    "input": "user có; compare=false",
+    "expected": "401; không sign",
+    "branch": "LG.1: F/T",
+    "reason": "Password sai",
+    "oracle": "S"
+  },
+  {
+    "id": "WB-LG-03",
+    "key": "LG",
+    "module": "Authentication",
+    "function": "login",
+    "input": "user USER; compare=true",
+    "expected": "200 token; JWT claims id/email/role, expiresIn=1h; DTO đúng tier, không password",
+    "branch": "LG.1: F/F",
+    "reason": "Login hợp lệ",
+    "oracle": "B"
+  },
+  {
+    "id": "WB-CP-01",
+    "key": "CP",
+    "module": "Authentication",
+    "function": "changePassword",
+    "input": "req.user undefined",
+    "expected": "401; không hash/update",
+    "branch": "CP.1 T",
+    "reason": "Chưa xác thực",
+    "oracle": "S"
+  },
+  {
+    "id": "WB-CP-02",
+    "key": "CP",
+    "module": "Authentication",
+    "function": "changePassword",
+    "input": "currentPassword empty; newPassword=abcdef",
+    "expected": "400; không DB",
+    "branch": "CP.2: T/NE",
+    "reason": "Toán hạng current thiếu",
+    "oracle": "S"
+  },
+  {
+    "id": "WB-CP-03",
+    "key": "CP",
+    "module": "Authentication",
+    "function": "changePassword",
+    "input": "currentPassword=oldpass; newPassword empty",
+    "expected": "400; không DB",
+    "branch": "CP.2: F/T",
+    "reason": "Toán hạng new thiếu",
+    "oracle": "S"
+  },
+  {
+    "id": "WB-CP-04",
+    "key": "CP",
+    "module": "Authentication",
+    "function": "changePassword",
+    "input": "newPassword=abcde; current hợp lệ",
+    "expected": "400; không lookup",
+    "branch": "CP.2 F/F; CP.3 T",
+    "reason": "Biên dưới 6",
+    "oracle": "S"
+  },
+  {
+    "id": "WB-CP-08",
+    "key": "CP",
+    "module": "Authentication",
+    "function": "changePassword",
+    "input": "current=oldpass; new=abcdef; compare=true; dependencies resolve",
+    "expected": "200; hash(new,10), update đúng userId; notification một lần",
+    "branch": "CP.3 F tại 6; CP.6 F; CP.E success",
+    "reason": "Biên hợp lệ tối thiểu",
+    "oracle": "B"
+  },
+  {
+    "id": "WB-CP-09",
+    "key": "CP",
+    "module": "Authentication",
+    "function": "changePassword",
+    "input": "newPassword=abcdefg; update reject",
+    "expected": "500; không notification",
+    "branch": "CP.3 F tại 7; CP.E catch",
+    "reason": "Biên trên và lỗi lưu",
+    "oracle": "S"
+  },
+  {
+    "id": "WB-RP-04",
+    "key": "RP",
+    "module": "Authentication",
+    "function": "resetPassword",
+    "input": "newPassword=123456 (number)",
+    "expected": "400; không lookup",
+    "branch": "RP.1 F/F/F; RP.2 T/NE",
+    "reason": "Sai kiểu, không đọc length",
+    "oracle": "S"
+  },
+  {
+    "id": "WB-RP-08",
+    "key": "RP",
+    "module": "Authentication",
+    "function": "resetPassword",
+    "input": "resetOtp=123456; input otp=999999",
+    "expected": "400; không hash/update",
+    "branch": "RP.4: F/T",
+    "reason": "Mã sai",
+    "oracle": "B"
+  },
+  {
+    "id": "WB-RP-10",
+    "key": "RP",
+    "module": "Authentication",
+    "function": "resetPassword",
+    "input": "OTP khớp; expiry=T−1ms",
+    "expected": "400 expired; không hash/update",
+    "branch": "RP.5: F/T",
+    "reason": "Vừa hết hạn",
+    "oracle": "S"
+  },
+  {
+    "id": "WB-RP-12",
+    "key": "RP",
+    "module": "Authentication",
+    "function": "resetPassword",
+    "input": "email HOA có space; otp=space+123456+space; expiry=T+1ms; new=abcdef",
+    "expected": "200; lookup lower/trim; hash(new,10); update password, xóa OTP+expiry; notification",
+    "branch": "RP.2 F/F; RP.4 F/F; RP.5 F/F",
+    "reason": "Còn hạn tối thiểu, trim OTP",
+    "oracle": "B"
+  },
+  {
+    "id": "WB-RG-01",
+    "key": "RG",
+    "module": "Member Management",
+    "function": "register",
+    "input": "email valid, name, password; hash=HASH; create resolve",
+    "expected": "201; create nhận email/name/HASH/role USER; không plaintext",
+    "branch": "RG.1 success",
+    "reason": "Public đăng ký cơ bản",
+    "oracle": "B"
+  },
+  {
+    "id": "WB-RG-02",
+    "key": "RG",
+    "module": "Member Management",
+    "function": "register",
+    "input": "Email đã có; create reject P2002",
+    "expected": "400 User already exists",
+    "branch": "RG.1 catch",
+    "reason": "Không tạo trùng",
+    "oracle": "B"
+  }
+]

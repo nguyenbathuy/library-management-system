@@ -1,0 +1,16 @@
+{
+  "observedAt": "2026-10-12T08:08:16.519Z",
+  "mockedConstructor": true,
+  "controllerImportConstructorCalls": 1,
+  "constructorReturnedExpectedMock": true,
+  "factories": {
+    "prisma": true,
+    "bcrypt": true,
+    "jwt": true,
+    "mail": true,
+    "notification": true
+  },
+  "databaseCallsBeforeTests": 0,
+  "prismaAlias": "server/tests/mocks/prismaGuard.ts",
+  "startupPolicy": "Only authController.ts imported; no index.ts, route bootstrap, seed or migration import."
+}
