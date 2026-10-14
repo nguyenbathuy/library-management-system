@@ -1,0 +1,710 @@
+[
+  {
+    "id": "WB-AT-01",
+    "mockConfiguration": {
+      "default": "deny unconfigured JWT calls"
+    },
+    "invocations": [
+      {
+        "function": "authenticateToken",
+        "input": {
+          "authorization": null,
+          "user": null
+        },
+        "mockConfiguration": {
+          "default": "deny unconfigured JWT calls"
+        },
+        "actual": {
+          "responseWritten": true,
+          "statusCode": 401,
+          "payload": null,
+          "nextCalls": 0,
+          "user": null
+        },
+        "calls": {
+          "jwt.verify": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "jwt.sign": {
+            "arguments": [],
+            "outcomes": []
+          }
+        }
+      }
+    ],
+    "runnerStateAtFinishedHook": "pass",
+    "recordedAt": "2026-10-14T05:35:05.933Z",
+    "calls": {
+      "jwt.verify": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "jwt.sign": {
+        "arguments": [],
+        "outcomes": []
+      }
+    }
+  },
+  {
+    "id": "WB-AT-02",
+    "mockConfiguration": {
+      "default": "deny unconfigured JWT calls"
+    },
+    "invocations": [
+      {
+        "function": "authenticateToken",
+        "input": {
+          "authorization": "Bearer",
+          "user": null
+        },
+        "mockConfiguration": {
+          "default": "deny unconfigured JWT calls"
+        },
+        "actual": {
+          "responseWritten": true,
+          "statusCode": 401,
+          "payload": null,
+          "nextCalls": 0,
+          "user": null
+        },
+        "calls": {
+          "jwt.verify": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "jwt.sign": {
+            "arguments": [],
+            "outcomes": []
+          }
+        }
+      }
+    ],
+    "runnerStateAtFinishedHook": "pass",
+    "recordedAt": "2026-10-14T05:35:05.933Z",
+    "calls": {
+      "jwt.verify": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "jwt.sign": {
+        "arguments": [],
+        "outcomes": []
+      }
+    }
+  },
+  {
+    "id": "WB-AT-03",
+    "mockConfiguration": {
+      "default": "deny unconfigured JWT calls",
+      "verify": {
+        "error": {
+          "name": "TokenExpiredError",
+          "message": "Simulated TokenExpiredError"
+        },
+        "decodedUser": null
+      }
+    },
+    "invocations": [
+      {
+        "function": "authenticateToken",
+        "input": {
+          "authorization": "Bearer x",
+          "user": null
+        },
+        "mockConfiguration": {
+          "default": "deny unconfigured JWT calls",
+          "verify": {
+            "error": {
+              "name": "JsonWebTokenError",
+              "message": "Simulated JsonWebTokenError"
+            },
+            "decodedUser": null
+          }
+        },
+        "actual": {
+          "responseWritten": true,
+          "statusCode": 403,
+          "payload": null,
+          "nextCalls": 0,
+          "user": null
+        },
+        "calls": {
+          "jwt.verify": {
+            "arguments": [
+              [
+                "x",
+                "unit-test-secret-never-used-for-real-tokens",
+                "[callback]"
+              ]
+            ],
+            "outcomes": [
+              {
+                "status": "fulfilled",
+                "value": {
+                  "status": "[callback]",
+                  "json": "[callback]",
+                  "sendStatus": "[callback]"
+                }
+              }
+            ]
+          },
+          "jwt.sign": {
+            "arguments": [],
+            "outcomes": []
+          }
+        }
+      },
+      {
+        "function": "authenticateToken",
+        "input": {
+          "authorization": "Bearer x",
+          "user": null
+        },
+        "mockConfiguration": {
+          "default": "deny unconfigured JWT calls",
+          "verify": {
+            "error": {
+              "name": "TokenExpiredError",
+              "message": "Simulated TokenExpiredError"
+            },
+            "decodedUser": null
+          }
+        },
+        "actual": {
+          "responseWritten": true,
+          "statusCode": 403,
+          "payload": null,
+          "nextCalls": 0,
+          "user": null
+        },
+        "calls": {
+          "jwt.verify": {
+            "arguments": [
+              [
+                "x",
+                "unit-test-secret-never-used-for-real-tokens",
+                "[callback]"
+              ]
+            ],
+            "outcomes": [
+              {
+                "status": "fulfilled",
+                "value": {
+                  "status": "[callback]",
+                  "json": "[callback]",
+                  "sendStatus": "[callback]"
+                }
+              }
+            ]
+          },
+          "jwt.sign": {
+            "arguments": [],
+            "outcomes": []
+          }
+        }
+      }
+    ],
+    "runnerStateAtFinishedHook": "pass",
+    "recordedAt": "2026-10-14T05:35:05.935Z",
+    "calls": {
+      "jwt.verify": {
+        "arguments": [
+          [
+            "x",
+            "unit-test-secret-never-used-for-real-tokens",
+            "[callback]"
+          ],
+          [
+            "x",
+            "unit-test-secret-never-used-for-real-tokens",
+            "[callback]"
+          ]
+        ],
+        "outcomes": [
+          {
+            "status": "fulfilled",
+            "value": {
+              "status": "[callback]",
+              "json": "[callback]",
+              "sendStatus": "[callback]"
+            }
+          },
+          {
+            "status": "fulfilled",
+            "value": {
+              "status": "[callback]",
+              "json": "[callback]",
+              "sendStatus": "[callback]"
+            }
+          }
+        ]
+      },
+      "jwt.sign": {
+        "arguments": [],
+        "outcomes": []
+      }
+    }
+  },
+  {
+    "id": "WB-AT-04",
+    "mockConfiguration": {
+      "default": "deny unconfigured JWT calls",
+      "verify": {
+        "error": null,
+        "decodedUser": {
+          "userId": 1,
+          "email": "user@example.com",
+          "role": "USER"
+        }
+      }
+    },
+    "invocations": [
+      {
+        "function": "authenticateToken",
+        "input": {
+          "authorization": "Bearer x",
+          "user": null
+        },
+        "mockConfiguration": {
+          "default": "deny unconfigured JWT calls",
+          "verify": {
+            "error": null,
+            "decodedUser": {
+              "userId": 1,
+              "email": "user@example.com",
+              "role": "USER"
+            }
+          }
+        },
+        "actual": {
+          "responseWritten": false,
+          "statusCode": null,
+          "payload": null,
+          "nextCalls": 1,
+          "user": {
+            "userId": 1,
+            "email": "user@example.com",
+            "role": "USER"
+          }
+        },
+        "calls": {
+          "jwt.verify": {
+            "arguments": [
+              [
+                "x",
+                "unit-test-secret-never-used-for-real-tokens",
+                "[callback]"
+              ]
+            ],
+            "outcomes": [
+              {
+                "status": "fulfilled"
+              }
+            ]
+          },
+          "jwt.sign": {
+            "arguments": [],
+            "outcomes": []
+          }
+        }
+      }
+    ],
+    "runnerStateAtFinishedHook": "pass",
+    "recordedAt": "2026-10-14T05:35:05.935Z",
+    "calls": {
+      "jwt.verify": {
+        "arguments": [
+          [
+            "x",
+            "unit-test-secret-never-used-for-real-tokens",
+            "[callback]"
+          ]
+        ],
+        "outcomes": [
+          {
+            "status": "fulfilled"
+          }
+        ]
+      },
+      "jwt.sign": {
+        "arguments": [],
+        "outcomes": []
+      }
+    }
+  },
+  {
+    "id": "WB-AA-01",
+    "mockConfiguration": {
+      "default": "deny unconfigured JWT calls"
+    },
+    "invocations": [
+      {
+        "function": "authorizeAdmin",
+        "input": {
+          "authorization": null,
+          "user": null
+        },
+        "mockConfiguration": {
+          "default": "deny unconfigured JWT calls"
+        },
+        "actual": {
+          "responseWritten": true,
+          "statusCode": 403,
+          "payload": {
+            "message": "Forbidden"
+          },
+          "nextCalls": 0,
+          "user": null
+        },
+        "calls": {
+          "jwt.verify": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "jwt.sign": {
+            "arguments": [],
+            "outcomes": []
+          }
+        }
+      }
+    ],
+    "runnerStateAtFinishedHook": "pass",
+    "recordedAt": "2026-10-14T05:35:05.937Z",
+    "calls": {
+      "jwt.verify": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "jwt.sign": {
+        "arguments": [],
+        "outcomes": []
+      }
+    }
+  },
+  {
+    "id": "WB-AA-02",
+    "mockConfiguration": {
+      "default": "deny unconfigured JWT calls"
+    },
+    "invocations": [
+      {
+        "function": "authorizeAdmin",
+        "input": {
+          "authorization": null,
+          "user": {
+            "userId": 1,
+            "email": "user@example.com",
+            "role": "USER"
+          }
+        },
+        "mockConfiguration": {
+          "default": "deny unconfigured JWT calls"
+        },
+        "actual": {
+          "responseWritten": true,
+          "statusCode": 403,
+          "payload": {
+            "message": "Forbidden"
+          },
+          "nextCalls": 0,
+          "user": {
+            "userId": 1,
+            "email": "user@example.com",
+            "role": "USER"
+          }
+        },
+        "calls": {
+          "jwt.verify": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "jwt.sign": {
+            "arguments": [],
+            "outcomes": []
+          }
+        }
+      }
+    ],
+    "runnerStateAtFinishedHook": "pass",
+    "recordedAt": "2026-10-14T05:35:05.937Z",
+    "calls": {
+      "jwt.verify": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "jwt.sign": {
+        "arguments": [],
+        "outcomes": []
+      }
+    }
+  },
+  {
+    "id": "WB-AA-03",
+    "mockConfiguration": {
+      "default": "deny unconfigured JWT calls"
+    },
+    "invocations": [
+      {
+        "function": "authorizeAdmin",
+        "input": {
+          "authorization": null,
+          "user": {
+            "userId": 1,
+            "email": "user@example.com",
+            "role": "ADMIN"
+          }
+        },
+        "mockConfiguration": {
+          "default": "deny unconfigured JWT calls"
+        },
+        "actual": {
+          "responseWritten": false,
+          "statusCode": null,
+          "payload": null,
+          "nextCalls": 1,
+          "user": {
+            "userId": 1,
+            "email": "user@example.com",
+            "role": "ADMIN"
+          }
+        },
+        "calls": {
+          "jwt.verify": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "jwt.sign": {
+            "arguments": [],
+            "outcomes": []
+          }
+        }
+      }
+    ],
+    "runnerStateAtFinishedHook": "pass",
+    "recordedAt": "2026-10-14T05:35:05.938Z",
+    "calls": {
+      "jwt.verify": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "jwt.sign": {
+        "arguments": [],
+        "outcomes": []
+      }
+    }
+  },
+  {
+    "id": "WB-OA-01",
+    "mockConfiguration": {
+      "default": "deny unconfigured JWT calls"
+    },
+    "invocations": [
+      {
+        "function": "optionalAuthenticateToken",
+        "input": {
+          "authorization": null,
+          "user": null
+        },
+        "mockConfiguration": {
+          "default": "deny unconfigured JWT calls"
+        },
+        "actual": {
+          "responseWritten": false,
+          "statusCode": null,
+          "payload": null,
+          "nextCalls": 1,
+          "user": null
+        },
+        "calls": {
+          "jwt.verify": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "jwt.sign": {
+            "arguments": [],
+            "outcomes": []
+          }
+        }
+      }
+    ],
+    "runnerStateAtFinishedHook": "pass",
+    "recordedAt": "2026-10-14T05:35:05.938Z",
+    "calls": {
+      "jwt.verify": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "jwt.sign": {
+        "arguments": [],
+        "outcomes": []
+      }
+    }
+  },
+  {
+    "id": "WB-OA-02",
+    "mockConfiguration": {
+      "default": "deny unconfigured JWT calls",
+      "verify": {
+        "error": {
+          "name": "JsonWebTokenError"
+        },
+        "decodedUser": null
+      }
+    },
+    "invocations": [
+      {
+        "function": "optionalAuthenticateToken",
+        "input": {
+          "authorization": "Bearer x",
+          "user": null
+        },
+        "mockConfiguration": {
+          "default": "deny unconfigured JWT calls",
+          "verify": {
+            "error": {
+              "name": "JsonWebTokenError"
+            },
+            "decodedUser": null
+          }
+        },
+        "actual": {
+          "responseWritten": false,
+          "statusCode": null,
+          "payload": null,
+          "nextCalls": 1,
+          "user": null
+        },
+        "calls": {
+          "jwt.verify": {
+            "arguments": [
+              [
+                "x",
+                "unit-test-secret-never-used-for-real-tokens",
+                "[callback]"
+              ]
+            ],
+            "outcomes": [
+              {
+                "status": "fulfilled"
+              }
+            ]
+          },
+          "jwt.sign": {
+            "arguments": [],
+            "outcomes": []
+          }
+        }
+      }
+    ],
+    "runnerStateAtFinishedHook": "pass",
+    "recordedAt": "2026-10-14T05:35:05.938Z",
+    "calls": {
+      "jwt.verify": {
+        "arguments": [
+          [
+            "x",
+            "unit-test-secret-never-used-for-real-tokens",
+            "[callback]"
+          ]
+        ],
+        "outcomes": [
+          {
+            "status": "fulfilled"
+          }
+        ]
+      },
+      "jwt.sign": {
+        "arguments": [],
+        "outcomes": []
+      }
+    }
+  },
+  {
+    "id": "WB-OA-03",
+    "mockConfiguration": {
+      "default": "deny unconfigured JWT calls",
+      "verify": {
+        "error": null,
+        "decodedUser": {
+          "userId": 1,
+          "email": "user@example.com",
+          "role": "USER"
+        }
+      }
+    },
+    "invocations": [
+      {
+        "function": "optionalAuthenticateToken",
+        "input": {
+          "authorization": "Bearer x",
+          "user": null
+        },
+        "mockConfiguration": {
+          "default": "deny unconfigured JWT calls",
+          "verify": {
+            "error": null,
+            "decodedUser": {
+              "userId": 1,
+              "email": "user@example.com",
+              "role": "USER"
+            }
+          }
+        },
+        "actual": {
+          "responseWritten": false,
+          "statusCode": null,
+          "payload": null,
+          "nextCalls": 1,
+          "user": {
+            "userId": 1,
+            "email": "user@example.com",
+            "role": "USER"
+          }
+        },
+        "calls": {
+          "jwt.verify": {
+            "arguments": [
+              [
+                "x",
+                "unit-test-secret-never-used-for-real-tokens",
+                "[callback]"
+              ]
+            ],
+            "outcomes": [
+              {
+                "status": "fulfilled"
+              }
+            ]
+          },
+          "jwt.sign": {
+            "arguments": [],
+            "outcomes": []
+          }
+        }
+      }
+    ],
+    "runnerStateAtFinishedHook": "pass",
+    "recordedAt": "2026-10-14T05:35:05.939Z",
+    "calls": {
+      "jwt.verify": {
+        "arguments": [
+          [
+            "x",
+            "unit-test-secret-never-used-for-real-tokens",
+            "[callback]"
+          ]
+        ],
+        "outcomes": [
+          {
+            "status": "fulfilled"
+          }
+        ]
+      },
+      "jwt.sign": {
+        "arguments": [],
+        "outcomes": []
+      }
+    }
+  }
+]

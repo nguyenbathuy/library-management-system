@@ -1,0 +1,14 @@
+{
+  "testModule": "server/tests/unit/loan/knownbug-verify.loan.stateMachine.test.ts",
+  "guardsInstalled": 8,
+  "attemptedCalls": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ]
+}

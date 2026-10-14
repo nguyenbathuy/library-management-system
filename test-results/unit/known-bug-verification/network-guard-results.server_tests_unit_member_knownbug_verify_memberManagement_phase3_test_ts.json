@@ -1,0 +1,14 @@
+{
+  "testModule": "server/tests/unit/member/knownbug-verify.memberManagement.phase3.test.ts",
+  "guardsInstalled": 8,
+  "attemptedCalls": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ]
+}

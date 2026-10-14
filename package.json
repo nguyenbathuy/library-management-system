@@ -7,9 +7,12 @@
     "dev": "concurrently \"npm run start:server\" \"npm run start:client\"",
     "start:client": "vite",
     "start:server": "cd server && npm run dev",
-    "test": "vitest run --config vitest.backend.config.ts",
+    "test": "npm run test:unit && npm run test:integration",
     "test:unit": "vitest run --config vitest.backend.config.ts",
     "test:coverage": "vitest run --config vitest.backend.config.ts --coverage",
+    "test:integration": "vitest run --config vitest.integration.config.ts",
+    "test:integration:coverage": "vitest run --config vitest.integration.config.ts --coverage",
+    "test:property": "vitest run --config vitest.backend.config.ts server/tests/property && vitest run --config vitest.integration.config.ts server/tests/property/api",
     "test:e2e": "playwright test",
     "test:all": "npm test && npm run test:e2e"
   },
@@ -78,10 +81,14 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
+    "@playwright/test": "1.64.0",
     "@tailwindcss/vite": "4.1.12",
+    "@types/supertest": "7.2.1",
     "@vitejs/plugin-react": "4.7.0",
     "@vitest/coverage-v8": "4.1.0",
     "concurrently": "^9.2.1",
+    "fast-check": "4.10.2",
+    "supertest": "7.3.1",
     "tailwindcss": "4.1.12",
     "vite": "6.3.5",
     "vitest": "4.1.0"

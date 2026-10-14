@@ -1,0 +1,9 @@
+{"id":"PBT-P0","recordedAt":"2026-10-14T05:34:44.878Z","failed":false,"numRuns":500,"numShrinks":0,"seed":870678446,"counterexamplePath":null,"counterexample":null,"error":null}
+{"id":"PBT-P1","recordedAt":"2026-10-14T05:34:44.880Z","failed":false,"numRuns":500,"numShrinks":0,"seed":180241171,"counterexamplePath":null,"counterexample":null,"error":null}
+{"id":"PBT-P2","recordedAt":"2026-10-14T05:34:44.881Z","failed":true,"numRuns":1,"numShrinks":2,"seed":-494346409,"counterexamplePath":"0:0:0","counterexample":["2020-01-01T00:00:00.000Z",1],"error":"Error: Property failed by returning false"}
+{"id":"PBT-P2b","recordedAt":"2026-10-14T05:34:44.885Z","failed":false,"numRuns":500,"numShrinks":0,"seed":1191719867,"counterexamplePath":null,"counterexample":null,"error":null}
+{"id":"PBT-P3","recordedAt":"2026-10-14T05:34:44.888Z","failed":false,"numRuns":500,"numShrinks":0,"seed":-1187871522,"counterexamplePath":null,"counterexample":null,"error":null}
+{"id":"PBT-P6","recordedAt":"2026-10-14T05:34:44.890Z","failed":false,"numRuns":500,"numShrinks":0,"seed":-39404818,"counterexamplePath":null,"counterexample":null,"error":null}
+{"id":"PBT-P4a","recordedAt":"2026-10-14T05:34:44.891Z","failed":false,"numRuns":500,"numShrinks":0,"seed":-254523517,"counterexamplePath":null,"counterexample":null,"error":null}
+{"id":"PBT-P4","recordedAt":"2026-10-14T05:34:44.892Z","failed":true,"numRuns":1,"numShrinks":1,"seed":387266270,"counterexamplePath":"0:0","counterexample":["2020-01-01T00:00:00.000Z","PREMIUM"],"error":"Error: Property failed by returning false"}
+{"id":"PBT-P7","recordedAt":"2026-10-14T05:34:44.892Z","failed":true,"numRuns":1,"numShrinks":1,"seed":-126498094,"counterexamplePath":"0:0","counterexample":["2020-01-01T00:00:00.000Z"],"error":"Error: Property failed by returning false"}

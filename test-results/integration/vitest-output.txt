@@ -1,0 +1,95 @@
+
+ RUN  v4.1.0 /home/a2ilab/Documents/project/library-management-system
+      Coverage enabled with v8
+
+ ✓ |library-integration| server/tests/property/api/borrow.fuzz.test.ts > P5 — fuzz API mượn/gia hạn > PBT-P5a borrow-by-barcode: không 5xx; chỉ tạo Loan khi barcode + userId hợp lệ 339ms
+ ✓ |library-integration| server/tests/property/api/borrow.fuzz.test.ts > P5 — fuzz API mượn/gia hạn > PBT-P5b request-renew với :id ngẫu nhiên: không 5xx, không đổi phiếu không liên quan 177ms
+ ✓ |library-integration| server/tests/integration/loans.api.test.ts > Mượn sách — POST /api/loans/borrow-by-barcode > IT-BOR-01 (BOR-01) thủ thư quét barcode độc giả + sách → 200, Loan ACTIVE, BookItem BORROWED, khả dụng 3 → 2 207ms
+ ✓ |library-integration| server/tests/integration/loans.api.test.ts > Mượn sách — POST /api/loans/borrow-by-barcode > IT-BOR-02 thiếu barcode → 400, không tạo phiếu 94ms
+ ✓ |library-integration| server/tests/integration/loans.api.test.ts > Mượn sách — POST /api/loans/borrow-by-barcode > IT-BOR-03 barcode không tồn tại → 404 76ms
+ ✓ |library-integration| server/tests/integration/loans.api.test.ts > Mượn sách — POST /api/loans/borrow-by-barcode > IT-BOR-04 mã độc giả không tồn tại → 404 81ms
+ ✓ |library-integration| server/tests/integration/loans.api.test.ts > Mượn sách — POST /api/loans/borrow-by-barcode > IT-BOR-05 độc giả (USER) tự gọi API mượn → 403 84ms
+ ✓ |library-integration| server/tests/integration/loans.api.test.ts > Mượn sách — POST /api/loans/borrow-by-barcode > IT-BOR-06 (BOR-06) quét cuốn đang BORROWED → 400, không tạo phiếu thứ hai 132ms
+ ✓ |library-integration| server/tests/integration/loans.api.test.ts > Mượn sách — POST /api/loans/borrow-by-barcode > IT-BOR-07 độc giả bị Blacklist → 403 124ms
+ ✓ |library-integration| server/tests/integration/loans.api.test.ts > Mượn sách — POST /api/loans/borrow-by-barcode > IT-BOR-08 độc giả có phiếu quá hạn (dueDate dời về quá khứ) → 400 105ms
+ ✓ |library-integration| server/tests/integration/loans.api.test.ts > Mượn sách — POST /api/loans/borrow-by-barcode > IT-BOR-09 STANDARD → dueDate lưu trong DB = ngày mượn + 14 ngày 111ms
+ ✓ |library-integration| server/tests/integration/loans.api.test.ts > Mượn sách — POST /api/loans/borrow-by-barcode > IT-BOR-10 STANDARD đã mượn 5 cuốn → cuốn thứ 6 bị chặn 400 (hạn mức) 235ms
+ ✓ |library-integration| server/tests/integration/loans.api.test.ts > Mượn sách — POST /api/loans/borrow-by-barcode > IT-BOR-11 không gửi token → 401 98ms
+ ✓ |library-integration| server/tests/integration/loans.api.test.ts > Mượn sách — POST /api/loans/borrow-by-barcode > IT-BOR-12 còn nợ phạt chưa nộp (phiếu đã trả) → không được mượn mới 90ms
+ ✓ |library-integration| server/tests/integration/loans.api.test.ts > Mượn sách — POST /api/loans/borrow-by-barcode > IT-BOR-13 mượn thành công → ghi 1 dòng AuditLog (DEF-004) 133ms
+ ✓ |library-integration| server/tests/integration/loans.api.test.ts > Mượn sách — POST /api/loans/borrow-by-barcode > IT-BOR-14 độc giả PREMIUM → dueDate = ngày mượn + 30 ngày (DEF-005) 127ms
+ ✓ |library-integration| server/tests/integration/loans.api.test.ts > Trả sách — POST /api/loans/return-by-barcode > IT-RET-01 (RET-01) trả đúng hạn → Loan COMPLETED, phạt 0, BookItem AVAILABLE, khả dụng phục hồi 134ms
+ ✓ |library-integration| server/tests/integration/loans.api.test.ts > Trả sách — POST /api/loans/return-by-barcode > IT-RET-02 trả trễ 3 ngày → phạt 15.000 đ được lưu, sách về AVAILABLE 147ms
+ ✓ |library-integration| server/tests/integration/loans.api.test.ts > Trả sách — POST /api/loans/return-by-barcode > IT-RET-03 trả trễ chưa nộp phạt → Loan PENDING_FINE_PAYMENT (DEF-006) 141ms
+ ✓ |library-integration| server/tests/integration/loans.api.test.ts > Trả sách — POST /api/loans/return-by-barcode > IT-RET-04 trễ 1 ngày 1 giờ → phạt theo ceil = 2 ngày = 10.000 đ (FIND-01) 129ms
+ ✓ |library-integration| server/tests/integration/loans.api.test.ts > Trả sách — POST /api/loans/return-by-barcode > IT-RET-05 quét trả cuốn đang AVAILABLE (không có phiếu mở) → 400 89ms
+ ✓ |library-integration| server/tests/integration/loans.api.test.ts > Trả sách — POST /api/loans/return-by-barcode > IT-RET-06 barcode không tồn tại → 404 82ms
+ ✓ |library-integration| server/tests/integration/loans.api.test.ts > Trả sách — POST /api/loans/return-by-barcode > IT-RET-07 độc giả (USER) gọi API trả → 403, phiếu vẫn ACTIVE 107ms
+ ✓ |library-integration| server/tests/integration/loans.api.test.ts > Trả sách — POST /api/loans/return-by-barcode > IT-RET-08 trả sách đang có người đặt trước (WAITING) → đặt trước chuyển NOTIFIED + thông báo 181ms
+ ✓ |library-integration| server/tests/integration/loans.api.test.ts > Trả sách — POST /api/loans/return-by-barcode > IT-RET-09 sau khi trả trễ còn nợ phạt → bị chặn mượn mới (400) 149ms
+ ✓ |library-integration| server/tests/integration/loans.api.test.ts > Trả sách — POST /api/loans/return-by-barcode > IT-RET-10 (RET-10) bấm trả lần 2 → 400; trả theo loanId phiếu COMPLETED → "đã hoàn tất" 151ms
+ ✓ |library-integration| server/tests/integration/loans.api.test.ts > Trả sách — POST /api/loans/return-by-barcode > IT-RET-11 báo mất 120.000 đ → Loan LOST_PENDING_PAYMENT, BookItem LOST, báo mất lần 2 → 400 136ms
+ ✓ |library-integration| server/tests/integration/loans.api.test.ts > Trả sách — POST /api/loans/return-by-barcode > IT-RET-12 có luồng báo hỏng sách trong API phiếu mượn (DEF-007) 89ms
+ ✓ |library-integration| server/tests/integration/loans.api.test.ts > Gia hạn — request-renew / approve-renew / reject-renew > IT-EXT-01 (EXT-01) độc giả gửi gia hạn → PENDING; thủ thư duyệt → APPROVED, dueDate lùi về sau 171ms
+ ✓ |library-integration| server/tests/integration/loans.api.test.ts > Gia hạn — request-renew / approve-renew / reject-renew > IT-EXT-02 duyệt gia hạn → dueDate + 14 ngày (DEF-008) 149ms
+ ✓ |library-integration| server/tests/integration/loans.api.test.ts > Gia hạn — request-renew / approve-renew / reject-renew > IT-EXT-03 gửi gia hạn lần nữa khi đang PENDING → 400 138ms
+ ✓ |library-integration| server/tests/integration/loans.api.test.ts > Gia hạn — request-renew / approve-renew / reject-renew > IT-EXT-04 phiếu đã quá hạn → không cho gửi gia hạn (400) 136ms
+ ✓ |library-integration| server/tests/integration/loans.api.test.ts > Gia hạn — request-renew / approve-renew / reject-renew > IT-EXT-05 đã gia hạn 1 lần (APPROVED) → yêu cầu gia hạn lần 2 bị chặn (DEF-009) 171ms
+ ✓ |library-integration| server/tests/integration/loans.api.test.ts > Gia hạn — request-renew / approve-renew / reject-renew > IT-EXT-06 từ chối kèm lý do → lý do được lưu/gửi tới độc giả (DEF-010) 155ms
+ ✓ |library-integration| server/tests/integration/loans.api.test.ts > Gia hạn — request-renew / approve-renew / reject-renew > IT-EXT-07 độc giả còn nợ phạt → thủ thư không duyệt được gia hạn (DEF-011) 189ms
+ ✓ |library-integration| server/tests/integration/loans.api.test.ts > Gia hạn — request-renew / approve-renew / reject-renew > IT-EXT-08 đầu sách đang có độc giả khác đặt trước → không cho gia hạn (400) 129ms
+ ✓ |library-integration| server/tests/integration/loans.api.test.ts > Gia hạn — request-renew / approve-renew / reject-renew > IT-EXT-09 độc giả (USER) tự duyệt gia hạn → 403 105ms
+ ✓ |library-integration| server/tests/integration/loans.api.test.ts > Tra cứu phiếu mượn — GET /api/loans/all, /barcode/:barcode > IT-SRCH-01 thủ thư xem toàn bộ phiếu → 200, đủ số phiếu, có trạng thái hiển thị 131ms
+ ✓ |library-integration| server/tests/integration/loans.api.test.ts > Tra cứu phiếu mượn — GET /api/loans/all, /barcode/:barcode > IT-SRCH-02 tìm phiếu theo mã phiếu → chỉ trả về đúng phiếu đó (DEF-012) 114ms
+ ✓ |library-integration| server/tests/integration/loans.api.test.ts > Tra cứu phiếu mượn — GET /api/loans/all, /barcode/:barcode > IT-SRCH-03 tra cứu barcode trả kèm lịch sử mượn của cuốn sách (DEF-013) 120ms
+ ✓ |library-integration| server/tests/integration/loans.api.test.ts > Tra cứu phiếu mượn — GET /api/loans/all, /barcode/:barcode > IT-SRCH-04 lọc phiếu theo trạng thái + phân trang (DEF-014) 121ms
+ ✓ |library-integration| server/tests/integration/auth.api.test.ts > Đăng nhập > IT-AUTH-01 (AUTH-01) admin đăng nhập đúng (2FA tắt) → token dùng được cho /me với role ADMIN 213ms
+ ✓ |library-integration| server/tests/integration/auth.api.test.ts > Đăng nhập > IT-AUTH-02 (AUTH-02) sai mật khẩu → 401, không có token 103ms
+ ✓ |library-integration| server/tests/integration/auth.api.test.ts > Đăng nhập > IT-AUTH-03 email không tồn tại → 401 cùng thông điệp với sai mật khẩu (không lộ tài khoản) 122ms
+ ✓ |library-integration| server/tests/integration/auth.api.test.ts > Đăng nhập > IT-AUTH-07 bật 2FA → login chỉ trả requireOtp; verify-otp đúng mã trong DB → token; dùng lại OTP → 400 144ms
+ ✓ |library-integration| server/tests/integration/auth.api.test.ts > Phân quyền > IT-AUTH-04 (AUTH-04) USER gọi API quản trị danh sách thành viên → 403 34ms
+ ✓ |library-integration| server/tests/integration/auth.api.test.ts > Phân quyền > IT-SRCH-07 (SRCH-07) USER tra cứu toàn bộ phiếu mượn / khóa thành viên → 403 32ms
+ ✓ |library-integration| server/tests/integration/auth.api.test.ts > Phân quyền > IT-AUTH-06 không có token → 401; token bị sửa chữ ký → 403 31ms
+ ✓ |library-integration| server/tests/integration/auth.api.test.ts > Đổi mật khẩu > IT-AUTH-05 (AUTH-05) đổi mật khẩu → đăng nhập bằng mật khẩu mới được, mật khẩu cũ bị từ chối 350ms
+ ✓ |library-integration| server/tests/integration/auth.api.test.ts > Đổi mật khẩu > IT-AUTH-08 sai mật khẩu hiện tại → 400/401, mật khẩu cũ vẫn dùng được 176ms
+ ✓ |library-integration| server/tests/integration/auth.api.test.ts > Tạo thành viên — POST /api/auth/register > IT-MEM-01 tạo thành viên hợp lệ → 201, đăng nhập được, mật khẩu được băm 210ms
+ ✓ |library-integration| server/tests/integration/auth.api.test.ts > Tạo thành viên — POST /api/auth/register > IT-MEM-02 email thiếu "@" → bị từ chối 400, không tạo tài khoản (DEF-001) 113ms
+ ✓ |library-integration| server/tests/integration/auth.api.test.ts > Tạo thành viên — POST /api/auth/register > IT-MEM-05 chọn hạng LECTURER → bản ghi trong DB có membershipTier LECTURER (DEF-002) 106ms
+
+ Test Files  3 passed (3)
+      Tests  37 passed | 16 expected fail (53)
+   Start at  12:34:03
+   Duration  9.78s (transform 214ms, setup 61ms, import 1.16s, tests 7.39s, environment 0ms)
+
+JSON report written to /home/a2ilab/Documents/project/library-management-system/test-results/integration/vitest-results.json
+ % Coverage report from v8
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------|---------|----------|---------|---------|-------------------
+All files          |   32.33 |     24.2 |   28.84 |   32.88 |                   
+ controllers       |   28.66 |    24.76 |   24.71 |   29.22 |                   
+  ...Controller.ts |   11.11 |        0 |       0 |   11.62 | ...83-129,135-175 
+  ...Controller.ts |   40.44 |    34.02 |   54.54 |   41.14 | ...26-469,474-527 
+  ...Controller.ts |    4.67 |     0.37 |       0 |    4.98 | ...33-801,806-981 
+  ...Controller.ts |    5.88 |        0 |       0 |       6 | 13-48,61-211      
+  ...Controller.ts |    68.4 |     67.3 |      80 |   69.49 | ...1116,1149-1150 
+  ...Controller.ts |   11.76 |        0 |       0 |   11.76 | ...91-110,118-131 
+  ...Controller.ts |    5.88 |        0 |       0 |    5.88 | ...87-139,148-230 
+  ...Controller.ts |    8.23 |        0 |       0 |    8.23 | ...39-291,299-332 
+ middleware        |   65.21 |    57.14 |      60 |      65 |                   
+  auth.ts          |   65.21 |    57.14 |      60 |      65 | 33-42             
+ routes            |     100 |      100 |     100 |     100 |                   
+  ...ticsRoutes.ts |     100 |      100 |     100 |     100 |                   
+  authRoutes.ts    |     100 |      100 |     100 |     100 |                   
+  bookRoutes.ts    |     100 |      100 |     100 |     100 |                   
+  ...toryRoutes.ts |     100 |      100 |     100 |     100 |                   
+  loanRoutes.ts    |     100 |      100 |     100 |     100 |                   
+  ...tionRoutes.ts |     100 |      100 |     100 |     100 |                   
+  paymentRoutes.ts |     100 |      100 |     100 |     100 |                   
+  ...tionRoutes.ts |     100 |      100 |     100 |     100 |                   
+ services          |    6.41 |        0 |   16.66 |    6.49 |                   
+  mailService.ts   |       0 |        0 |       0 |       0 | 3-372             
+  ...ionService.ts |   71.42 |      100 |     100 |   71.42 | 24-25             
+ utils             |     100 |      100 |     100 |     100 |                   
+  loanRules.ts     |     100 |      100 |     100 |     100 |                   
+-------------------|---------|----------|---------|---------|-------------------

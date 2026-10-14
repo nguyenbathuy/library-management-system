@@ -1,0 +1,53 @@
+{
+  "part": "Part 1 — unit + integration (Chương 5.1)",
+  "startedUtc": "2026-10-14T05:33:58Z",
+  "endedUtc": "2026-10-14T05:34:32Z",
+  "timezoneForTests": "Asia/Ho_Chi_Minh",
+  "head": "5edd084f60e2fd171385a3c398f653a834b6c8a1",
+  "branch": "test/automation-ch5-ch6",
+  "workspaceDirty": true,
+  "node": "v22.23.3",
+  "npm": "10.9.9",
+  "vitest": "vitest/4.1.0 linux-x64 node-v22.23.3",
+  "prisma": "prisma                  : 5.22.0",
+  "devDbSha256Before": "ee53659396d2b961ba42e1c44d43d20f3df0400fb99095fb3ae535434e4fc66c",
+  "devDbSha256After": "ee53659396d2b961ba42e1c44d43d20f3df0400fb99095fb3ae535434e4fc66c",
+  "commands": [
+    {
+      "cmd": "LMS_WB_RUN_DIR=test-results/unit npx vitest run --config vitest.backend.config.ts --coverage",
+      "log": "unit/vitest-output.txt",
+      "exit": 0
+    },
+    {
+      "cmd": "LMS_WB_RUN_DIR=test-results/unit/shuffle npx vitest run --config vitest.backend.config.ts --sequence.shuffle",
+      "log": "unit/vitest-shuffle-output.txt",
+      "exit": 0
+    },
+    {
+      "cmd": "LMS_IT_RUN_DIR=test-results/integration npx vitest run --config vitest.integration.config.ts --coverage",
+      "log": "integration/vitest-output.txt",
+      "exit": 0
+    },
+    {
+      "cmd": "LMS_IT_RUN_DIR=test-results/integration/shuffle npx vitest run --config vitest.integration.config.ts --sequence.shuffle",
+      "log": "integration/vitest-shuffle-output.txt",
+      "exit": 0
+    },
+    {
+      "cmd": "node server/tests/support/verify-known-bugs.mjs vitest.backend.config.ts <files with test.fails>",
+      "log": "unit/known-bug-verification.txt",
+      "exit": 0,
+      "note": "rerun after fixing copy naming; exit 0 of wrapper, inner vitest exit 1 expected"
+    },
+    {
+      "cmd": "node server/tests/support/verify-known-bugs.mjs vitest.integration.config.ts loans.api + auth.api",
+      "log": "integration/known-bug-verification.txt",
+      "exit": 0
+    },
+    {
+      "cmd": "LMS_WB_SCOPE=whitebox LMS_WB_RUN_DIR=test-results/unit/whitebox-scope npx vitest run --config vitest.backend.config.ts --coverage",
+      "log": "unit/whitebox-scope/vitest-output.txt",
+      "exit": 0
+    }
+  ]
+}
