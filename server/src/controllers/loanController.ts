@@ -2,6 +2,7 @@ import { Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import { AuthRequest } from '../middleware/auth';
 import { createNotification } from '../services/notificationService';
+import { calculateDueDate, calculateFine, calculateRenewedDueDate, daysUntilDue, FINE_PER_DAY } from '../utils/loanRules';
 
 const prisma = new PrismaClient();
 
@@ -40,9 +41,7 @@ export const formatLoanResponse = (loan: any, availableCopies?: number) => {
     } else if (loan.status === LOAN_STATUS.OVERDUE || loan.status === 'Overdue') {
         uiStatus = 'Overdue';
     } else {
-        const now = new Date();
-        const due = new Date(loan.dueDate);
-        const diffDays = Math.ceil((due.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+        const diffDays = daysUntilDue(new Date(loan.dueDate), new Date());
         if (diffDays < 0) {
             uiStatus = 'Overdue';
         } else if (diffDays <= 2) {
@@ -52,16 +51,14 @@ export const formatLoanResponse = (loan: any, availableCopies?: number) => {
         }
     }
 
-    const now = new Date();
-    const due = new Date(loan.dueDate);
-    const diffDays = Math.ceil((due.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+    const diffDays = daysUntilDue(new Date(loan.dueDate), new Date());
 
     let calculatedFine = loan.fineAmount || 0;
     if (loan.compensationAmount && loan.compensationAmount > 0 && !loan.isFinePaid) {
         calculatedFine = loan.compensationAmount;
     } else if (!loan.isFinePaid && (loan.status === LOAN_STATUS.OVERDUE || diffDays < 0)) {
         if (!loan.fineAmount || loan.fineAmount === 0) {
-            calculatedFine = Math.max(0, Math.abs(diffDays) * 5000);
+            calculatedFine = Math.max(0, Math.abs(diffDays) * FINE_PER_DAY);
         }
     }
 
@@ -246,8 +243,7 @@ export const borrowBook = async (req: AuthRequest, res: Response) => {
         }
 
         // 2. Chạy $transaction: Cập nhật BookItem -> BORROWED & Tạo Loan -> ACTIVE
-        const dueDate = new Date();
-        dueDate.setDate(dueDate.getDate() + 14); // 14 ngày mượn sách
+        const dueDate = calculateDueDate(new Date());
 
         const [updatedBookItem, createdLoan] = await prisma.$transaction([
             prisma.bookItem.update({
@@ -346,8 +342,7 @@ export const borrowByBarcode = async (req: AuthRequest, res: Response) => {
             return res.status(riskCheck.status || 400).json({ error: riskCheck.error });
         }
 
-        const dueDate = new Date();
-        dueDate.setDate(dueDate.getDate() + 14);
+        const dueDate = calculateDueDate(new Date(), borrower.membershipTier);
 
         // $transaction: BookItem -> BORROWED & Loan -> ACTIVE
         const [updatedItem, createdLoan] = await prisma.$transaction([
@@ -436,13 +431,12 @@ export const returnBook = async (req: AuthRequest, res: Response) => {
         }
 
         const now = new Date();
-        const due = new Date(loan.dueDate);
-        const diffDays = Math.ceil((due.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+        const lateFine = calculateFine(new Date(loan.dueDate), now);
 
         // Tính tiền phạt trễ hạn nếu có
         let calculatedFine = loan.fineAmount || 0;
-        if (diffDays < 0 && !loan.isFinePaid) {
-            calculatedFine = Math.max(calculatedFine, Math.abs(diffDays) * 5000);
+        if (lateFine > 0 && !loan.isFinePaid) {
+            calculatedFine = Math.max(calculatedFine, lateFine);
         }
 
         // Quyết định trạng thái theo State Machine:
@@ -576,12 +570,11 @@ export const returnByBarcode = async (req: AuthRequest, res: Response) => {
         }
 
         const now = new Date();
-        const due = new Date(activeLoan.dueDate);
-        const diffDays = Math.ceil((due.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+        const lateFine = calculateFine(new Date(activeLoan.dueDate), now);
 
         let calculatedFine = activeLoan.fineAmount || 0;
-        if (diffDays < 0 && !activeLoan.isFinePaid) {
-            calculatedFine = Math.max(calculatedFine, Math.abs(diffDays) * 5000);
+        if (lateFine > 0 && !activeLoan.isFinePaid) {
+            calculatedFine = Math.max(calculatedFine, lateFine);
         }
 
         const hasUnpaidFine = !activeLoan.isFinePaid && (calculatedFine > 0 || (activeLoan.compensationAmount && activeLoan.compensationAmount > 0));
@@ -1051,8 +1044,7 @@ export const approveRenewLoan = async (req: AuthRequest, res: Response) => {
             return res.status(400).json({ error: 'Phiếu mượn này đã kết thúc, không thể gia hạn' });
         }
 
-        const newDueDate = new Date(loan.dueDate);
-        newDueDate.setDate(newDueDate.getDate() + 7);
+        const newDueDate = calculateRenewedDueDate(new Date(loan.dueDate));
 
         const updatedLoan = await prisma.loan.update({
             where: { id: loanId },
