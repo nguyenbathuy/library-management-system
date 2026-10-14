@@ -8,7 +8,8 @@
     "expected": "401 Invalid credentials; không compare/sign",
     "branch": "LG.1: T/NE",
     "reason": "OR short-circuit",
-    "oracle": "S"
+    "oracle": "S",
+    "rebaseline": "Oracle S cập nhật theo commit 90f35a26 (2FA): thông điệp 401 tiếng Việt, DTO login có requireOtp/twoFactorEnabled, getMe select thêm twoFactorEnabled. Expected gốc giữ trong lịch sử phase."
   },
   {
     "id": "WB-LG-02",
@@ -19,7 +20,8 @@
     "expected": "401; không sign",
     "branch": "LG.1: F/T",
     "reason": "Password sai",
-    "oracle": "S"
+    "oracle": "S",
+    "rebaseline": "Oracle S cập nhật theo commit 90f35a26 (2FA): thông điệp 401 tiếng Việt, DTO login có requireOtp/twoFactorEnabled, getMe select thêm twoFactorEnabled. Expected gốc giữ trong lịch sử phase."
   },
   {
     "id": "WB-LG-03",
@@ -30,7 +32,8 @@
     "expected": "200 token; JWT claims id/email/role, expiresIn=1h; DTO đúng tier, không password",
     "branch": "LG.1: F/F",
     "reason": "Login hợp lệ",
-    "oracle": "B"
+    "oracle": "B",
+    "rebaseline": "Oracle S cập nhật theo commit 90f35a26 (2FA): thông điệp 401 tiếng Việt, DTO login có requireOtp/twoFactorEnabled, getMe select thêm twoFactorEnabled. Expected gốc giữ trong lịch sử phase."
   },
   {
     "id": "WB-CP-01",

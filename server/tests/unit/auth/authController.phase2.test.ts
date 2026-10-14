@@ -149,7 +149,7 @@ afterAll(() => {
 describe('Authentication Phase 2 — login and password guards', () => {
   test('WB-LG-04 login preserves the stored ADMIN role in token and DTO', async () => {
     // Arrange
-    foundUser(makeUser({ role: 'ADMIN' })); matchingPassword(true);
+    foundUser(makeUser({ role: 'ADMIN', twoFactorEnabled: false })); matchingPassword(true);
     mocks.jwt.sign.mockReturnValue(TOKEN);
     observation.mockConfiguration.jwtSign = TOKEN;
     // Act
@@ -160,8 +160,9 @@ describe('Authentication Phase 2 — login and password guards', () => {
       { userId: 1, email: 'user@example.com', role: 'ADMIN' },
       'unit-test-secret-never-used-for-real-tokens', { expiresIn: '1h' },
     );
-    expect(actual).toEqual({ statusCode: 200, payload: { token: TOKEN,
-      user: { id: 1, email: 'user@example.com', name: 'Unit Test User', role: 'ADMIN', membershipTier: 'STANDARD', isBlacklisted: false } } });
+    // Oracle S re-baselined to commit 90f35a26 (2FA login contract); history kept in docs/qa/CHANGELOG.md.
+    expect(actual).toEqual({ statusCode: 200, payload: { requireOtp: false, token: TOKEN,
+      user: { id: 1, email: 'user@example.com', name: 'Unit Test User', role: 'ADMIN', membershipTier: 'STANDARD', isBlacklisted: false, twoFactorEnabled: false } } });
     expect(mocks.prisma.user.update).not.toHaveBeenCalled();
   });
 

@@ -231,7 +231,7 @@ describe('Authentication Phase 1 — login', () => {
     // Act
     const actual = await invoke(login, { email: 'user@example.com', password: 'oldpass' });
     // Assert
-    expect(actual).toEqual({ statusCode: 401, payload: { error: 'Invalid credentials' } });
+    expect(actual).toEqual({ statusCode: 401, payload: { error: 'Tài khoản hoặc mật khẩu không chính xác' } });
     expect(mocks.prisma.user.findUnique).toHaveBeenCalledExactlyOnceWith({ where: { email: 'user@example.com' } });
     expect(mocks.bcrypt.compare).not.toHaveBeenCalled();
     expect(mocks.jwt.sign).not.toHaveBeenCalled();
@@ -244,14 +244,14 @@ describe('Authentication Phase 1 — login', () => {
     // Act
     const actual = await invoke(login, { email: 'user@example.com', password: 'wrongpass' });
     // Assert
-    expect(actual).toEqual({ statusCode: 401, payload: { error: 'Invalid credentials' } });
+    expect(actual).toEqual({ statusCode: 401, payload: { error: 'Tài khoản hoặc mật khẩu không chính xác' } });
     expect(mocks.bcrypt.compare).toHaveBeenCalledExactlyOnceWith('wrongpass', 'unit-test-stored-hash');
     expect(mocks.jwt.sign).not.toHaveBeenCalled();
   });
 
   test('WB-LG-03 login returns a one-hour token and safe user DTO', async () => {
     // Arrange
-    foundUser(makeUser());
+    foundUser(makeUser({ twoFactorEnabled: false }));
     matchingPassword(true);
     observation.mockConfiguration.jwtSign = TOKEN;
     mocks.jwt.sign.mockReturnValue(TOKEN);
@@ -262,8 +262,10 @@ describe('Authentication Phase 1 — login', () => {
       { userId: 1, email: 'user@example.com', role: 'USER' },
       'unit-test-secret-never-used-for-real-tokens', { expiresIn: '1h' },
     );
+    // Oracle S re-baselined to commit 90f35a26 (2FA login contract); history kept in docs/qa/CHANGELOG.md.
     expect(actual).toEqual({ statusCode: 200, payload: {
-      token: TOKEN, user: { id: 1, email: 'user@example.com', name: 'Unit Test User', role: 'USER', membershipTier: 'STANDARD', isBlacklisted: false },
+      requireOtp: false,
+      token: TOKEN, user: { id: 1, email: 'user@example.com', name: 'Unit Test User', role: 'USER', membershipTier: 'STANDARD', isBlacklisted: false, twoFactorEnabled: false },
     } });
     expect((actual.payload as { user: unknown }).user).not.toHaveProperty('password');
     expect((actual.payload as { user: unknown }).user).not.toHaveProperty('resetOtp');

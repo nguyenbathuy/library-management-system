@@ -139,7 +139,8 @@
     "relatedManualTests": [],
     "sourceFiles": [
       "server/src/controllers/authController.ts"
-    ]
+    ],
+    "rebaseline": "Oracle S cập nhật theo commit 90f35a26 (2FA): thông điệp 401 tiếng Việt, DTO login có requireOtp/twoFactorEnabled, getMe select thêm twoFactorEnabled. Expected gốc giữ trong lịch sử phase."
   },
   {
     "id": "WB-ME-03",
@@ -155,7 +156,8 @@
     "relatedManualTests": [],
     "sourceFiles": [
       "server/src/controllers/authController.ts"
-    ]
+    ],
+    "rebaseline": "Oracle S cập nhật theo commit 90f35a26 (2FA): thông điệp 401 tiếng Việt, DTO login có requireOtp/twoFactorEnabled, getMe select thêm twoFactorEnabled. Expected gốc giữ trong lịch sử phase."
   },
   {
     "id": "WB-ME-04",
@@ -171,7 +173,8 @@
     "relatedManualTests": [],
     "sourceFiles": [
       "server/src/controllers/authController.ts"
-    ]
+    ],
+    "rebaseline": "Oracle S cập nhật theo commit 90f35a26 (2FA): thông điệp 401 tiếng Việt, DTO login có requireOtp/twoFactorEnabled, getMe select thêm twoFactorEnabled. Expected gốc giữ trong lịch sử phase."
   },
   {
     "id": "WB-TB-01",
