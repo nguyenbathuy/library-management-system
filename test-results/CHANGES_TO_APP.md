@@ -8,8 +8,10 @@ Brief Chương 5–6 chỉ cho phép hai loại thay đổi trong `server/src` v
 | 2 | `server/src/controllers/loanController.ts` | (a) gọi hàm đã tách | Thay biểu thức inline bằng lời gọi `loanRules` tại: `formatLoanResponse` (dùng `daysUntilDue`, `FINE_PER_DAY`), `borrowBook` / `borrowByBarcode` (`calculateDueDate`), `returnBook` / `returnByBarcode` (`calculateFine`; điều kiện `lateFine > 0` tương đương `diffDays < 0` vì mức phạt dương), `approveRenewLoan` (`calculateRenewedDueDate`). Không đổi thông điệp, mã HTTP, truy vấn Prisma hay thứ tự thao tác. | `git diff 90f35a26 -- server/src/controllers/loanController.ts`; `PBT-P0`; 63 ca hộp trắng cũ và các ca mới đều chạy trên mã đã refactor. |
 | 3 | `server/tsconfig.json` | cấu hình build (không phải mã ứng dụng) | Thêm `"include": ["src"]`. Trước đó `tsc -p server/tsconfig.json` báo lỗi TS6059 vì gom cả `server/tests/` (ngoài `rootDir`). Không ảnh hưởng `ts-node`/`nodemon`. | `tsc --project server/tsconfig.json --noEmit` exit 0. |
 
-Không có thay đổi nào khác trong `server/src`. Mục `data-testid` trong `src/` được cập nhật ở phần E2E bên dưới nếu có.
+Không có thay đổi nào khác trong `server/src`.
 
-## E2E (Phần 3)
+## E2E (Phần 3) — không sửa `src/`
 
-_Xem cập nhật ở cuối file sau khi hoàn tất Phần 3._
+- **Không thêm `data-testid`.** Mọi selector dùng placeholder, role, nhãn và text hiển thị (xem `e2e/pages/`).
+- Backend E2E chạy **nguyên** `server/src/index.ts`; việc đổi datasource Prisma sang DB tạm và chặn gửi email được làm bằng preload chỉ dùng cho test (`e2e/support/server-preload.cjs`, nạp qua `node -r`), không phải sửa mã ứng dụng.
+- **FIND-05 không được sửa:** `src/app/components/Settings.tsx` gọi `useEffect` nhưng chỉ `import { useState } from 'react'` (thêm ở commit 90f35a26) → trang `/settings` trắng. Brief không cho phép sửa lỗi ứng dụng nên E2E-SET-01 và E2E-AUTH-05 được đánh dấu `test.fail` kèm mã FIND-05.

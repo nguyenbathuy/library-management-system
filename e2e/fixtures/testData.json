@@ -1,0 +1,20 @@
+{
+  "password": "Test@123",
+  "users": {
+    "admin": { "email": "e2e_admin@test.local", "name": "Thủ thư E2E", "role": "ADMIN" },
+    "user": { "email": "e2e_user@test.local", "name": "Độc giả E2E", "role": "USER" },
+    "renew": { "email": "e2e_renew@test.local", "name": "Độc giả Gia hạn E2E", "role": "USER" },
+    "password": { "email": "e2e_pw@test.local", "name": "Độc giả Đổi mật khẩu E2E", "role": "USER" }
+  },
+  "books": {
+    "borrow": { "isbn": "ISBN-E2E-01", "title": "E2E Sách cho mượn", "copies": 3 },
+    "loaned": { "isbn": "ISBN-E2E-02", "title": "E2E Sách đang mượn", "copies": 3 },
+    "renew": { "isbn": "ISBN-E2E-03", "title": "E2E Sách gia hạn", "copies": 1 }
+  },
+  "seededLoans": [
+    { "book": "loaned", "copy": 1, "user": "user", "dueInDays": 7, "purpose": "E2E-RET-01" },
+    { "book": "loaned", "copy": 2, "user": "user", "dueInDays": 7, "purpose": "E2E-RET-10" },
+    { "book": "loaned", "copy": 3, "user": "user", "dueInDays": 7, "purpose": "E2E-BOR-06" },
+    { "book": "renew", "copy": 1, "user": "renew", "dueInDays": 5, "purpose": "E2E-EXT-01" }
+  ]
+}
