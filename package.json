@@ -13,6 +13,7 @@
     "test:integration": "vitest run --config vitest.integration.config.ts",
     "test:integration:coverage": "vitest run --config vitest.integration.config.ts --coverage",
     "test:property": "vitest run --config vitest.backend.config.ts server/tests/property && vitest run --config vitest.integration.config.ts server/tests/property/api",
+    "test:mutation": "stryker run",
     "test:e2e": "playwright test",
     "test:all": "npm test && npm run test:e2e"
   },
@@ -82,6 +83,8 @@
   },
   "devDependencies": {
     "@playwright/test": "1.64.0",
+    "@stryker-mutator/core": "10.0.0",
+    "@stryker-mutator/vitest-runner": "10.0.0",
     "@tailwindcss/vite": "4.1.12",
     "@types/supertest": "7.2.1",
     "@vitejs/plugin-react": "4.7.0",

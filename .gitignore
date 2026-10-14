@@ -71,3 +71,4 @@ e2e/.tmp/
 artifacts/
 server/prisma/backups/
 !.env.example
+.stryker-tmp/

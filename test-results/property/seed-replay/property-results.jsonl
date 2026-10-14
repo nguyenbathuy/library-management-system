@@ -1,0 +1,2 @@
+{"id":"PBT-P2","recordedAt":"2026-10-14T05:48:23.057Z","failed":true,"numRuns":1,"numShrinks":2,"seed":398241936,"counterexamplePath":"0:0:0","counterexample":["2020-01-01T00:00:00.000Z",1],"error":"Error: Property failed by returning false"}
+{"id":"PBT-P5a","recordedAt":"2026-10-14T05:48:25.014Z","failed":true,"numRuns":8,"numShrinks":5,"seed":1757931683,"counterexamplePath":"7:2:2:2:1:1","counterexample":["__VALID__",":",null],"error":"Error: Property failed by returning false"}

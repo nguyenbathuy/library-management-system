@@ -125,6 +125,14 @@ describe('calculateRenewedDueDate — hạn mới khi duyệt gia hạn', () => 
     expect(input.getTime()).toBe(CURRENT_DUE.getTime());
   });
 
+  // Bổ sung sau mutation testing lần 1: hai ca DEF-008 là test.fails nên không "giết" được đột biến
+  // đổi dấu/xóa thân hàm. Oracle trung tính (đúng cho cả +7 lẫn +14): gia hạn phải lùi hạn về sau, giữ giờ.
+  test('UT-RNW-03 hạn mới sau hạn cũ ít nhất 1 ngày và giữ nguyên giờ trả', () => {
+    const renewed = calculateRenewedDueDate(CURRENT_DUE);
+    expect(wholeDaysBetween(CURRENT_DUE, renewed)).toBeGreaterThanOrEqual(1);
+    expect(renewed.toISOString().slice(11)).toBe(CURRENT_DUE.toISOString().slice(11));
+  });
+
   // KNOWN BUG DEF-008: hệ thống cộng +7 ngày.
   test.fails('UT-RNW-02 duyệt gia hạn → dueDate + 14 ngày (DEF-008)', () => {
     expect(wholeDaysBetween(CURRENT_DUE, calculateRenewedDueDate(CURRENT_DUE))).toBe(14);

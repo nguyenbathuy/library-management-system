@@ -1,0 +1,36 @@
+### FC_SEED=398241936 replay of PBT-P2 (seed recorded in the canonical run)
+
+ RUN  v4.1.0 /home/a2ilab/Documents/project/library-management-system
+
+ ↓ |library-backend-all| server/tests/property/loanRules.property.test.ts > P0 — refactor giữ nguyên hành vi > PBT-P0 calculateFine/calculateDueDate trùng biểu thức inline cũ trên mọi đầu vào
+ ↓ |library-backend-all| server/tests/property/loanRules.property.test.ts > Tiền phạt trễ hạn > PBT-P1 mọi returnDate ≤ dueDate → phạt = 0
+ ✓ |library-backend-all| server/tests/property/loanRules.property.test.ts > Tiền phạt trễ hạn > PBT-P2 mọi returnDate > dueDate → phạt = ceil(số ngày trễ) × 5.000 và > 0 (FIND-01) 5ms
+ ↓ |library-backend-all| server/tests/property/loanRules.property.test.ts > Tiền phạt trễ hạn > PBT-P2b trễ tròn k ngày (k ≥ 1) → phạt = k × 5.000
+ ↓ |library-backend-all| server/tests/property/loanRules.property.test.ts > Tiền phạt trễ hạn > PBT-P3 đơn điệu: trả muộn hơn thì phạt không nhỏ hơn
+ ↓ |library-backend-all| server/tests/property/loanRules.property.test.ts > Tiền phạt trễ hạn > PBT-P6 phạt luôn là số nguyên không âm và là bội số của mức phạt/ngày
+ ↓ |library-backend-all| server/tests/property/loanRules.property.test.ts > Hạn trả > PBT-P4a hạng STANDARD → đúng 14 ngày lịch, giữ nguyên giờ
+ ↓ |library-backend-all| server/tests/property/loanRules.property.test.ts > Hạn trả > PBT-P4 mọi hạng → calculateDueDate(d, tier) − d = 14/30/60 ngày (DEF-005)
+ ↓ |library-backend-all| server/tests/property/loanRules.property.test.ts > Hạn trả > PBT-P7 duyệt gia hạn → hạn mới = hạn cũ + 14 ngày (DEF-008)
+
+ Test Files  1 passed (1)
+      Tests  1 expected fail | 8 skipped (9)
+   Start at  12:48:22
+   Duration  164ms (transform 38ms, setup 38ms, import 33ms, tests 7ms, environment 0ms)
+
+JSON report written to /home/a2ilab/Documents/project/library-management-system/test-results/property/seed-replay/vitest-results.json
+[exit code: 0]
+
+### FC_SEED=1757931683 replay of PBT-P5a
+
+ RUN  v4.1.0 /home/a2ilab/Documents/project/library-management-system
+
+ ✓ |library-integration| server/tests/property/api/borrow.fuzz.test.ts > P5 — fuzz API mượn/gia hạn > PBT-P5a borrow-by-barcode: không 5xx; chỉ tạo Loan khi barcode + userId hợp lệ 220ms
+ ↓ |library-integration| server/tests/property/api/borrow.fuzz.test.ts > P5 — fuzz API mượn/gia hạn > PBT-P5b request-renew với :id ngẫu nhiên: không 5xx, không đổi phiếu không liên quan
+
+ Test Files  1 passed (1)
+      Tests  1 expected fail | 1 skipped (2)
+   Start at  12:48:23
+   Duration  1.51s (transform 170ms, setup 53ms, import 453ms, tests 373ms, environment 0ms)
+
+JSON report written to /home/a2ilab/Documents/project/library-management-system/test-results/property/seed-replay/vitest-results.json
+[exit code: 0]
