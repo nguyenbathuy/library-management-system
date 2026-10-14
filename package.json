@@ -9,7 +9,9 @@
     "start:server": "cd server && npm run dev",
     "test": "vitest run --config vitest.backend.config.ts",
     "test:unit": "vitest run --config vitest.backend.config.ts",
-    "test:coverage": "vitest run --config vitest.backend.config.ts --coverage"
+    "test:coverage": "vitest run --config vitest.backend.config.ts --coverage",
+    "test:e2e": "playwright test",
+    "test:all": "npm test && npm run test:e2e"
   },
   "dependencies": {
     "@emotion/react": "11.14.0",

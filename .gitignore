@@ -58,3 +58,16 @@ server/node_modules/
 
 # Temporary / dump files
 merged_code.txt
+
+# Test outputs (evidence is kept under test-results/, databases are disposable)
+/coverage/
+server/coverage/
+/playwright-report/
+/blob-report/
+test-results/**/*.db
+test-results/**/*.db-journal
+server/tests/tmp/
+e2e/.tmp/
+artifacts/
+server/prisma/backups/
+!.env.example
