@@ -1,0 +1,463 @@
+[
+  {
+    "id": "WB-RG-03",
+    "module": "Member Management",
+    "function": "register",
+    "inputDesign": "hash rejects before create",
+    "expected": "Promise rejects same injected error; no create/response",
+    "branchCondition": "RG.0 exception before try",
+    "reason": "Hash boundary is outside Prisma catch",
+    "oracle": "S",
+    "originalMatrix": true,
+    "relatedDefects": [],
+    "relatedManualTests": [],
+    "sourceFiles": [
+      "server/src/controllers/authController.ts"
+    ]
+  },
+  {
+    "id": "WB-RG-04",
+    "module": "Member Management",
+    "function": "register",
+    "inputDesign": "ADMIN context; USER role; membershipTier=LECTURER",
+    "expected": "create data preserves LECTURER; hash(password,10); 201",
+    "branchCondition": "RG.GAP membershipTier",
+    "reason": "Regression of confirmed DEF-002 on manual LECTURER variant",
+    "oracle": "B",
+    "originalMatrix": true,
+    "relatedDefects": [
+      "DEF-002"
+    ],
+    "relatedManualTests": [
+      "MEM-05"
+    ],
+    "sourceFiles": [
+      "server/src/controllers/authController.ts"
+    ]
+  },
+  {
+    "id": "WB-RG-05",
+    "module": "Member Management",
+    "function": "register",
+    "inputDesign": "ADMIN context; USER role; membershipTier=PREMIUM",
+    "expected": "create data preserves PREMIUM; hash(password,10); 201",
+    "branchCondition": "RG.GAP membershipTier",
+    "reason": "Original MEM-05 tier scenario, unit expansion of DEF-002",
+    "oracle": "B",
+    "originalMatrix": true,
+    "relatedDefects": [
+      "DEF-002"
+    ],
+    "relatedManualTests": [
+      "MEM-05"
+    ],
+    "sourceFiles": [
+      "server/src/controllers/authController.ts"
+    ]
+  },
+  {
+    "id": "WB-GU-01",
+    "module": "Member Management",
+    "function": "getAllUsers",
+    "inputDesign": "findMany returns []",
+    "expected": "200 []; safe select; orderBy id asc; no writes",
+    "branchCondition": "GU.1 straight-line",
+    "reason": "Empty boundary",
+    "oracle": "S",
+    "originalMatrix": true,
+    "relatedDefects": [],
+    "relatedManualTests": [
+      "MEM-01"
+    ],
+    "sourceFiles": [
+      "server/src/controllers/authController.ts"
+    ]
+  },
+  {
+    "id": "WB-GU-02",
+    "module": "Member Management",
+    "function": "getAllUsers",
+    "inputDesign": "two DTOs with different role/tier/blacklist",
+    "expected": "200 exact DTOs; select excludes secrets; no writes",
+    "branchCondition": "GU.1 straight-line",
+    "reason": "Field passthrough/privacy query intent",
+    "oracle": "S",
+    "originalMatrix": true,
+    "relatedDefects": [],
+    "relatedManualTests": [
+      "MEM-01"
+    ],
+    "sourceFiles": [
+      "server/src/controllers/authController.ts"
+    ]
+  },
+  {
+    "id": "WB-GU-03",
+    "module": "Member Management",
+    "function": "getAllUsers",
+    "inputDesign": "findMany rejects injected error",
+    "expected": "Promise rejects same error; responseWritten=false; no writes",
+    "branchCondition": "GU.E uncaught dependency rejection",
+    "reason": "Observe exception boundary; HTTP error contract remains unknown",
+    "oracle": "S",
+    "originalMatrix": false,
+    "relatedDefects": [],
+    "relatedManualTests": [
+      "MEM-01"
+    ],
+    "sourceFiles": [
+      "server/src/controllers/authController.ts"
+    ]
+  },
+  {
+    "id": "WB-ME-01",
+    "module": "Member Management",
+    "function": "getMe",
+    "inputDesign": "req.user absent",
+    "expected": "401 Not authenticated; no query/write",
+    "branchCondition": "ME.1 T",
+    "reason": "Guard before query",
+    "oracle": "S",
+    "originalMatrix": true,
+    "relatedDefects": [],
+    "relatedManualTests": [],
+    "sourceFiles": [
+      "server/src/controllers/authController.ts"
+    ]
+  },
+  {
+    "id": "WB-ME-02",
+    "module": "Member Management",
+    "function": "getMe",
+    "inputDesign": "verified identity; findUnique=null",
+    "expected": "404 User not found; safe select by userId",
+    "branchCondition": "ME.1 F; ME.2 T",
+    "reason": "Identity references missing member",
+    "oracle": "S",
+    "originalMatrix": true,
+    "relatedDefects": [],
+    "relatedManualTests": [],
+    "sourceFiles": [
+      "server/src/controllers/authController.ts"
+    ],
+    "rebaseline": "Oracle S cập nhật theo commit 90f35a26 (2FA): thông điệp 401 tiếng Việt, DTO login có requireOtp/twoFactorEnabled, getMe select thêm twoFactorEnabled. Expected gốc giữ trong lịch sử phase."
+  },
+  {
+    "id": "WB-ME-03",
+    "module": "Member Management",
+    "function": "getMe",
+    "inputDesign": "identity USER; findUnique returns member DTO",
+    "expected": "200 selected DTO; select excludes secrets; no writes",
+    "branchCondition": "ME.1 F; ME.2 F",
+    "reason": "Shared Authentication/Member identity DTO",
+    "oracle": "S",
+    "originalMatrix": true,
+    "relatedDefects": [],
+    "relatedManualTests": [],
+    "sourceFiles": [
+      "server/src/controllers/authController.ts"
+    ],
+    "rebaseline": "Oracle S cập nhật theo commit 90f35a26 (2FA): thông điệp 401 tiếng Việt, DTO login có requireOtp/twoFactorEnabled, getMe select thêm twoFactorEnabled. Expected gốc giữ trong lịch sử phase."
+  },
+  {
+    "id": "WB-ME-04",
+    "module": "Member Management",
+    "function": "getMe",
+    "inputDesign": "identity USER; findUnique rejects",
+    "expected": "Promise rejects same error; responseWritten=false; no writes",
+    "branchCondition": "ME.E uncaught query rejection",
+    "reason": "No invented HTTP 500/message contract",
+    "oracle": "S",
+    "originalMatrix": false,
+    "relatedDefects": [],
+    "relatedManualTests": [],
+    "sourceFiles": [
+      "server/src/controllers/authController.ts"
+    ],
+    "rebaseline": "Oracle S cập nhật theo commit 90f35a26 (2FA): thông điệp 401 tiếng Việt, DTO login có requireOtp/twoFactorEnabled, getMe select thêm twoFactorEnabled. Expected gốc giữ trong lịch sử phase."
+  },
+  {
+    "id": "WB-TB-01",
+    "module": "Member Management",
+    "function": "toggleBlacklist",
+    "inputDesign": "target=null",
+    "expected": "404; no update",
+    "branchCondition": "TB.1 T",
+    "reason": "Missing target",
+    "oracle": "S",
+    "originalMatrix": true,
+    "relatedDefects": [],
+    "relatedManualTests": [
+      "MEM-04"
+    ],
+    "sourceFiles": [
+      "server/src/controllers/authController.ts"
+    ]
+  },
+  {
+    "id": "WB-TB-02",
+    "module": "Member Management",
+    "function": "toggleBlacklist",
+    "inputDesign": "target.id=actor.userId=1",
+    "expected": "400 self operation; no update",
+    "branchCondition": "TB.1 F; TB.2 T",
+    "reason": "Prevent self blacklist",
+    "oracle": "S",
+    "originalMatrix": true,
+    "relatedDefects": [],
+    "relatedManualTests": [
+      "MEM-04"
+    ],
+    "sourceFiles": [
+      "server/src/controllers/authController.ts"
+    ]
+  },
+  {
+    "id": "WB-TB-03",
+    "module": "Member Management",
+    "function": "toggleBlacklist",
+    "inputDesign": "old=false; requested=true; ADMIN actor",
+    "expected": "200 update true; blocked message; safe select",
+    "branchCondition": "TB.2 F; TB.3 boolean; TB.4 T",
+    "reason": "Explicit block MEM-04",
+    "oracle": "B",
+    "originalMatrix": true,
+    "relatedDefects": [],
+    "relatedManualTests": [
+      "MEM-04"
+    ],
+    "sourceFiles": [
+      "server/src/controllers/authController.ts"
+    ]
+  },
+  {
+    "id": "WB-TB-04",
+    "module": "Member Management",
+    "function": "toggleBlacklist",
+    "inputDesign": "old=true; requested=false; ADMIN actor",
+    "expected": "200 update false; unblocked message; safe select",
+    "branchCondition": "TB.3 boolean; TB.4 F",
+    "reason": "Explicit unblock MEM-04",
+    "oracle": "B",
+    "originalMatrix": true,
+    "relatedDefects": [],
+    "relatedManualTests": [
+      "MEM-04"
+    ],
+    "sourceFiles": [
+      "server/src/controllers/authController.ts"
+    ]
+  },
+  {
+    "id": "WB-TB-05",
+    "module": "Member Management",
+    "function": "toggleBlacklist",
+    "inputDesign": "old=false; requested flag omitted",
+    "expected": "200 update true; safe select",
+    "branchCondition": "TB.3 nonboolean; !old T; TB.4 T",
+    "reason": "Fallback toggle from active",
+    "oracle": "S",
+    "originalMatrix": true,
+    "relatedDefects": [],
+    "relatedManualTests": [
+      "MEM-04"
+    ],
+    "sourceFiles": [
+      "server/src/controllers/authController.ts"
+    ]
+  },
+  {
+    "id": "WB-TB-06",
+    "module": "Member Management",
+    "function": "toggleBlacklist",
+    "inputDesign": "old=true; requested flag omitted",
+    "expected": "200 update false; safe select",
+    "branchCondition": "TB.3 nonboolean; !old F; TB.4 F",
+    "reason": "Fallback toggle from blacklisted",
+    "oracle": "S",
+    "originalMatrix": true,
+    "relatedDefects": [],
+    "relatedManualTests": [
+      "MEM-04"
+    ],
+    "sourceFiles": [
+      "server/src/controllers/authController.ts"
+    ]
+  },
+  {
+    "id": "WB-TB-08",
+    "module": "Member Management",
+    "function": "toggleBlacklist",
+    "inputDesign": "target found; update rejects",
+    "expected": "500 blacklist error; exact attempted update",
+    "branchCondition": "TB.E catch after update",
+    "reason": "Prisma update fault injection",
+    "oracle": "S",
+    "originalMatrix": true,
+    "relatedDefects": [],
+    "relatedManualTests": [
+      "MEM-04"
+    ],
+    "sourceFiles": [
+      "server/src/controllers/authController.ts"
+    ]
+  },
+  {
+    "id": "WB-TB-09",
+    "module": "Member Management",
+    "function": "toggleBlacklist",
+    "inputDesign": "findUnique rejects",
+    "expected": "500 blacklist error; no update",
+    "branchCondition": "TB.E catch before target condition",
+    "reason": "Prisma lookup fault injection",
+    "oracle": "S",
+    "originalMatrix": false,
+    "relatedDefects": [],
+    "relatedManualTests": [
+      "MEM-04"
+    ],
+    "sourceFiles": [
+      "server/src/controllers/authController.ts"
+    ]
+  },
+  {
+    "id": "WB-MR-01",
+    "module": "Member Management",
+    "function": "authenticateToken → authorizeAdmin → getAllUsers",
+    "inputDesign": "registered GET /users; no header",
+    "expected": "401; only authenticateToken runs; no query/write",
+    "branchCondition": "AT.1 F; AT.2 T",
+    "reason": "Member list authentication boundary",
+    "oracle": "S",
+    "originalMatrix": false,
+    "relatedDefects": [],
+    "relatedManualTests": [
+      "MEM-01"
+    ],
+    "sourceFiles": [
+      "server/src/routes/authRoutes.ts",
+      "server/src/middleware/auth.ts",
+      "server/src/controllers/authController.ts"
+    ]
+  },
+  {
+    "id": "WB-MR-02",
+    "module": "Member Management",
+    "function": "authenticateToken → authorizeAdmin → getAllUsers",
+    "inputDesign": "GET /users; JWT verify callback error",
+    "expected": "403; no authorize/controller/query/write",
+    "branchCondition": "AT.2 F; AT.3 T",
+    "reason": "Invalid authentication boundary",
+    "oracle": "S",
+    "originalMatrix": false,
+    "relatedDefects": [],
+    "relatedManualTests": [
+      "MEM-01"
+    ],
+    "sourceFiles": [
+      "server/src/routes/authRoutes.ts",
+      "server/src/middleware/auth.ts",
+      "server/src/controllers/authController.ts"
+    ]
+  },
+  {
+    "id": "WB-MR-03",
+    "module": "Member Management",
+    "function": "authenticateToken → authorizeAdmin → getAllUsers",
+    "inputDesign": "GET /users; decoded role=USER",
+    "expected": "403 Forbidden; controller/query not reached",
+    "branchCondition": "AT.3 F; AA.1 T",
+    "reason": "Member list authorization denial",
+    "oracle": "S",
+    "originalMatrix": false,
+    "relatedDefects": [],
+    "relatedManualTests": [
+      "MEM-01"
+    ],
+    "sourceFiles": [
+      "server/src/routes/authRoutes.ts",
+      "server/src/middleware/auth.ts",
+      "server/src/controllers/authController.ts"
+    ]
+  },
+  {
+    "id": "WB-MR-04",
+    "module": "Member Management",
+    "function": "authenticateToken → authorizeAdmin → getAllUsers",
+    "inputDesign": "GET /users; decoded role=ADMIN; DTO list",
+    "expected": "200 DTOs; correct source handler order; one query",
+    "branchCondition": "AT.3 F; AA.1 F; GU.1",
+    "reason": "Authorized list access through actual registrations",
+    "oracle": "S",
+    "originalMatrix": false,
+    "relatedDefects": [],
+    "relatedManualTests": [
+      "MEM-01"
+    ],
+    "sourceFiles": [
+      "server/src/routes/authRoutes.ts",
+      "server/src/middleware/auth.ts",
+      "server/src/controllers/authController.ts"
+    ]
+  },
+  {
+    "id": "WB-MR-05",
+    "module": "Member Management",
+    "function": "authenticateToken → authorizeAdmin → toggleBlacklist",
+    "inputDesign": "PATCH /users/:id/blacklist; decoded USER",
+    "expected": "403 Forbidden; no lookup/update",
+    "branchCondition": "AT.3 F; AA.1 T",
+    "reason": "Protect member write path",
+    "oracle": "S",
+    "originalMatrix": false,
+    "relatedDefects": [],
+    "relatedManualTests": [
+      "MEM-04"
+    ],
+    "sourceFiles": [
+      "server/src/routes/authRoutes.ts",
+      "server/src/middleware/auth.ts",
+      "server/src/controllers/authController.ts"
+    ]
+  },
+  {
+    "id": "WB-MR-06",
+    "module": "Member Management",
+    "function": "authenticateToken → authorizeAdmin → toggleBlacklist",
+    "inputDesign": "PATCH blacklist; ADMIN; target id=2; requested=true",
+    "expected": "200; controller reached; exact update true",
+    "branchCondition": "AT.3 F; AA.1 F; TB.3 boolean; TB.4 T",
+    "reason": "Authorized blacklist write through source registrations",
+    "oracle": "S",
+    "originalMatrix": false,
+    "relatedDefects": [],
+    "relatedManualTests": [
+      "MEM-04"
+    ],
+    "sourceFiles": [
+      "server/src/routes/authRoutes.ts",
+      "server/src/middleware/auth.ts",
+      "server/src/controllers/authController.ts"
+    ]
+  },
+  {
+    "id": "WB-MR-07",
+    "module": "Member Management",
+    "function": "authenticateToken → authorizeAdmin → toggleBlacklist",
+    "inputDesign": "PATCH blacklist; no header",
+    "expected": "401; no JWT/lookup/update",
+    "branchCondition": "AT.1 F; AT.2 T",
+    "reason": "Anonymous write denied before data access",
+    "oracle": "S",
+    "originalMatrix": false,
+    "relatedDefects": [],
+    "relatedManualTests": [
+      "MEM-04"
+    ],
+    "sourceFiles": [
+      "server/src/routes/authRoutes.ts",
+      "server/src/middleware/auth.ts",
+      "server/src/controllers/authController.ts"
+    ]
+  }
+]

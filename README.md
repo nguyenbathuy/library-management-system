@@ -4,18 +4,19 @@
 
 ![React](https://img.shields.io/badge/React-18.3-61DAFB?style=for-the-badge&logo=react&logoColor=black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
-![Node.js](https://img.shields.io/badge/Node.js-20.x-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-22.x-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
 ![Express](https://img.shields.io/badge/Express-5.x-000000?style=for-the-badge&logo=express&logoColor=white)
 ![Prisma](https://img.shields.io/badge/Prisma-5.22-2D3748?style=for-the-badge&logo=prisma&logoColor=white)
 ![TailwindCSS](https://img.shields.io/badge/TailwindCSS-4.x-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-6.x-646CFF?style=for-the-badge&logo=vite&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
+[![CI](https://github.com/nguyenbathuy/library-management-system/actions/workflows/ci.yml/badge.svg)](https://github.com/nguyenbathuy/library-management-system/actions/workflows/ci.yml)
 ![Status](https://img.shields.io/badge/Build-Passing-brightgreen?style=for-the-badge)
 
 **Giải pháp chuyển đổi số toàn diện cho công tác quản lý học liệu và lưu thông sách học đường.**  
 *Tích hợp Kiến trúc Máy trạng thái (State Machine), Tự động hóa tác vụ ngầm (Cronjob) và Phân quyền bảo mật đa lớp (RBAC).*
 
-[🎯 Mục tiêu](#1--mục-tiêu-dự-án) • [🏗️ Kiến trúc & Công nghệ](#2-️-kiến-trúc--công-nghệ-tech-stack) • [⚡ Tính năng nổi bật](#3--tính-năng-nổi-bật-key-features) • [🔄 Quy trình Vòng đời (State Machine)](#4--quy-trình-vòng-đời-phiếu-mượn-state-machine) • [📋 Chức năng cốt lõi (CRUD)](#5--danh-sách-chức-năng-cốt-lõi-crud) • [🚀 Cài đặt & Khởi chạy](#6--hướng-dẫn-cài-đặt--khởi-chạy) • [👥 Tài khoản thử nghiệm](#7--tài-khoản-thử-nghiệm)
+[🎯 Mục tiêu](#1--mục-tiêu-dự-án) • [🏗️ Kiến trúc & Công nghệ](#2-️-kiến-trúc--công-nghệ-tech-stack) • [⚡ Tính năng nổi bật](#3--tính-năng-nổi-bật-key-features) • [🔄 Quy trình Vòng đời (State Machine)](#4--quy-trình-vòng-đời-phiếu-mượn-state-machine) • [📋 Chức năng cốt lõi (CRUD)](#5--danh-sách-chức-năng-cốt-lõi-crud) • [🚀 Cài đặt & Khởi chạy](#6--hướng-dẫn-cài-đặt--khởi-chạy) • [👥 Tài khoản thử nghiệm](#7--tài-khoản-thử-nghiệm) • [🧪 Chạy kiểm thử](#9--hướng-dẫn-chạy-kiểm-thử)
 
 </div>
 
@@ -30,7 +31,7 @@ Hệ thống được thiết kế và xây dựng theo chuẩn mực thư việ
 * ⚙️ **Quản trị vòng đời bằng State Machine**: Khóa chặt các chuyển dịch trạng thái của phiếu mượn (`ACTIVE` $\rightarrow$ `OVERDUE` $\rightarrow$ `COMPLETED`), ngăn ngừa tình trạng dữ liệu mồ côi hoặc thất thoát sách.
 * 💰 **Kỷ cương tài chính chặt chẽ**: Tự động tính toán mức phạt quá hạn theo ngày và đền bù sách mất/hỏng; khóa chức năng mượn và đóng phiếu cho tới khi nghĩa vụ tài chính được tất toán.
 * 🔔 **Truyền thông sự kiện đa kênh (Event-Driven)**: Kết hợp chuông thông báo In-app thời gian thực và tiến trình nền (Cronjob) gửi Email HTML tự động nhắc hạn mỗi sáng.
-* 📊 **Trực quan hóa chỉ số KPI**: Bảng điều khiển thời gian thực và chức năng xuất báo cáo thống kê PDF chuẩn A4, hiển thị tiếng Việt Unicode 100% không lỗi font.
+* 📊 **Trực quan hóa chỉ số KPI**: Bảng điều khiển và chức năng xuất báo cáo thống kê PDF chuẩn A4, với mục tiêu hiển thị tiếng Việt không lỗi font.
 
 ---
 
@@ -57,7 +58,7 @@ Hệ thống tuân thủ kiến trúc phân tầng **Client - Server (RESTful AP
                                     │ Prisma ORM 5.22
                                     ▼
 ┌────────────────────────────────────────────────────────────────────────┐
-│                   CƠ SỞ DỮ LIỆU QUAN HỆ (SQLite / PostgreSQL)          │
+│                     CƠ SỞ DỮ LIỆU QUAN HỆ (SQLite)                    │
 │   • User, Token, Book, BookItem, Category, Author, Publisher,          │
 │     Loan, Fine, Reservation, Notification, AuditLog                    │
 └────────────────────────────────────────────────────────────────────────┘
@@ -72,11 +73,11 @@ Hệ thống tuân thủ kiến trúc phân tầng **Client - Server (RESTful AP
   - `Lucide React`: Hệ thống icon vector tối giản, sắc nét.
   - `Recharts`: Biểu đồ trực quan hóa dữ liệu xu hướng mượn sách theo từng tháng.
   - Hỗ trợ chế độ giao diện **Dark Mode / Light Mode** và chuyển đổi **Song ngữ (Việt - Anh)** linh hoạt.
-* **Kết xuất tài liệu báo cáo**: `html2canvas-pro` (hỗ trợ đầy đủ CSS `oklch` của Tailwind v4) kết hợp `jspdf` giúp xuất file PDF báo cáo chuẩn A4 với font tiếng Việt sắc nét.
+* **Kết xuất tài liệu báo cáo**: Dashboard sử dụng `html2canvas-pro` kết hợp `jspdf` để xuất file PDF báo cáo chuẩn A4. Chất lượng font cần đối chiếu file xuất và kết quả QA, không suy từ thư viện sử dụng.
 
 ### 2.2. Phía Backend
-* **Nền tảng thực thi**: `Node.js 20.x LTS` với framework `Express 5.x` viết toàn bộ bằng `TypeScript`.
-* **ORM & CSDL**: `Prisma ORM 5.22` kết nối cơ sở dữ liệu quan hệ SQLite cục bộ (dễ dàng chuyển đổi sang PostgreSQL/MySQL trong môi trường production).
+* **Nền tảng thực thi**: `Node.js 22.x` với framework `Express 5.x` viết toàn bộ bằng `TypeScript`; môi trường đã ghi nhận trong QA dùng Node.js `22.23.3`.
+* **ORM & CSDL**: `Prisma ORM 5.22` kết nối SQLite cục bộ tại `server/prisma/dev.db`, theo datasource `file:./dev.db` trong schema hiện tại.
 * **Bảo mật & Phân quyền**: Xác thực người dùng qua `jsonwebtoken` (JWT), mã hóa mật khẩu bằng `bcryptjs` (salt 10 rounds), bảo vệ route theo vai trò (RBAC: `ADMIN` / `USER`).
 
 ### 2.3. Bảng tổng hợp công nghệ & thư viện
@@ -143,7 +144,7 @@ Hệ thống tuân thủ kiến trúc phân tầng **Client - Server (RESTful AP
   - Gửi email định dạng HTML chuyên nghiệp: **Màu xanh nhắc nhở** khi còn 1-2 ngày đến hạn; **Màu đỏ cảnh báo khẩn cấp** khi sách đã quá hạn.
 
 ### 3.5. 📊 Xuất báo cáo PDF chuẩn hóa tiếng Việt (Unicode PDF Export)
-* **Render trực tiếp qua HTML & Canvas**: Giải quyết triệt để lỗi bể font (`B£ng iÁu khiÃn...`) của thư viện jsPDF truyền thống bằng giải pháp kết xuất qua `html2canvas-pro`.
+* **Render trực tiếp qua HTML & Canvas**: Dashboard kết xuất nội dung qua `html2canvas-pro` và đóng gói bằng jsPDF. Hiển thị tiếng Việt trong file PDF xuất ra (Dashboard và báo cáo kiểm kê) là một hạn chế đã biết chưa được xử lý.
 * **Định dạng báo cáo chuẩn mực**: Bổ sung đầy đủ Logo trường Đại học Phenikaa, tiêu đề báo cáo chính thức, thời gian xuất báo cáo thực tế, tên thủ thư lập báo cáo, thẻ KPI thống kê, đồ thị xu hướng và danh sách hoạt động.
 * **Hỗ trợ chia trang tự động**: Tự động tính toán tỷ lệ khổ giấy A4 Landscape và phân trang mượt mà nếu nội dung dài.
 
@@ -226,156 +227,171 @@ erDiagram
 ## 6. 🚀 Hướng dẫn Cài đặt & Khởi chạy
 
 ### Yêu cầu tiên quyết
-* Đã cài đặt **Node.js** (Phiên bản `18.x` hoặc `20.x LTS` trở lên).
-* Trình quản lý gói **npm** (đi kèm Node.js) hoặc **pnpm**.
+* **Node.js 22 LTS** và **npm 10** (đã kiểm tra với Node.js `22.23.3`, npm `10.9.9`), **Git**.
+* Dự án dùng SQLite qua Prisma; không cần cài MySQL/PostgreSQL.
 
----
-
-### Bước 1: Clone mã nguồn và Cài đặt Dependencies
-
-Mở Terminal và thực thi lệnh sau:
+### Bước 1: Lấy mã nguồn và cài dependencies
 
 ```bash
-# 1. Clone repository
 git clone https://github.com/nguyenbathuy/library-management-system.git
 cd library-management-system
 
-# 2. Cài đặt thư viện cho Frontend (Thư mục gốc)
-npm install
-
-# 3. Cài đặt thư viện cho Backend (Server)
-cd server
-npm install
-cd ..
+npm ci                  # Frontend (thư mục gốc)
+npm --prefix server ci  # Backend
 ```
 
----
+`node_modules/` không được commit; dùng `npm ci` để cài đúng binary của hệ điều hành (không sao chép `node_modules` giữa Windows và Linux).
 
-### Bước 2: Cấu hình biến môi trường (.env)
+### Bước 2: Cấu hình biến môi trường
 
-Tạo file `.env` bên trong thư mục `server/` (đã có sẵn file mẫu `.env.example` để tham khảo):
+Tệp `server/.env` **không được commit** (chứa bí mật). Tạo từ tệp mẫu rồi điền giá trị riêng:
+
+```bash
+cp server/.env.example server/.env
+```
 
 ```env
-# Cổng chạy máy chủ backend
 PORT=5000
+JWT_SECRET="doi_thanh_chuoi_bi_mat_rieng"
 
-# Đường dẫn cơ sở dữ liệu SQLite
-DATABASE_URL="file:./dev.db"
-
-# Chuỗi bí mật mã hóa JWT Token
-JWT_SECRET="super_secret_jwt_key_library_phenikaa_2026"
-
-# (Tùy chọn) Cấu hình gửi Email thực tế qua Gmail SMTP:
+# (Tùy chọn) gửi email thật qua SMTP. Để trống thì mailService dùng tài khoản Ethereal giả lập (cần mạng).
 # SMTP_HOST=smtp.gmail.com
 # SMTP_PORT=587
-# SMTP_USER=your_email@gmail.com
-# SMTP_PASS=your_gmail_app_password
-# SMTP_FROM="Thư Viện PKA <your_email@gmail.com>"
+# SMTP_USER=
+# SMTP_PASS=
+# SMTP_FROM=
 ```
 
-> 💡 **Ghi chú**: Nếu không cấu hình SMTP thật, hệ thống sẽ tự động chuyển sang dịch vụ giả lập **Ethereal Email** an toàn để kiểm thử mà không phát sinh bất kỳ lỗi nào.
+Đường dẫn SQLite được khai báo trực tiếp là `file:./dev.db` trong `server/prisma/schema.prisma`, tức `server/prisma/dev.db`; biến `DATABASE_URL` không đổi kết nối này. Backend đăng ký cron nhắc hạn lúc 08:00 mỗi ngày theo múi giờ máy; tác vụ này có thể cập nhật trạng thái/phí phạt/thông báo và gửi email theo cấu hình.
 
----
+### Bước 3: Tạo Prisma Client và cơ sở dữ liệu
 
-### Bước 3: Khởi tạo Cơ sở dữ liệu & Nạp dữ liệu mẫu (Seed Data)
-
-Di chuyển vào thư mục `server` để chuẩn bị CSDL:
+Tệp `server/prisma/dev.db` không được commit, nên cần tạo CSDL mới và nạp dữ liệu mẫu:
 
 ```bash
 cd server
-
-# Đẩy schema Prisma vào database SQLite
-npx prisma db push
-
-# Nạp dữ liệu mẫu ban đầu (Đầu sách, bản sao vật lý, tài khoản Admin/User)
-npx ts-node src/seed.ts
-
+npx prisma generate               # tạo Prisma Client cho hệ điều hành hiện tại
+npx prisma db push                # tạo CSDL SQLite từ schema
+npx ts-node src/seed.ts           # nạp tài khoản và dữ liệu mẫu
 cd ..
 ```
 
----
+**Seed xóa các bản ghi mượn, bản sao sách, đặt trước và danh mục cũ trước khi tạo dữ liệu mẫu; chỉ chạy trên CSDL demo mới.** Lệnh `prisma generate` không tạo hoặc xóa dữ liệu.
 
 ### Bước 4: Khởi động hệ thống
 
-Chạy cả **Frontend** và **Backend** đồng thời chỉ với một câu lệnh duy nhất tại thư mục gốc:
+Tại thư mục gốc, chạy đồng thời Frontend và Backend:
 
 ```bash
 npm run dev
 ```
 
-Sau khi khởi chạy thành công:
-* 🌐 **Giao diện người dùng (Frontend)**: [http://localhost:5173](http://localhost:5173)
-* 🔌 **Cổng dịch vụ API (Backend)**: [http://localhost:5000](http://localhost:5000)
+* 🌐 **Giao diện (Frontend)**: [http://localhost:5173](http://localhost:5173)
+* 🔌 **API (Backend)**: [http://localhost:5000](http://localhost:5000) (chỉ là API, không có giao diện)
+
+Frontend gọi cố định API ở `http://localhost:5000/api`, nên giữ cổng backend `5000`. Nếu `5173` hoặc `5000` đang bận, dừng tiến trình đang chiếm cổng rồi chạy lại; Vite có thể chuyển sang cổng khác khi `5173` bận, hãy dùng đúng URL Vite in ra. Dừng cả hai bằng **Ctrl+C**.
+
+### Xử lý sự cố thường gặp
+* Báo `Cannot find module '.prisma/client/default'`: chạy lại `npx prisma generate` trong thư mục `server`.
+* Lỗi native module khi chuyển hệ điều hành: xóa `node_modules` và `server/node_modules`, rồi chạy lại Bước 1.
+* API báo `Invalid credentials`: kiểm tra tài khoản ở mục 7; nếu CSDL mới chưa seed thì chạy lại Bước 3.
 
 ---
 
 ## 7. 👥 Tài khoản thử nghiệm
 
-Hệ thống đã chuẩn bị sẵn các tài khoản demo đầy đủ dữ liệu mượn/trả để chấm điểm và kiểm thử ngay lập tức:
+Sau khi chạy seed (Bước 3) có sẵn hai tài khoản demo:
 
 | Vai trò (Role) | Email đăng nhập | Mật khẩu | Hạng thẻ | Quyền hạn & Nghiệp vụ khả dụng |
 | :--- | :--- | :---: | :---: | :--- |
 | 👑 **Thủ thư (Admin)** | `admin@library.com` | `123` | `PREMIUM` | Toàn quyền hệ thống: Quản trị kho sách, Nhập Excel, Quét Barcode POS mượn/trả, Kiểm kê kho, Bật/tắt Blacklist, Duyệt gia hạn, Kích hoạt Cronjob gửi email, Xuất báo cáo PDF. |
 | 🎓 **Độc giả (User)** | `user@library.com` | `123` | `STANDARD` | Tra cứu danh mục sách, Đặt trước khi hết sách, Gửi yêu cầu gia hạn sách đang mượn, Xem lịch sử mượn & thông báo cá nhân. |
 
+Mật khẩu `123` chỉ dùng cho môi trường demo cục bộ.
+
 ---
 
 ## 8. 📁 Cấu trúc thư mục dự án
 
 ```
-Library Management System/
-├── server/                               # Backend Application (Node.js/Express)
+library-management-system/
+├── server/                               # Backend (Node.js / Express / Prisma)
 │   ├── prisma/
-│   │   ├── dev.db                        # Cơ sở dữ liệu SQLite cục bộ
-│   │   └── schema.prisma                 # Định nghĩa mô hình dữ liệu (Prisma Schema)
+│   │   ├── migrations/                   # Migration khởi tạo ban đầu
+│   │   └── schema.prisma                 # Mô hình dữ liệu (Prisma Schema)
 │   ├── src/
-│   │   ├── controllers/                  # Bộ điều khiển xử lý nghiệp vụ API
-│   │   │   ├── analyticsController.ts    # Thống kê KPI, Biểu đồ Dashboard
-│   │   │   ├── authController.ts         # Đăng nhập, Đăng ký, Cấp phát JWT
-│   │   │   ├── bookController.ts         # CRUD đầu sách, Import Excel, Smart Merge
-│   │   │   ├── inventoryController.ts    # Quản lý kho, Kiểm kê Barcode Audit
-│   │   │   ├── loanController.ts         # Mượn/Trả sách, State Machine, Gia hạn
-│   │   │   ├── notificationController.ts # Chuông thông báo In-app thời gian thực
-│   │   │   └── paymentController.ts      # Quản lý phí phạt quá hạn & bồi thường
-│   │   ├── jobs/
-│   │   │   └── reminderJob.ts            # Tác vụ Cronjob quét hạn & gửi email tự động
-│   │   ├── middleware/
-│   │   │   └── auth.ts                   # Middleware xác thực JWT & Phân quyền RBAC
-│   │   ├── routes/                       # Định tuyến endpoints RESTful API
-│   │   ├── services/
-│   │   │   └── mailService.ts            # Dịch vụ định dạng & gửi thư điện tử HTML
+│   │   ├── controllers/                  # Nghiệp vụ API: analytics, auth, book, inventory, loan,
+│   │   │                                 #   notification, payment, reservation
+│   │   ├── jobs/reminderJob.ts           # Cronjob quét hạn & gửi email nhắc hạn
+│   │   ├── middleware/auth.ts            # Xác thực JWT & phân quyền RBAC
+│   │   ├── routes/                       # Định tuyến RESTful API
+│   │   ├── services/                     # mailService, notificationService
+│   │   ├── utils/loanRules.ts            # Hàm thuần: tiền phạt, hạn trả, hạn gia hạn
 │   │   ├── index.ts                      # Điểm khởi chạy máy chủ Express
-│   │   └── seed.ts                       # Kịch bản nạp dữ liệu mẫu ban đầu
-│   ├── .env                              # Biến môi trường Backend
-│   └── package.json                      # Cấu hình gói và kịch bản Backend
-├── src/                                  # Frontend Application (React 18 + Vite)
+│   │   └── seed.ts                       # Nạp dữ liệu mẫu
+│   ├── tests/                            # Unit, tích hợp, property-based (xem mục 9)
+│   ├── .env.example                      # Mẫu biến môi trường (không commit .env)
+│   └── package.json
+├── src/                                  # Frontend (React 18 + Vite + Tailwind 4)
 │   ├── app/
-│   │   ├── api/
-│   │   │   └── client.ts                 # Cấu hình Axios Client gắn Bearer Token
+│   │   ├── api/client.ts                 # Axios client gắn Bearer Token
 │   │   ├── components/                   # Các trang và thành phần giao diện
-│   │   │   ├── BookDetailModal.tsx       # Modal xem chi tiết thông tin đầu sách
-│   │   │   ├── BooksManagement.tsx       # Quản trị danh mục sách & Import Excel
-│   │   │   ├── BorrowedBooks.tsx         # Quản trị mượn trả, Quét Barcode POS
-│   │   │   ├── Dashboard.tsx             # Thống kê, Biểu đồ & Xuất PDF Unicode
-│   │   │   ├── InventoryCheck.tsx        # Kiểm kê kho Barcode & Modal xem chi tiết
-│   │   │   ├── MembersManagement.tsx     # Quản lý thành viên & Danh sách đen
-│   │   │   ├── NotificationDropdown.tsx  # Menu chuông thông báo In-app
-│   │   │   ├── Sidebar.tsx               # Thanh điều hướng với Logo Phenikaa
-│   │   │   └── UserProfile.tsx           # Trang cá nhân, gia hạn & lịch sử độc giả
-│   │   ├── contexts/                     # Quản lý trạng thái Auth, Theme, Ngôn ngữ
-│   │   ├── App.tsx                       # Cấu hình Route điều hướng & Route Guard
-│   │   └── Layout.tsx                    # Khung sườn giao diện tổng thể
-│   ├── styles/                           # CSS Tokens, Tailwind v4 & Theme Colors
-├── package.json                          # Cấu hình gói và kịch bản Root
-├── vite.config.ts                        # Cấu hình Vite Build Tool
-└── README.md                             # Tài liệu kỹ thuật & Hướng dẫn sử dụng
+│   │   ├── contexts/                     # Trạng thái Auth, Theme, Ngôn ngữ
+│   │   ├── App.tsx                       # Route & Route Guard
+│   │   └── Layout.tsx
+│   └── styles/                           # CSS tokens, Tailwind, theme
+├── e2e/                                  # Kiểm thử E2E Playwright (pages, specs, fixtures, support)
+├── .github/workflows/ci.yml              # CI: unit + tích hợp + E2E
+├── vitest.backend.config.ts              # Runner unit
+├── vitest.integration.config.ts          # Runner tích hợp API
+├── playwright.config.ts                  # Runner E2E
+├── stryker.config.mjs                    # Mutation testing (loanRules, authController)
+├── stryker.extension.config.mjs          # Mutation testing mở rộng
+├── eslint.config.mjs                     # Phân tích tĩnh
+├── tsconfig.frontend.json                # Kiểm tra kiểu strict cho frontend
+└── package.json                          # Cấu hình gói và script
 ```
-
-<div align="center">
 
 ---
 
-**Đồ án Môn học - Hệ Thống Quản Lý Thư Viện Số Thông Minh**  
-*Trường Đại học Phenikaa • Phát triển với sự tận tâm và chuẩn mực kỹ thuật cao nhất.*
+## 9. 🧪 Hướng dẫn chạy kiểm thử
 
-</div>
+Mọi lệnh chạy **từ thư mục gốc của repo** sau khi đã hoàn thành Bước 1 và `npx prisma generate` ở Bước 3. Kiểm thử đơn vị và tích hợp **không cần bật ứng dụng, không cần `.env` và không đụng `server/prisma/dev.db`**: tầng tích hợp tự tạo SQLite tạm từ schema, tầng E2E tự bật backend thật cùng Vite trên một CSDL tạm riêng.
+
+### Chuẩn bị (một lần)
+```bash
+npm ci && npm --prefix server ci
+cd server && npx prisma generate && cd ..
+npx playwright install chromium     # chỉ cần cho E2E
+```
+
+### Lệnh chính
+| Lệnh | Việc làm |
+| :--- | :--- |
+| `npm test` | Unit + tích hợp |
+| `npm run test:unit` / `npm run test:coverage` | Unit (mock Prisma, không DB, không mạng); `:coverage` đo V8 và kiểm tra ngưỡng |
+| `npm run test:integration` / `npm run test:integration:coverage` | API qua supertest trên SQLite tạm, kể cả tải file Excel/e-book |
+| `npm run test:property` | Property-based testing và fuzz API (fast-check) |
+| `npm run test:e2e` | E2E Playwright trên Chromium; cổng `5000` và `5173` phải trống |
+| `npm run test:mutation` / `npm run test:mutation:ext` | Mutation testing (Stryker) cho `loanRules` + `authController` / cho các controller và job còn lại |
+| `npm run typecheck` | `tsc` cho backend, mã kiểm thử và E2E |
+| `npm run typecheck:frontend` | `tsc --strict` cho `src/` (hiện còn một số lỗi đã biết) |
+| `npm run lint` | ESLint toàn repo; `npm run lint:report` ghi báo cáo JSON |
+
+Ví dụ chạy một phạm vi hẹp: `LMS_WB_SCOPE=loan npm run test:coverage`. `LMS_WB_SCOPE` nhận `all` (mặc định), `modules`, `whitebox`, `authentication`, `member`, `loan`, `property`.
+
+### Cấu trúc mã kiểm thử
+* `server/tests/unit/`: unit theo module (`auth`, `member`, `loan`, `inventory`, `reservation`, `payment`, `notification`, `analytics`, `book`, `mail`, `jobs`); `server/tests/integration/`: API theo router; `server/tests/property/`: property-based và fuzz API.
+* `server/tests/helpers`, `setup`, `mocks`, `support`: tiện ích dùng chung (harness gọi controller, tạo SQLite tạm, factory dữ liệu, chặn mạng, mock Prisma).
+* `e2e/`: Page Object (`pages`), kịch bản (`specs`), dữ liệu seed (`fixtures`) và trình khởi động máy chủ E2E (`support`).
+
+### Quy ước kiểm thử
+* **Cách ly dữ liệu:** unit mock Prisma trước khi nạp mã; tích hợp và E2E dùng SQLite tạm và kiểm tra hash `dev.db` không đổi nếu file này tồn tại; mail luôn bị stub/`jsonTransport`; unit chặn mọi truy cập mạng.
+* **Ca lỗi đã biết:** viết theo đặc tả đúng và đánh dấu `test.fails` (Vitest) hoặc `test.fail` (Playwright) kèm mã lỗi `DEF-xxx`/`FIND-xx` trong chú thích; chúng được tính là "thất bại dự kiến". Để xem lý do thất bại thật, chạy lại với `test.fails` tắt: `node server/tests/support/verify-known-bugs.mjs vitest.backend.config.ts <file test>` (hoặc `vitest.integration.config.ts` cho tích hợp), và `E2E_SHOW_KNOWN_BUGS=1 npm run test:e2e` cho E2E. Khi một lỗi được sửa, ca tương ứng sẽ đạt và Vitest báo lỗi nếu quên gỡ `test.fails`.
+* **Ngưỡng bao phủ:** unit (phạm vi `all`) tối thiểu 90% câu lệnh, 85% nhánh, 90% hàm, 90% dòng; tích hợp 75% / 65% / 85% / 75%. Dưới ngưỡng thì lệnh coverage thoát mã khác 0.
+* **Tái hiện phản ví dụ ngẫu nhiên:** đặt `FC_SEED=<seed>` khi chạy `npm run test:property`.
+* **Lưu kết quả riêng cho từng lượt:** đặt `LMS_WB_RUN_DIR=<thư mục mới>` (unit) hoặc `LMS_IT_RUN_DIR=<thư mục mới>` (tích hợp); mặc định kết quả nằm trong `artifacts/` (đã được `.gitignore`). E2E ghi báo cáo vào `test-results/e2e/`; sao lưu thư mục này trước khi chạy lại nếu cần giữ kết quả cũ.
+* **Không dùng `npm run dev` để chạy E2E:** lệnh đó nối vào `dev.db`; `npm run test:e2e` tự dùng CSDL tạm.
+
+### CI
+[`.github/workflows/ci.yml`](.github/workflows/ci.yml) chạy khi push lên `main`, nhánh `test/**` và khi có pull request vào `main`: job *Unit + integration* (cài đặt, `typecheck`, ESLint mã kiểm thử, phân tích tĩnh mã sản phẩm ở chế độ chỉ báo cáo, unit + coverage, tích hợp + coverage) và job *End-to-end* (Playwright trên Chromium). Báo cáo coverage và Playwright được tải lên dưới dạng artifact.

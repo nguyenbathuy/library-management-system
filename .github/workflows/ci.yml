@@ -1,0 +1,120 @@
+name: CI
+
+on:
+  push:
+    branches: [main, 'test/**']
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  unit:
+    name: Unit + integration (Vitest, coverage)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            server/package-lock.json
+
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Install server dependencies
+        run: npm ci
+        working-directory: server
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+        working-directory: server
+
+      - name: Type-check server source, tests and E2E
+        run: npm run typecheck
+
+      # Phân tích tĩnh: báo cáo, không chặn pipeline. Mã sản phẩm hiện có lỗi/cảnh báo đã ghi nhận (docs/qa/CHANGELOG.md);
+      # mã kiểm thử (server/tests, e2e) được giữ sạch ở bước "Lint test code" bên dưới.
+      - name: Lint test code (blocking)
+        run: npx eslint server/tests e2e eslint.config.mjs vitest.backend.config.ts vitest.integration.config.ts playwright.config.ts
+
+      - name: Static analysis of product code (report only)
+        continue-on-error: true
+        run: |
+          mkdir -p ci-results/static-analysis
+          npm run lint:report || true
+          npm run typecheck:frontend 2>&1 | tee ci-results/static-analysis/tsc-frontend.txt
+          cp test-results/static-analysis/eslint-report.json ci-results/static-analysis/ || true
+
+      - name: Unit tests + V8 coverage (white-box, loan rules, state machine, properties)
+        run: npm run test:coverage
+        env:
+          LMS_WB_RUN_DIR: ci-results/unit
+
+      - name: Integration tests (supertest + disposable SQLite) + API fuzzing
+        run: npm run test:integration:coverage
+        env:
+          LMS_IT_RUN_DIR: ci-results/integration
+
+      - name: Upload coverage and test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: ci-results/
+          retention-days: 14
+
+  e2e:
+    name: End-to-end (Playwright, Chromium)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            server/package-lock.json
+
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Install server dependencies
+        run: npm ci
+        working-directory: server
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+        working-directory: server
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      # playwright.config.ts starts the real backend on an isolated SQLite (e2e/.tmp) and Vite.
+      - name: Run Playwright tests
+        run: npx playwright test
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            test-results/e2e/playwright-report/
+            test-results/e2e/playwright-results.json
+            test-results/e2e/artifacts/
+            test-results/e2e/screenshots/
+          retention-days: 14
