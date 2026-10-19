@@ -1,9 +1,10 @@
 // Vitest globalSetup cho kiểm thử tích hợp: tạo một lần DB mẫu (chỉ cấu trúc) dưới server/tests/tmp/.
 import { createHash } from 'node:crypto';
-import { readFileSync, rmSync } from 'node:fs';
+import { existsSync, readFileSync, rmSync } from 'node:fs';
 import { createTemplateDatabase, PRODUCTION_DB, TMP_DIR } from '../helpers/testDb';
 
-const hash = (file: string) => createHash('sha256').update(readFileSync(file)).digest('hex');
+// dev.db không được commit: trên bản clone mới file này có thể chưa tồn tại → bỏ qua kiểm tra bảo toàn.
+const hash = (file: string) => (existsSync(file) ? createHash('sha256').update(readFileSync(file)).digest('hex') : null);
 
 export default function setup({ provide }: { provide: (key: string, value: unknown) => void }) {
   const productionHashBefore = hash(PRODUCTION_DB);

@@ -160,7 +160,7 @@ describe('Authentication Phase 2 — login and password guards', () => {
       { userId: 1, email: 'user@example.com', role: 'ADMIN' },
       'unit-test-secret-never-used-for-real-tokens', { expiresIn: '1h' },
     );
-    // Oracle S re-baselined to commit 90f35a26 (2FA login contract); history kept in docs/qa/CHANGELOG.md.
+    // Oracle S re-baselined to commit 90f35a26 (2FA login contract); see git history for the previous oracle.
     expect(actual).toEqual({ statusCode: 200, payload: { requireOtp: false, token: TOKEN,
       user: { id: 1, email: 'user@example.com', name: 'Unit Test User', role: 'ADMIN', membershipTier: 'STANDARD', isBlacklisted: false, twoFactorEnabled: false } } });
     expect(mocks.prisma.user.update).not.toHaveBeenCalled();

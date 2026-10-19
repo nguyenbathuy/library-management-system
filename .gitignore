@@ -59,7 +59,7 @@ server/node_modules/
 # Temporary / dump files
 merged_code.txt
 
-# Test outputs (evidence is kept under test-results/, databases are disposable)
+# Test outputs (generated; databases are disposable)
 /coverage/
 server/coverage/
 /playwright-report/
@@ -72,3 +72,13 @@ artifacts/
 server/prisma/backups/
 !.env.example
 .stryker-tmp/
+
+# Báo cáo, bằng chứng kiểm thử và ghi chú nội bộ: giữ cục bộ, không đưa lên repo
+docs/
+test-results/
+AGENTS.md
+*.docx
+
+# Bí mật và CSDL cục bộ (tạo bằng .env.example và prisma db push + seed)
+server/.env
+server/prisma/dev.db

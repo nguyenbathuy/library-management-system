@@ -1,9 +1,0 @@
-
-> @figma/my-make-file@0.0.1 typecheck:frontend
-> node server/node_modules/typescript/bin/tsc -p tsconfig.frontend.json
-
-src/app/components/BooksManagement.tsx(189,64): error TS7006: Parameter 'oldData' implicitly has an 'any' type.
-src/app/components/Settings.tsx(40,3): error TS2304: Cannot find name 'useEffect'.
-src/app/components/Settings.tsx(54,7): error TS2304: Cannot find name 'queryClient'.
-src/main.tsx(1,28): error TS7016: Could not find a declaration file for module 'react-dom/client'. '/home/a2ilab/Documents/project/library-management-system/node_modules/react-dom/client.js' implicitly has an 'any' type.
-  Try `npm i --save-dev @types/react-dom` if it exists or add a new declaration (.d.ts) file containing `declare module 'react-dom/client';`

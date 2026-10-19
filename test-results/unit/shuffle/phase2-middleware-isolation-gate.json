@@ -1,6 +1,0 @@
-{
-  "observedAt": "2026-10-14T05:34:02.356Z",
-  "jwtFactoryLoaded": true,
-  "verifyIsMock": true,
-  "databasePolicy": "Direct middleware import has no Prisma dependency; global fail-closed alias remains enabled."
-}
