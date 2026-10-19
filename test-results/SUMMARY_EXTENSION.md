@@ -132,6 +132,8 @@ Quy ước: mã `DEF-xxx` đã có từ báo cáo thủ công; `FIND-xx` do tự
 | FIND-22 | Duyệt/từ chối gia hạn khi chưa có yêu cầu PENDING; từ chối được phiếu đã COMPLETED | 400 → **200** | UT-AP-07/08/09, IT-LST-22 |
 | DEF-005 (bổ sung) | Hạn trả PREMIUM vẫn +14 ngày — thêm biểu hiện ở `POST /loans/borrow` | +30 → **+14** | UT-LN-23, IT-LST-08 |
 
+Đối chiếu mã với báo cáo Nhóm 8 (`docs/qa/output/Nhom8-DGVKDCLPM-Reportt.docx`): báo cáo dùng một sổ lỗi duy nhất `DEF-xxx`; FIND-01…05 là DEF-017, 018, 019, 020, 016 (theo thứ tự FIND-01…05) và **FIND-nn (nn ≥ 6) là DEF-(nn + 15)**, tức FIND-06…22 là DEF-021…037. Mức độ nghiêm trọng của DEF-021…037 do nhóm kiểm thử đề xuất (High: DEF-026, 027, 031, 036; Low: DEF-024, 029, 030, 034; còn lại Medium) và chờ nhóm phát triển xác nhận.
+
 Các lỗi đã biết từ Chương 5–6 (DEF-001…014, FIND-01…05) giữ nguyên trạng thái; DEF-003 (PDF font tiếng Việt) vẫn **chưa tự động hóa** (không có oracle tự động tin cậy cho glyph).
 
 ## 5. Phân tích tĩnh

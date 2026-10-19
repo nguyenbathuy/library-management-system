@@ -2,6 +2,14 @@
 
 Lịch sử được tổng hợp từ tài liệu/evidence có sẵn, không phải danh sách commit hoặc xác nhận đã retest toàn hệ thống. Các báo cáo [sửa lỗi sách](../bug_fix_report.md) và [feature walkthrough](../feature_walkthrough.md) là lịch sử phát triển riêng, được giữ lại; trước nhiệm vụ này chưa có changelog QA tổng hợp. Không suy ngày thực thi từ ngày sửa file.
 
+## 2026-10-19 — Cập nhật báo cáo Nhóm 8 theo đợt mở rộng kiểm thử
+
+- **Tệp đích:** cập nhật trực tiếp `docs/qa/output/Nhom8-DGVKDCLPM-Reportt.docx`; backup nguyên bản tại `docs/qa/output/backups/Nhom8-DGVKDCLPM-Reportt_before_extension_20261019.docx` (SHA256 `1acbb754…7a62 → 5e17e3f5…`). Chỉ `word/document.xml` thay đổi so với backup; ảnh, header, style và các part khác giữ nguyên byte.
+- **Nội dung thêm/sửa:** mục 5.6 (kết quả 770 ca, số ca theo module, bao phủ đơn vị và tích hợp, ngưỡng bao phủ), 5.7 (phân tích tĩnh), 6.2.4 (8 ca E2E bổ sung), bảng mutation mở rộng (6.4b), sổ lỗi DEF-021 → DEF-037 (Bảng 3.15, 7.1, 7.2; FIND-nn ↔ DEF-(nn + 15)), cập nhật Chương 1 (công cụ), 5.1, 5.4 (trạng thái CI), 6.5, 7.1, 7.3 – 7.5, Kết luận, Phụ lục B và danh mục bảng. Các bảng 5.3 – 5.5 giữ nguyên là số liệu lượt chuẩn 14/10/2026 và được chú thích.
+- **Mục lục:** mục lục chính trước đó thiếu 5.1 – 5.5, 6.x và có các mục rỗng; được dựng lại cho mọi tiêu đề (kể cả 5.6, 5.7, 6.2.4) với số trang lấy từ bản render LibreOffice (92 trang); cờ cập nhật trường của Word vẫn bật.
+- **Validation:** `validate.py` (XSD) đạt; render lại bằng LibreOffice và kiểm tra trực quan các trang mục lục, 5.6, 5.7, 6.2.4, 6.4b, Chương 7 và Phụ lục B; số liệu trong văn bản đối chiếu với `test-results/extension/` và `test-results/mutation-ext/`.
+- **Giới hạn:** chưa có ảnh tab GitHub Actions vì chưa push được (token thiếu phạm vi `workflow`); báo cáo ghi rõ chỗ cần chèn. Mức độ nghiêm trọng của DEF-021 → 037 là đề xuất của nhóm kiểm thử. Không chạy lại test hay sửa mã/evidence trong bước này.
+
 ## 2026-10-19 — Mở rộng kiểm thử tự động: controller chưa phủ, tích hợp toàn bộ router, E2E, phân tích tĩnh
 
 Ngày lấy từ [run-metadata](../../test-results/extension/run-metadata.json). Nhánh `test/automation-ch5-ch6`, chưa commit/push. Tổng kết số liệu và danh sách lỗi: [SUMMARY_EXTENSION](../../test-results/SUMMARY_EXTENSION.md). **Không sửa mã sản phẩm** (`server/src`, `src`) theo yêu cầu của người dùng; chỉ thêm test, tooling, CI và tài liệu.
