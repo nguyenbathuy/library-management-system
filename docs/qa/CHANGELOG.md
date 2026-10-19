@@ -7,6 +7,7 @@ Lịch sử được tổng hợp từ tài liệu/evidence có sẵn, không ph
 - **Sự kiện:** nhánh `test/automation-ch5-ch6` được push (4 commit, HEAD `36689f0f`); workflow CI chạy lần đầu (run #1) và **thành công** cả hai job. Chi tiết, số liệu artifact và ảnh: [github-actions-run1.md](../../test-results/ci/github-actions-run1.md). Lần push đầu bị chặn vì token `gh` thiếu phạm vi `workflow`; được khắc phục bằng cách cấp lại phạm vi này.
 - **Báo cáo** `docs/qa/output/Nhom8-DGVKDCLPM-Reportt.docx`: thay đoạn "workflow chưa chạy" ở mục 5.4 bằng kết quả thật, thêm Hình 5.1 (ảnh trang Actions; hình Vitest cũ thành Hình 5.2 và tham chiếu ở Chương 4 được đổi theo), cập nhật mục 7.4, 7.5 và Kết luận. Chỉ `word/document.xml`, quan hệ và một ảnh mới thay đổi; `validate.py` đạt. File báo cáo chưa được commit theo yêu cầu của người dùng (chỉ push phần mã kiểm thử và tài liệu kỹ thuật).
 - **Giới hạn:** CI mới chạy bằng `push`, chưa chạy ở chế độ pull request vào `main`; chênh lệch nhỏ về coverage giữa CI và máy cục bộ (xem tệp chi tiết).
+- **Chỉnh báo cáo theo yêu cầu của người dùng:** bỏ khỏi báo cáo các câu "cần xác nhận"/"mức độ do nhóm kiểm thử đề xuất" của DEF-021 → 037 và mọi tham chiếu thư mục/đường dẫn mã nguồn (chỉ giữ tên file, lệnh `npm`, tên cấu hình); Phụ lục B viết lại bằng lệnh `npm` và mô tả. Các tài liệu kỹ thuật trong repo (CHANGELOG, SUMMARY_EXTENSION) không thay đổi nội dung này.
 
 ## 2026-10-19 — Cập nhật báo cáo Nhóm 8 theo đợt mở rộng kiểm thử
 
