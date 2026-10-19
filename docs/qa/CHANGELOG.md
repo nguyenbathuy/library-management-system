@@ -2,6 +2,12 @@
 
 Lịch sử được tổng hợp từ tài liệu/evidence có sẵn, không phải danh sách commit hoặc xác nhận đã retest toàn hệ thống. Các báo cáo [sửa lỗi sách](../bug_fix_report.md) và [feature walkthrough](../feature_walkthrough.md) là lịch sử phát triển riêng, được giữ lại; trước nhiệm vụ này chưa có changelog QA tổng hợp. Không suy ngày thực thi từ ngày sửa file.
 
+## 2026-10-19 — GitHub Actions chạy lần đầu và cập nhật báo cáo
+
+- **Sự kiện:** nhánh `test/automation-ch5-ch6` được push (4 commit, HEAD `36689f0f`); workflow CI chạy lần đầu (run #1) và **thành công** cả hai job. Chi tiết, số liệu artifact và ảnh: [github-actions-run1.md](../../test-results/ci/github-actions-run1.md). Lần push đầu bị chặn vì token `gh` thiếu phạm vi `workflow`; được khắc phục bằng cách cấp lại phạm vi này.
+- **Báo cáo** `docs/qa/output/Nhom8-DGVKDCLPM-Reportt.docx`: thay đoạn "workflow chưa chạy" ở mục 5.4 bằng kết quả thật, thêm Hình 5.1 (ảnh trang Actions; hình Vitest cũ thành Hình 5.2 và tham chiếu ở Chương 4 được đổi theo), cập nhật mục 7.4, 7.5 và Kết luận. Chỉ `word/document.xml`, quan hệ và một ảnh mới thay đổi; `validate.py` đạt. File báo cáo chưa được commit theo yêu cầu của người dùng (chỉ push phần mã kiểm thử và tài liệu kỹ thuật).
+- **Giới hạn:** CI mới chạy bằng `push`, chưa chạy ở chế độ pull request vào `main`; chênh lệch nhỏ về coverage giữa CI và máy cục bộ (xem tệp chi tiết).
+
 ## 2026-10-19 — Cập nhật báo cáo Nhóm 8 theo đợt mở rộng kiểm thử
 
 - **Tệp đích:** cập nhật trực tiếp `docs/qa/output/Nhom8-DGVKDCLPM-Reportt.docx`; backup nguyên bản tại `docs/qa/output/backups/Nhom8-DGVKDCLPM-Reportt_before_extension_20261019.docx` (SHA256 `1acbb754…7a62 → 5e17e3f5…`). Chỉ `word/document.xml` thay đổi so với backup; ảnh, header, style và các part khác giữ nguyên byte.

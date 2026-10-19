@@ -5,7 +5,7 @@ Nhánh `test/automation-ch5-ch6`, nối tiếp [SUMMARY_CH5_CH6](SUMMARY_CH5_CH6
 > **Phạm vi và quy ước**
 > - **Không sửa mã sản phẩm** (`server/src`, `src`) theo yêu cầu của người dùng: chỉ thêm test, tooling, CI và tài liệu. Ca nào hệ thống sai so với đặc tả được viết theo đặc tả đúng, đánh dấu `test.fails` / `test.fail` và ghi nhận ở mục 4; lý do thất bại được chứng minh bằng `server/tests/support/verify-known-bugs.mjs`.
 > - Ca `test.fails` vẫn được Vitest tính là "xanh"; ở các bảng chúng được tách riêng khỏi PASS.
-> - **CI GitHub chưa chạy** (chưa commit/push trong lượt này). Kết quả dưới đây là chạy cục bộ, không phải GitHub Actions.
+> - Kết quả dưới đây là chạy cục bộ. GitHub Actions đã chạy thành công lần đầu trên commit `36689f0f` (số ca khớp, coverage lệch nhẹ): xem [ci/github-actions-run1.md](ci/github-actions-run1.md).
 > - Căn cứ của một số lỗi (FIND-06/07/11/12/13/20/22) là chú thích mã nguồn hoặc nguyên tắc bảo mật, chưa phải yêu cầu đã được nhóm xác nhận; mỗi ca ghi rõ căn cứ ở header file test.
 
 ## 1. Công cụ (thực tế)
