@@ -40,11 +40,21 @@ jobs:
         run: npx prisma generate
         working-directory: server
 
-      - name: Type-check server source and tests
+      - name: Type-check server source, tests and E2E
+        run: npm run typecheck
+
+      # Phân tích tĩnh: báo cáo, không chặn pipeline. Mã sản phẩm hiện có lỗi/cảnh báo đã ghi nhận (docs/qa/CHANGELOG.md);
+      # mã kiểm thử (server/tests, e2e) được giữ sạch ở bước "Lint test code" bên dưới.
+      - name: Lint test code (blocking)
+        run: npx eslint server/tests e2e eslint.config.mjs vitest.backend.config.ts vitest.integration.config.ts playwright.config.ts
+
+      - name: Static analysis of product code (report only)
+        continue-on-error: true
         run: |
-          ./server/node_modules/.bin/tsc --project server/tsconfig.json --noEmit
-          ./server/node_modules/.bin/tsc --project server/tsconfig.tests.json --noEmit
-          ./server/node_modules/.bin/tsc --project e2e/tsconfig.json
+          mkdir -p ci-results/static-analysis
+          npm run lint:report || true
+          npm run typecheck:frontend 2>&1 | tee ci-results/static-analysis/tsc-frontend.txt
+          cp test-results/static-analysis/eslint-report.json ci-results/static-analysis/ || true
 
       - name: Unit tests + V8 coverage (white-box, loan rules, state machine, properties)
         run: npm run test:coverage

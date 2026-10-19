@@ -16,7 +16,7 @@ export class SettingsPage {
       await expect(this.language).toBeVisible();
     } catch (error) {
       // Nêu rõ lỗi runtime của trang (nếu có) thay vì chỉ "không tìm thấy phần tử".
-      throw new Error(`Trang Cài đặt không hiển thị. Lỗi JavaScript trên trang: ${this.pageErrors.join(' | ') || 'không có'}\n${error}`);
+      throw new Error(`Trang Cài đặt không hiển thị. Lỗi JavaScript trên trang: ${this.pageErrors.join(' | ') || 'không có'}\n${error}`, { cause: error });
     }
   }
 

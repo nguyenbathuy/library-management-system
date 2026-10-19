@@ -36,12 +36,15 @@ export default defineConfig({
         'server/src/middleware/**',
         'server/src/services/**',
         'server/src/utils/**',
+        'server/src/jobs/**',
         'server/src/routes/**',
       ],
       exclude: ['**/node_modules/**', 'server/tests/**'],
       reporter: ['text', 'html', 'json-summary', 'json', 'lcov'],
       reportsDirectory: resolve(runDirectory, 'coverage'),
       reportOnFailure: true,
+      // Ngưỡng bảo vệ coverage tích hợp (mailService bị stub nên 0% là bình thường; routes/** được nạp khi dựng app).
+      thresholds: { statements: 75, branches: 65, functions: 85, lines: 75 },
     },
   },
 });

@@ -7,8 +7,8 @@ type BookSeed = { isbn: string; title: string; copies: number };
 
 const data = JSON.parse(readFileSync(new URL('./testData.json', import.meta.url), 'utf8')) as {
   password: string;
-  users: Record<'admin' | 'user' | 'renew' | 'password', Account>;
-  books: Record<'borrow' | 'loaned' | 'renew', BookSeed>;
+  users: Record<'admin' | 'user' | 'renew' | 'password' | 'reserver', Account>;
+  books: Record<'borrow' | 'loaned' | 'renew' | 'soldout' | 'inventory', BookSeed>;
 };
 
 export const PASSWORD = data.password;

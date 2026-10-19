@@ -14,7 +14,12 @@
     "test:integration:coverage": "vitest run --config vitest.integration.config.ts --coverage",
     "test:property": "vitest run --config vitest.backend.config.ts server/tests/property && vitest run --config vitest.integration.config.ts server/tests/property/api",
     "test:mutation": "stryker run",
+    "test:mutation:ext": "stryker run stryker.extension.config.mjs",
     "test:e2e": "playwright test",
+    "typecheck": "node server/node_modules/typescript/bin/tsc -p server/tsconfig.json --noEmit && node server/node_modules/typescript/bin/tsc -p server/tsconfig.tests.json --noEmit && node server/node_modules/typescript/bin/tsc -p e2e/tsconfig.json",
+    "typecheck:frontend": "node server/node_modules/typescript/bin/tsc -p tsconfig.frontend.json",
+    "lint": "eslint .",
+    "lint:report": "eslint . -f json -o test-results/static-analysis/eslint-report.json",
     "test:all": "npm test && npm run test:e2e"
   },
   "dependencies": {
@@ -82,6 +87,7 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
+    "@eslint/js": "10.0.1",
     "@playwright/test": "1.64.0",
     "@stryker-mutator/core": "10.0.0",
     "@stryker-mutator/vitest-runner": "10.0.0",
@@ -90,9 +96,12 @@
     "@vitejs/plugin-react": "4.7.0",
     "@vitest/coverage-v8": "4.1.0",
     "concurrently": "^9.2.1",
+    "eslint": "10.13.0",
     "fast-check": "4.10.2",
+    "globals": "17.13.0",
     "supertest": "7.3.1",
     "tailwindcss": "4.1.12",
+    "typescript-eslint": "8.71.2",
     "vite": "6.3.5",
     "vitest": "4.1.0"
   },

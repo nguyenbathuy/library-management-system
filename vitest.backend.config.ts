@@ -8,6 +8,9 @@ import { defineConfig } from 'vitest/config';
 const AUTH_TESTS = 'server/tests/unit/auth/**/*.test.ts';
 const MEMBER_TESTS = 'server/tests/unit/member/**/*.test.ts';
 const LOAN_TESTS = 'server/tests/unit/loan/**/*.test.ts';
+// Modules added in the Chapter 5 extension (inventory, reservation, payment, notification, analytics, book,
+// mailService, reminderJob). Each has its own folder under server/tests/unit/.
+const MODULE_TESTS = 'server/tests/unit/{inventory,reservation,payment,notification,analytics,book,mail,jobs}/**/*.test.ts';
 const PROPERTY_TESTS = 'server/tests/property/**/*.property.test.ts';
 
 // Coverage denominators per scope. `authentication`, `member` and `whitebox` keep the
@@ -23,10 +26,12 @@ const ALL_SOURCES = [
   'server/src/middleware/**',
   'server/src/services/**',
   'server/src/utils/**',
+  'server/src/jobs/**',
 ];
 
 const scopes = {
-  all: { include: [AUTH_TESTS, MEMBER_TESTS, LOAN_TESTS, PROPERTY_TESTS], coverage: ALL_SOURCES },
+  all: { include: [AUTH_TESTS, MEMBER_TESTS, LOAN_TESTS, MODULE_TESTS, PROPERTY_TESTS], coverage: ALL_SOURCES },
+  modules: { include: [MODULE_TESTS], coverage: ALL_SOURCES },
   whitebox: { include: [AUTH_TESTS, MEMBER_TESTS], coverage: AUTH_SOURCES },
   authentication: { include: [AUTH_TESTS], coverage: AUTH_SOURCES },
   member: { include: [MEMBER_TESTS], coverage: AUTH_SOURCES },
@@ -82,6 +87,9 @@ export default defineConfig({
       reporter: ['text', 'html', 'json-summary', 'json', 'lcov'],
       reportsDirectory: resolve(runDirectory, 'coverage'),
       reportOnFailure: true,
+      // Ngưỡng chỉ áp dụng cho phạm vi toàn backend (scope `all`) để CI phát hiện coverage tụt; các scope hẹp
+      // (whitebox/authentication/...) dùng mẫu số riêng nên không đặt ngưỡng chung.
+      ...(scope === 'all' ? { thresholds: { statements: 90, branches: 85, functions: 90, lines: 90 } } : {}),
     },
   },
 });

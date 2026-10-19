@@ -24,6 +24,8 @@ vi.mock('@prisma/client', async (importOriginal) => {
 });
 
 export const mailCalls: Array<{ fn: string; args: unknown }> = [];
+// Chia sẻ cho các file test (import trực tiếp file setup sẽ chạy lại setup): đọc qua globalThis.__mailCalls.
+(globalThis as { __mailCalls?: typeof mailCalls }).__mailCalls = mailCalls;
 vi.mock('../../src/services/mailService', () => {
   const stub = (fn: string) => async (args: { to: string; subject?: string }) => {
     mailCalls.push({ fn, args });

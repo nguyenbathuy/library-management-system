@@ -22,6 +22,8 @@ const networkGuards = [
   vi.spyOn(tls, 'connect').mockImplementation(denyNetwork),
 ];
 
+// Vitest bắt buộc tham số thứ nhất của hook là mẫu destructuring đối tượng (xem FixtureParseError); `suite` ở tham số thứ hai.
+// eslint-disable-next-line no-empty-pattern
 afterAll(({}, suite) => {
   try {
     for (const guard of networkGuards) expect(guard).not.toHaveBeenCalled();
