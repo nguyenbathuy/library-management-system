@@ -420,10 +420,13 @@ Library Management System/
 ├── vitest.backend.config.ts              # Runner unit (white-box, loan rules, state machine, property)
 ├── vitest.integration.config.ts          # Runner tích hợp API (supertest + SQLite tạm) + fuzz API
 ├── playwright.config.ts                  # E2E Playwright (backend thật trên DB tạm e2e/.tmp)
-├── stryker.config.mjs                    # Mutation testing (Stryker)
+├── stryker.config.mjs                    # Mutation testing (Stryker): loanRules + authController
+├── stryker.extension.config.mjs          # Mutation testing mở rộng (controller/job bổ sung)
+├── eslint.config.mjs                     # Phân tích tĩnh (ESLint + typescript-eslint)
+├── tsconfig.frontend.json                # Type-check strict cho src/ (không build)
 ├── e2e/                                  # Page Objects, fixtures, specs, launcher E2E
 ├── server/tests/                         # unit/, integration/, property/, helpers/, setup/, mocks/
-├── test-results/                         # Bằng chứng Chương 5–6 (output, coverage, report, ảnh)
+├── test-results/                         # Bằng chứng Chương 5–6 và đợt mở rộng 19/10/2026 (extension/)
 ├── .github/workflows/ci.yml              # CI: unit + integration + E2E
 ├── AGENTS.md                             # Quy tắc dự án và kiểm tra cuối nhiệm vụ
 ├── docs/qa/                              # Baseline, kế hoạch, báo cáo và evidence QA
@@ -444,11 +447,14 @@ npm run test:integration:coverage # API tích hợp + fuzz API + coverage
 npm run test:property             # fast-check (thuộc tính + fuzz API)
 npm run test:e2e                  # Playwright (tự bật backend thật + Vite)
 npm run test:mutation             # Stryker trên loanRules.ts + authController.ts
+npm run test:mutation:ext         # Stryker trên controller/job bổ sung (báo cáo ở test-results/mutation-ext)
+npm run typecheck                 # tsc: server/src + server/tests + e2e
+npm run typecheck:frontend        # tsc strict cho src/ (hiện có 4 lỗi đã ghi nhận)
+npm run lint                      # ESLint toàn repo; lint:report ghi JSON vào test-results/static-analysis/
 LMS_WB_SCOPE=whitebox npm run test:coverage   # 3 file Authentication như baseline Chương 4
-./server/node_modules/.bin/tsc --project server/tsconfig.tests.json --noEmit
 ```
 
-Runner dùng Vitest/coverage-v8 4.1.0. `LMS_WB_SCOPE` chọn `all` (mặc định: auth + member + loan + property, coverage `controllers/middleware/services/utils`), `whitebox` (auth + member, coverage 3 file `authController.ts`, `middleware/auth.ts`, `authRoutes.ts`), `authentication`, `member`, `loan`, `property`. Ca lỗi đã biết viết theo đặc tả và đánh dấu `test.fails`/`test.fail`; `node server/tests/support/verify-known-bugs.mjs <config> <files>` và `E2E_SHOW_KNOWN_BUGS=1` hiển thị lỗi thật. Output mặc định ở `artifacts/qa/...`; dùng `LMS_WB_RUN_DIR`/`LMS_IT_RUN_DIR` tới thư mục mới khi lưu evidence. Tổng kết Chương 5–6: [test-results/SUMMARY_CH5_CH6.md](test-results/SUMMARY_CH5_CH6.md).
+Runner dùng Vitest/coverage-v8 4.1.0. `LMS_WB_SCOPE` chọn `all` (mặc định: auth + member + loan + các module inventory/reservation/payment/notification/analytics/book/mail/jobs + property, coverage `controllers/middleware/services/utils/jobs`, ngưỡng 90/85/90/90 khi chạy coverage), `modules` (chỉ các module mới), `whitebox` (auth + member, coverage 3 file `authController.ts`, `middleware/auth.ts`, `authRoutes.ts`), `authentication`, `member`, `loan`, `property`. Ca lỗi đã biết viết theo đặc tả và đánh dấu `test.fails`/`test.fail`; `node server/tests/support/verify-known-bugs.mjs <config> <files>` và `E2E_SHOW_KNOWN_BUGS=1` hiển thị lỗi thật. Output mặc định ở `artifacts/qa/...`; dùng `LMS_WB_RUN_DIR`/`LMS_IT_RUN_DIR` tới thư mục mới khi lưu evidence. Tổng kết Chương 5–6: [test-results/SUMMARY_CH5_CH6.md](test-results/SUMMARY_CH5_CH6.md); đợt mở rộng 19/10/2026 (coverage, lỗi FIND-06…22, phân tích tĩnh, mutation): [test-results/SUMMARY_EXTENSION.md](test-results/SUMMARY_EXTENSION.md).
 
 Xem [Phase 1 Results](docs/qa/whitebox/Whitebox_Phase1_Results.md), [Phase 2 Results](docs/qa/whitebox/Whitebox_Phase2_Results.md), [Phase 3 Results](docs/qa/whitebox/Whitebox_Phase3_Results.md), [Manual baseline v2](docs/qa/output/Manual_Test_Gap_Analysis_v2.md), [QA Changelog](docs/qa/CHANGELOG.md) và [Rules Audit](docs/qa/Rules_Audit.md). Bốn kế hoạch white-box giữ trạng thái thiết kế tại thời điểm tạo; package/config hiện tại và evidence từng run xác định trạng thái triển khai/thực thi. Các báo cáo kỹ thuật cũ trong `docs/` có ghi chú phạm vi; chúng không tự xác nhận defect đã được retest hoặc tính năng đạt production-ready.
 

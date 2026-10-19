@@ -1,0 +1,7 @@
+{
+  "file": "server/prisma/dev.db",
+  "sha256Before": "ee53659396d2b961ba42e1c44d43d20f3df0400fb99095fb3ae535434e4fc66c",
+  "sha256After": "ee53659396d2b961ba42e1c44d43d20f3df0400fb99095fb3ae535434e4fc66c",
+  "unchanged": true,
+  "note": "Hash không đổi chứng minh không ghi vào dev.db; không chứng minh không có thao tác đọc."
+}

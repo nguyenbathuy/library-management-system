@@ -1,0 +1,61 @@
+{
+  "generatedAtUtc": "2026-10-19T13:35:18.753Z",
+  "note": "Metadata thu thập sau các lượt chạy; chỉ gồm thông tin đo được. Exit code lấy từ tệp exit-code/vitest-output của từng lượt.",
+  "environment": {
+    "node": "v22.23.3",
+    "npm": "10.9.9",
+    "os": "Linux 6.8.0-138-generic",
+    "vitest": "vitest/4.1.0 linux-x64 node-v22.23.3",
+    "playwright": "Version 1.64.0",
+    "eslint": "v10.13.0",
+    "typescript": "Version 5.9.3",
+    "tz": "Asia/Ho_Chi_Minh (cấu hình runner)"
+  },
+  "git": {
+    "branch": "test/automation-ch5-ch6",
+    "headCommit": "d4ebbb07a4d2a2907df69a92aefc8f9957fbd1b3",
+    "workspaceDirty": "120 mục chưa commit",
+    "pushed": false
+  },
+  "runs": {
+    "unit": {
+      "command": "npm run test:coverage",
+      "runDir": "test-results/extension/unit",
+      "exit": "unit exit 0"
+    },
+    "integration": {
+      "command": "npm run test:integration:coverage",
+      "runDir": "test-results/extension/integration",
+      "exit": "integration exit 0"
+    },
+    "unitShuffle": {
+      "command": "vitest run --config vitest.backend.config.ts --sequence.shuffle",
+      "runDir": "test-results/extension/unit-shuffle"
+    },
+    "integrationShuffle": {
+      "command": "vitest run --config vitest.integration.config.ts --sequence.shuffle",
+      "runDir": "test-results/extension/integration-shuffle"
+    },
+    "unitWhitebox": {
+      "command": "LMS_WB_SCOPE=whitebox vitest run --config vitest.backend.config.ts --coverage",
+      "runDir": "test-results/extension/unit-whitebox"
+    },
+    "e2e": {
+      "command": "npx playwright test",
+      "runDir": "test-results/extension/e2e",
+      "note": "exit 0 (22 expected: 18 pass + 4 test.fail)"
+    },
+    "mutation": {
+      "command": "npm run test:mutation:ext",
+      "runDir": "test-results/mutation-ext"
+    },
+    "staticAnalysis": {
+      "runDir": "test-results/extension/static-analysis",
+      "exitCodes": "eslint(all) exit 1\neslint(test code) exit 0\ntypecheck(server+tests+e2e) exit 0\ntypecheck:frontend exit 2"
+    }
+  },
+  "devDbSha256": {
+    "after": "ee53659396d2b961ba42e1c44d43d20f3df0400fb99095fb3ae535434e4fc66c",
+    "note": "So với băm lấy trước lượt chạy (cùng phiên): không đổi; integration/E2E tự kiểm tra hash."
+  }
+}

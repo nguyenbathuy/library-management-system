@@ -1,0 +1,4 @@
+eslint(all) exit 1
+eslint(test code) exit 0
+typecheck(server+tests+e2e) exit 0
+typecheck:frontend exit 2

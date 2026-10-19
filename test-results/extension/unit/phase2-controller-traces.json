@@ -1,0 +1,3217 @@
+[
+  {
+    "id": "WB-LG-04",
+    "mockConfiguration": {
+      "default": "deny unconfigured calls",
+      "findUnique": {
+        "id": 1,
+        "email": "user@example.com",
+        "name": "Unit Test User",
+        "password": "unit-test-stored-hash",
+        "role": "ADMIN",
+        "membershipTier": "STANDARD",
+        "isBlacklisted": false,
+        "resetOtp": "123456",
+        "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+        "createdAt": "2026-01-01T00:00:00.000Z",
+        "twoFactorEnabled": false
+      },
+      "bcryptCompare": true,
+      "jwtSign": "unit-test-jwt-output"
+    },
+    "invocations": [
+      {
+        "function": "login",
+        "input": {
+          "email": "user@example.com",
+          "password": "oldpass"
+        },
+        "actor": null,
+        "mockConfiguration": {
+          "default": "deny unconfigured calls",
+          "findUnique": {
+            "id": 1,
+            "email": "user@example.com",
+            "name": "Unit Test User",
+            "password": "unit-test-stored-hash",
+            "role": "ADMIN",
+            "membershipTier": "STANDARD",
+            "isBlacklisted": false,
+            "resetOtp": "123456",
+            "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+            "createdAt": "2026-01-01T00:00:00.000Z",
+            "twoFactorEnabled": false
+          },
+          "bcryptCompare": true,
+          "jwtSign": "unit-test-jwt-output"
+        },
+        "actual": {
+          "statusCode": 200,
+          "payload": {
+            "requireOtp": false,
+            "token": "unit-test-jwt-output",
+            "user": {
+              "id": 1,
+              "email": "user@example.com",
+              "name": "Unit Test User",
+              "role": "ADMIN",
+              "membershipTier": "STANDARD",
+              "isBlacklisted": false,
+              "twoFactorEnabled": false
+            }
+          }
+        },
+        "calls": {
+          "user.create": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "user.findUnique": {
+            "arguments": [
+              [
+                {
+                  "where": {
+                    "email": "user@example.com"
+                  }
+                }
+              ]
+            ],
+            "outcomes": [
+              {
+                "status": "fulfilled",
+                "value": {
+                  "id": 1,
+                  "email": "user@example.com",
+                  "name": "Unit Test User",
+                  "password": "unit-test-stored-hash",
+                  "role": "ADMIN",
+                  "membershipTier": "STANDARD",
+                  "isBlacklisted": false,
+                  "resetOtp": "123456",
+                  "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+                  "createdAt": "2026-01-01T00:00:00.000Z",
+                  "twoFactorEnabled": false
+                }
+              }
+            ]
+          },
+          "user.findMany": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "user.update": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "prisma.$connect": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "prisma.$disconnect": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "prisma.$transaction": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "bcrypt.hash": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "bcrypt.compare": {
+            "arguments": [
+              [
+                "oldpass",
+                "unit-test-stored-hash"
+              ]
+            ],
+            "outcomes": [
+              {
+                "status": "fulfilled",
+                "value": true
+              }
+            ]
+          },
+          "jwt.sign": {
+            "arguments": [
+              [
+                {
+                  "userId": 1,
+                  "email": "user@example.com",
+                  "role": "ADMIN"
+                },
+                "unit-test-secret-never-used-for-real-tokens",
+                {
+                  "expiresIn": "1h"
+                }
+              ]
+            ],
+            "outcomes": [
+              {
+                "status": "fulfilled",
+                "value": "unit-test-jwt-output"
+              }
+            ]
+          },
+          "jwt.verify": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "mail.sendPasswordResetOtpEmail": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "notification.createNotification": {
+            "arguments": [],
+            "outcomes": []
+          }
+        }
+      }
+    ],
+    "runnerStateAtFinishedHook": "pass",
+    "recordedAt": "2026-10-19T13:27:26.040Z",
+    "consoleErrors": [],
+    "calls": {
+      "user.create": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "user.findUnique": {
+        "arguments": [
+          [
+            {
+              "where": {
+                "email": "user@example.com"
+              }
+            }
+          ]
+        ],
+        "outcomes": [
+          {
+            "status": "fulfilled",
+            "value": {
+              "id": 1,
+              "email": "user@example.com",
+              "name": "Unit Test User",
+              "password": "unit-test-stored-hash",
+              "role": "ADMIN",
+              "membershipTier": "STANDARD",
+              "isBlacklisted": false,
+              "resetOtp": "123456",
+              "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+              "createdAt": "2026-01-01T00:00:00.000Z",
+              "twoFactorEnabled": false
+            }
+          }
+        ]
+      },
+      "user.findMany": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "user.update": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "prisma.$connect": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "prisma.$disconnect": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "prisma.$transaction": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "bcrypt.hash": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "bcrypt.compare": {
+        "arguments": [
+          [
+            "oldpass",
+            "unit-test-stored-hash"
+          ]
+        ],
+        "outcomes": [
+          {
+            "status": "fulfilled",
+            "value": true
+          }
+        ]
+      },
+      "jwt.sign": {
+        "arguments": [
+          [
+            {
+              "userId": 1,
+              "email": "user@example.com",
+              "role": "ADMIN"
+            },
+            "unit-test-secret-never-used-for-real-tokens",
+            {
+              "expiresIn": "1h"
+            }
+          ]
+        ],
+        "outcomes": [
+          {
+            "status": "fulfilled",
+            "value": "unit-test-jwt-output"
+          }
+        ]
+      },
+      "jwt.verify": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "mail.sendPasswordResetOtpEmail": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "notification.createNotification": {
+        "arguments": [],
+        "outcomes": []
+      }
+    }
+  },
+  {
+    "id": "WB-CP-05",
+    "mockConfiguration": {
+      "default": "deny unconfigured calls",
+      "findUnique": null
+    },
+    "invocations": [
+      {
+        "function": "changePassword",
+        "input": {
+          "currentPassword": "oldpass",
+          "newPassword": "abcdef"
+        },
+        "actor": {
+          "userId": 1,
+          "email": "user@example.com",
+          "role": "USER"
+        },
+        "mockConfiguration": {
+          "default": "deny unconfigured calls",
+          "findUnique": null
+        },
+        "actual": {
+          "statusCode": 404,
+          "payload": {
+            "error": "Không tìm thấy thông tin người dùng"
+          }
+        },
+        "calls": {
+          "user.create": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "user.findUnique": {
+            "arguments": [
+              [
+                {
+                  "where": {
+                    "id": 1
+                  }
+                }
+              ]
+            ],
+            "outcomes": [
+              {
+                "status": "fulfilled",
+                "value": null
+              }
+            ]
+          },
+          "user.findMany": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "user.update": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "prisma.$connect": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "prisma.$disconnect": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "prisma.$transaction": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "bcrypt.hash": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "bcrypt.compare": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "jwt.sign": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "jwt.verify": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "mail.sendPasswordResetOtpEmail": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "notification.createNotification": {
+            "arguments": [],
+            "outcomes": []
+          }
+        }
+      }
+    ],
+    "runnerStateAtFinishedHook": "pass",
+    "recordedAt": "2026-10-19T13:27:26.041Z",
+    "consoleErrors": [],
+    "calls": {
+      "user.create": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "user.findUnique": {
+        "arguments": [
+          [
+            {
+              "where": {
+                "id": 1
+              }
+            }
+          ]
+        ],
+        "outcomes": [
+          {
+            "status": "fulfilled",
+            "value": null
+          }
+        ]
+      },
+      "user.findMany": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "user.update": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "prisma.$connect": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "prisma.$disconnect": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "prisma.$transaction": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "bcrypt.hash": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "bcrypt.compare": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "jwt.sign": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "jwt.verify": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "mail.sendPasswordResetOtpEmail": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "notification.createNotification": {
+        "arguments": [],
+        "outcomes": []
+      }
+    }
+  },
+  {
+    "id": "WB-CP-06",
+    "mockConfiguration": {
+      "default": "deny unconfigured calls",
+      "findUnique": {
+        "id": 1,
+        "email": "user@example.com",
+        "name": "Unit Test User",
+        "password": "unit-test-stored-hash",
+        "role": "USER",
+        "membershipTier": "STANDARD",
+        "isBlacklisted": false,
+        "resetOtp": "123456",
+        "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+        "createdAt": "2026-01-01T00:00:00.000Z"
+      },
+      "bcryptCompare": false
+    },
+    "invocations": [
+      {
+        "function": "changePassword",
+        "input": {
+          "currentPassword": "wrongpass",
+          "newPassword": "abcdef"
+        },
+        "actor": {
+          "userId": 1,
+          "email": "user@example.com",
+          "role": "USER"
+        },
+        "mockConfiguration": {
+          "default": "deny unconfigured calls",
+          "findUnique": {
+            "id": 1,
+            "email": "user@example.com",
+            "name": "Unit Test User",
+            "password": "unit-test-stored-hash",
+            "role": "USER",
+            "membershipTier": "STANDARD",
+            "isBlacklisted": false,
+            "resetOtp": "123456",
+            "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          },
+          "bcryptCompare": false
+        },
+        "actual": {
+          "statusCode": 400,
+          "payload": {
+            "error": "Mật khẩu hiện tại không chính xác"
+          }
+        },
+        "calls": {
+          "user.create": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "user.findUnique": {
+            "arguments": [
+              [
+                {
+                  "where": {
+                    "id": 1
+                  }
+                }
+              ]
+            ],
+            "outcomes": [
+              {
+                "status": "fulfilled",
+                "value": {
+                  "id": 1,
+                  "email": "user@example.com",
+                  "name": "Unit Test User",
+                  "password": "unit-test-stored-hash",
+                  "role": "USER",
+                  "membershipTier": "STANDARD",
+                  "isBlacklisted": false,
+                  "resetOtp": "123456",
+                  "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+                  "createdAt": "2026-01-01T00:00:00.000Z"
+                }
+              }
+            ]
+          },
+          "user.findMany": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "user.update": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "prisma.$connect": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "prisma.$disconnect": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "prisma.$transaction": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "bcrypt.hash": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "bcrypt.compare": {
+            "arguments": [
+              [
+                "wrongpass",
+                "unit-test-stored-hash"
+              ]
+            ],
+            "outcomes": [
+              {
+                "status": "fulfilled",
+                "value": false
+              }
+            ]
+          },
+          "jwt.sign": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "jwt.verify": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "mail.sendPasswordResetOtpEmail": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "notification.createNotification": {
+            "arguments": [],
+            "outcomes": []
+          }
+        }
+      }
+    ],
+    "runnerStateAtFinishedHook": "pass",
+    "recordedAt": "2026-10-19T13:27:26.041Z",
+    "consoleErrors": [],
+    "calls": {
+      "user.create": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "user.findUnique": {
+        "arguments": [
+          [
+            {
+              "where": {
+                "id": 1
+              }
+            }
+          ]
+        ],
+        "outcomes": [
+          {
+            "status": "fulfilled",
+            "value": {
+              "id": 1,
+              "email": "user@example.com",
+              "name": "Unit Test User",
+              "password": "unit-test-stored-hash",
+              "role": "USER",
+              "membershipTier": "STANDARD",
+              "isBlacklisted": false,
+              "resetOtp": "123456",
+              "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+              "createdAt": "2026-01-01T00:00:00.000Z"
+            }
+          }
+        ]
+      },
+      "user.findMany": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "user.update": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "prisma.$connect": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "prisma.$disconnect": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "prisma.$transaction": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "bcrypt.hash": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "bcrypt.compare": {
+        "arguments": [
+          [
+            "wrongpass",
+            "unit-test-stored-hash"
+          ]
+        ],
+        "outcomes": [
+          {
+            "status": "fulfilled",
+            "value": false
+          }
+        ]
+      },
+      "jwt.sign": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "jwt.verify": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "mail.sendPasswordResetOtpEmail": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "notification.createNotification": {
+        "arguments": [],
+        "outcomes": []
+      }
+    }
+  },
+  {
+    "id": "WB-CP-07",
+    "mockConfiguration": {
+      "default": "deny unconfigured calls",
+      "findUnique": {
+        "id": 1,
+        "email": "user@example.com",
+        "name": "Unit Test User",
+        "password": "unit-test-stored-hash",
+        "role": "USER",
+        "membershipTier": "STANDARD",
+        "isBlacklisted": false,
+        "resetOtp": "123456",
+        "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+        "createdAt": "2026-01-01T00:00:00.000Z"
+      },
+      "bcryptCompare": true
+    },
+    "invocations": [
+      {
+        "function": "changePassword",
+        "input": {
+          "currentPassword": "oldpass",
+          "newPassword": "oldpass"
+        },
+        "actor": {
+          "userId": 1,
+          "email": "user@example.com",
+          "role": "USER"
+        },
+        "mockConfiguration": {
+          "default": "deny unconfigured calls",
+          "findUnique": {
+            "id": 1,
+            "email": "user@example.com",
+            "name": "Unit Test User",
+            "password": "unit-test-stored-hash",
+            "role": "USER",
+            "membershipTier": "STANDARD",
+            "isBlacklisted": false,
+            "resetOtp": "123456",
+            "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          },
+          "bcryptCompare": true
+        },
+        "actual": {
+          "statusCode": 400,
+          "payload": {
+            "error": "Mật khẩu mới không được trùng với mật khẩu hiện tại"
+          }
+        },
+        "calls": {
+          "user.create": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "user.findUnique": {
+            "arguments": [
+              [
+                {
+                  "where": {
+                    "id": 1
+                  }
+                }
+              ]
+            ],
+            "outcomes": [
+              {
+                "status": "fulfilled",
+                "value": {
+                  "id": 1,
+                  "email": "user@example.com",
+                  "name": "Unit Test User",
+                  "password": "unit-test-stored-hash",
+                  "role": "USER",
+                  "membershipTier": "STANDARD",
+                  "isBlacklisted": false,
+                  "resetOtp": "123456",
+                  "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+                  "createdAt": "2026-01-01T00:00:00.000Z"
+                }
+              }
+            ]
+          },
+          "user.findMany": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "user.update": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "prisma.$connect": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "prisma.$disconnect": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "prisma.$transaction": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "bcrypt.hash": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "bcrypt.compare": {
+            "arguments": [
+              [
+                "oldpass",
+                "unit-test-stored-hash"
+              ]
+            ],
+            "outcomes": [
+              {
+                "status": "fulfilled",
+                "value": true
+              }
+            ]
+          },
+          "jwt.sign": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "jwt.verify": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "mail.sendPasswordResetOtpEmail": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "notification.createNotification": {
+            "arguments": [],
+            "outcomes": []
+          }
+        }
+      }
+    ],
+    "runnerStateAtFinishedHook": "pass",
+    "recordedAt": "2026-10-19T13:27:26.042Z",
+    "consoleErrors": [],
+    "calls": {
+      "user.create": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "user.findUnique": {
+        "arguments": [
+          [
+            {
+              "where": {
+                "id": 1
+              }
+            }
+          ]
+        ],
+        "outcomes": [
+          {
+            "status": "fulfilled",
+            "value": {
+              "id": 1,
+              "email": "user@example.com",
+              "name": "Unit Test User",
+              "password": "unit-test-stored-hash",
+              "role": "USER",
+              "membershipTier": "STANDARD",
+              "isBlacklisted": false,
+              "resetOtp": "123456",
+              "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+              "createdAt": "2026-01-01T00:00:00.000Z"
+            }
+          }
+        ]
+      },
+      "user.findMany": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "user.update": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "prisma.$connect": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "prisma.$disconnect": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "prisma.$transaction": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "bcrypt.hash": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "bcrypt.compare": {
+        "arguments": [
+          [
+            "oldpass",
+            "unit-test-stored-hash"
+          ]
+        ],
+        "outcomes": [
+          {
+            "status": "fulfilled",
+            "value": true
+          }
+        ]
+      },
+      "jwt.sign": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "jwt.verify": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "mail.sendPasswordResetOtpEmail": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "notification.createNotification": {
+        "arguments": [],
+        "outcomes": []
+      }
+    }
+  },
+  {
+    "id": "WB-FP-01",
+    "mockConfiguration": {
+      "default": "deny unconfigured calls"
+    },
+    "invocations": [
+      {
+        "function": "forgotPassword",
+        "input": {
+          "email": ""
+        },
+        "actor": null,
+        "mockConfiguration": {
+          "default": "deny unconfigured calls"
+        },
+        "actual": {
+          "statusCode": 400,
+          "payload": {
+            "error": "Vui lòng cung cấp địa chỉ email hợp lệ"
+          }
+        },
+        "calls": {
+          "user.create": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "user.findUnique": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "user.findMany": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "user.update": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "prisma.$connect": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "prisma.$disconnect": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "prisma.$transaction": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "bcrypt.hash": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "bcrypt.compare": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "jwt.sign": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "jwt.verify": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "mail.sendPasswordResetOtpEmail": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "notification.createNotification": {
+            "arguments": [],
+            "outcomes": []
+          }
+        }
+      }
+    ],
+    "runnerStateAtFinishedHook": "pass",
+    "recordedAt": "2026-10-19T13:27:26.042Z",
+    "consoleErrors": [],
+    "calls": {
+      "user.create": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "user.findUnique": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "user.findMany": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "user.update": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "prisma.$connect": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "prisma.$disconnect": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "prisma.$transaction": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "bcrypt.hash": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "bcrypt.compare": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "jwt.sign": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "jwt.verify": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "mail.sendPasswordResetOtpEmail": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "notification.createNotification": {
+        "arguments": [],
+        "outcomes": []
+      }
+    }
+  },
+  {
+    "id": "WB-FP-03",
+    "mockConfiguration": {
+      "default": "deny unconfigured calls",
+      "findUnique": null
+    },
+    "invocations": [
+      {
+        "function": "forgotPassword",
+        "input": {
+          "email": " USER@EXAMPLE.COM "
+        },
+        "actor": null,
+        "mockConfiguration": {
+          "default": "deny unconfigured calls",
+          "findUnique": null
+        },
+        "actual": {
+          "statusCode": 404,
+          "payload": {
+            "error": "Email không tồn tại trong hệ thống"
+          }
+        },
+        "calls": {
+          "user.create": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "user.findUnique": {
+            "arguments": [
+              [
+                {
+                  "where": {
+                    "email": "user@example.com"
+                  }
+                }
+              ]
+            ],
+            "outcomes": [
+              {
+                "status": "fulfilled",
+                "value": null
+              }
+            ]
+          },
+          "user.findMany": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "user.update": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "prisma.$connect": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "prisma.$disconnect": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "prisma.$transaction": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "bcrypt.hash": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "bcrypt.compare": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "jwt.sign": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "jwt.verify": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "mail.sendPasswordResetOtpEmail": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "notification.createNotification": {
+            "arguments": [],
+            "outcomes": []
+          }
+        }
+      }
+    ],
+    "runnerStateAtFinishedHook": "pass",
+    "recordedAt": "2026-10-19T13:27:26.043Z",
+    "consoleErrors": [],
+    "calls": {
+      "user.create": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "user.findUnique": {
+        "arguments": [
+          [
+            {
+              "where": {
+                "email": "user@example.com"
+              }
+            }
+          ]
+        ],
+        "outcomes": [
+          {
+            "status": "fulfilled",
+            "value": null
+          }
+        ]
+      },
+      "user.findMany": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "user.update": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "prisma.$connect": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "prisma.$disconnect": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "prisma.$transaction": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "bcrypt.hash": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "bcrypt.compare": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "jwt.sign": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "jwt.verify": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "mail.sendPasswordResetOtpEmail": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "notification.createNotification": {
+        "arguments": [],
+        "outcomes": []
+      }
+    }
+  },
+  {
+    "id": "WB-FP-04",
+    "mockConfiguration": {
+      "default": "deny unconfigured calls",
+      "clock": "2026-10-12T00:00:00.000Z",
+      "random": 0,
+      "findUnique": {
+        "id": 1,
+        "email": "user@example.com",
+        "name": "Unit Test User",
+        "password": "unit-test-stored-hash",
+        "role": "USER",
+        "membershipTier": "STANDARD",
+        "isBlacklisted": false,
+        "resetOtp": "123456",
+        "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+        "createdAt": "2026-01-01T00:00:00.000Z"
+      },
+      "userUpdate": "resolve",
+      "mail": {
+        "resolve": {
+          "previewUrl": "https://example.test/unit-preview"
+        }
+      }
+    },
+    "invocations": [
+      {
+        "function": "forgotPassword",
+        "input": {
+          "email": "user@example.com"
+        },
+        "actor": null,
+        "mockConfiguration": {
+          "default": "deny unconfigured calls",
+          "clock": "2026-10-12T00:00:00.000Z",
+          "random": 0,
+          "findUnique": {
+            "id": 1,
+            "email": "user@example.com",
+            "name": "Unit Test User",
+            "password": "unit-test-stored-hash",
+            "role": "USER",
+            "membershipTier": "STANDARD",
+            "isBlacklisted": false,
+            "resetOtp": "123456",
+            "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          },
+          "userUpdate": "resolve",
+          "mail": {
+            "resolve": {
+              "previewUrl": "https://example.test/unit-preview"
+            }
+          }
+        },
+        "actual": {
+          "statusCode": 200,
+          "payload": {
+            "message": "Mã xác thực OTP đã được gửi đến email của bạn. Vui lòng kiểm tra hộp thư (kể cả hòm thư rác/spam).",
+            "previewUrl": "https://example.test/unit-preview"
+          }
+        },
+        "calls": {
+          "user.create": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "user.findUnique": {
+            "arguments": [
+              [
+                {
+                  "where": {
+                    "email": "user@example.com"
+                  }
+                }
+              ]
+            ],
+            "outcomes": [
+              {
+                "status": "fulfilled",
+                "value": {
+                  "id": 1,
+                  "email": "user@example.com",
+                  "name": "Unit Test User",
+                  "password": "unit-test-stored-hash",
+                  "role": "USER",
+                  "membershipTier": "STANDARD",
+                  "isBlacklisted": false,
+                  "resetOtp": "123456",
+                  "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+                  "createdAt": "2026-01-01T00:00:00.000Z"
+                }
+              }
+            ]
+          },
+          "user.findMany": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "user.update": {
+            "arguments": [
+              [
+                {
+                  "where": {
+                    "id": 1
+                  },
+                  "data": {
+                    "resetOtp": "100000",
+                    "resetOtpExpiry": "2026-10-12T00:15:00.000Z"
+                  }
+                }
+              ]
+            ],
+            "outcomes": [
+              {
+                "status": "fulfilled",
+                "value": {
+                  "id": 1,
+                  "email": "user@example.com",
+                  "name": "Unit Test User",
+                  "password": "unit-test-stored-hash",
+                  "role": "USER",
+                  "membershipTier": "STANDARD",
+                  "isBlacklisted": false,
+                  "resetOtp": "123456",
+                  "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+                  "createdAt": "2026-01-01T00:00:00.000Z"
+                }
+              }
+            ]
+          },
+          "prisma.$connect": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "prisma.$disconnect": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "prisma.$transaction": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "bcrypt.hash": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "bcrypt.compare": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "jwt.sign": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "jwt.verify": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "mail.sendPasswordResetOtpEmail": {
+            "arguments": [
+              [
+                {
+                  "to": "user@example.com",
+                  "userName": "Unit Test User",
+                  "otp": "100000",
+                  "expiryMinutes": 15
+                }
+              ]
+            ],
+            "outcomes": [
+              {
+                "status": "fulfilled",
+                "value": {
+                  "previewUrl": "https://example.test/unit-preview"
+                }
+              }
+            ]
+          },
+          "notification.createNotification": {
+            "arguments": [],
+            "outcomes": []
+          }
+        }
+      }
+    ],
+    "runnerStateAtFinishedHook": "pass",
+    "recordedAt": "2026-10-19T13:27:26.045Z",
+    "consoleErrors": [],
+    "calls": {
+      "user.create": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "user.findUnique": {
+        "arguments": [
+          [
+            {
+              "where": {
+                "email": "user@example.com"
+              }
+            }
+          ]
+        ],
+        "outcomes": [
+          {
+            "status": "fulfilled",
+            "value": {
+              "id": 1,
+              "email": "user@example.com",
+              "name": "Unit Test User",
+              "password": "unit-test-stored-hash",
+              "role": "USER",
+              "membershipTier": "STANDARD",
+              "isBlacklisted": false,
+              "resetOtp": "123456",
+              "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+              "createdAt": "2026-01-01T00:00:00.000Z"
+            }
+          }
+        ]
+      },
+      "user.findMany": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "user.update": {
+        "arguments": [
+          [
+            {
+              "where": {
+                "id": 1
+              },
+              "data": {
+                "resetOtp": "100000",
+                "resetOtpExpiry": "2026-10-12T00:15:00.000Z"
+              }
+            }
+          ]
+        ],
+        "outcomes": [
+          {
+            "status": "fulfilled",
+            "value": {
+              "id": 1,
+              "email": "user@example.com",
+              "name": "Unit Test User",
+              "password": "unit-test-stored-hash",
+              "role": "USER",
+              "membershipTier": "STANDARD",
+              "isBlacklisted": false,
+              "resetOtp": "123456",
+              "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+              "createdAt": "2026-01-01T00:00:00.000Z"
+            }
+          }
+        ]
+      },
+      "prisma.$connect": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "prisma.$disconnect": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "prisma.$transaction": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "bcrypt.hash": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "bcrypt.compare": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "jwt.sign": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "jwt.verify": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "mail.sendPasswordResetOtpEmail": {
+        "arguments": [
+          [
+            {
+              "to": "user@example.com",
+              "userName": "Unit Test User",
+              "otp": "100000",
+              "expiryMinutes": 15
+            }
+          ]
+        ],
+        "outcomes": [
+          {
+            "status": "fulfilled",
+            "value": {
+              "previewUrl": "https://example.test/unit-preview"
+            }
+          }
+        ]
+      },
+      "notification.createNotification": {
+        "arguments": [],
+        "outcomes": []
+      }
+    }
+  },
+  {
+    "id": "WB-FP-07",
+    "mockConfiguration": {
+      "default": "deny unconfigured calls",
+      "clock": "2026-10-12T00:00:00.000Z",
+      "random": 0,
+      "findUnique": {
+        "id": 1,
+        "email": "user@example.com",
+        "name": "Unit Test User",
+        "password": "unit-test-stored-hash",
+        "role": "USER",
+        "membershipTier": "STANDARD",
+        "isBlacklisted": false,
+        "resetOtp": "123456",
+        "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+        "createdAt": "2026-01-01T00:00:00.000Z"
+      },
+      "userUpdate": "resolve",
+      "mail": {
+        "reject": "Simulated email delivery failure"
+      }
+    },
+    "invocations": [
+      {
+        "function": "forgotPassword",
+        "input": {
+          "email": "user@example.com"
+        },
+        "actor": null,
+        "mockConfiguration": {
+          "default": "deny unconfigured calls",
+          "clock": "2026-10-12T00:00:00.000Z",
+          "random": 0,
+          "findUnique": {
+            "id": 1,
+            "email": "user@example.com",
+            "name": "Unit Test User",
+            "password": "unit-test-stored-hash",
+            "role": "USER",
+            "membershipTier": "STANDARD",
+            "isBlacklisted": false,
+            "resetOtp": "123456",
+            "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          },
+          "userUpdate": "resolve",
+          "mail": {
+            "reject": "Simulated email delivery failure"
+          }
+        },
+        "actual": {
+          "statusCode": 500,
+          "payload": {
+            "error": "Không thể gửi mã xác nhận OTP, vui lòng thử lại sau"
+          }
+        },
+        "calls": {
+          "user.create": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "user.findUnique": {
+            "arguments": [
+              [
+                {
+                  "where": {
+                    "email": "user@example.com"
+                  }
+                }
+              ]
+            ],
+            "outcomes": [
+              {
+                "status": "fulfilled",
+                "value": {
+                  "id": 1,
+                  "email": "user@example.com",
+                  "name": "Unit Test User",
+                  "password": "unit-test-stored-hash",
+                  "role": "USER",
+                  "membershipTier": "STANDARD",
+                  "isBlacklisted": false,
+                  "resetOtp": "123456",
+                  "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+                  "createdAt": "2026-01-01T00:00:00.000Z"
+                }
+              }
+            ]
+          },
+          "user.findMany": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "user.update": {
+            "arguments": [
+              [
+                {
+                  "where": {
+                    "id": 1
+                  },
+                  "data": {
+                    "resetOtp": "100000",
+                    "resetOtpExpiry": "2026-10-12T00:15:00.000Z"
+                  }
+                }
+              ]
+            ],
+            "outcomes": [
+              {
+                "status": "fulfilled",
+                "value": {
+                  "id": 1,
+                  "email": "user@example.com",
+                  "name": "Unit Test User",
+                  "password": "unit-test-stored-hash",
+                  "role": "USER",
+                  "membershipTier": "STANDARD",
+                  "isBlacklisted": false,
+                  "resetOtp": "123456",
+                  "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+                  "createdAt": "2026-01-01T00:00:00.000Z"
+                }
+              }
+            ]
+          },
+          "prisma.$connect": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "prisma.$disconnect": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "prisma.$transaction": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "bcrypt.hash": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "bcrypt.compare": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "jwt.sign": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "jwt.verify": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "mail.sendPasswordResetOtpEmail": {
+            "arguments": [
+              [
+                {
+                  "to": "user@example.com",
+                  "userName": "Unit Test User",
+                  "otp": "100000",
+                  "expiryMinutes": 15
+                }
+              ]
+            ],
+            "outcomes": [
+              {
+                "status": "rejected",
+                "error": "Error: Simulated email delivery failure"
+              }
+            ]
+          },
+          "notification.createNotification": {
+            "arguments": [],
+            "outcomes": []
+          }
+        }
+      }
+    ],
+    "runnerStateAtFinishedHook": "pass",
+    "recordedAt": "2026-10-19T13:27:26.046Z",
+    "consoleErrors": [
+      [
+        "Error in forgotPassword:",
+        "Error: Simulated email delivery failure"
+      ]
+    ],
+    "calls": {
+      "user.create": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "user.findUnique": {
+        "arguments": [
+          [
+            {
+              "where": {
+                "email": "user@example.com"
+              }
+            }
+          ]
+        ],
+        "outcomes": [
+          {
+            "status": "fulfilled",
+            "value": {
+              "id": 1,
+              "email": "user@example.com",
+              "name": "Unit Test User",
+              "password": "unit-test-stored-hash",
+              "role": "USER",
+              "membershipTier": "STANDARD",
+              "isBlacklisted": false,
+              "resetOtp": "123456",
+              "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+              "createdAt": "2026-01-01T00:00:00.000Z"
+            }
+          }
+        ]
+      },
+      "user.findMany": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "user.update": {
+        "arguments": [
+          [
+            {
+              "where": {
+                "id": 1
+              },
+              "data": {
+                "resetOtp": "100000",
+                "resetOtpExpiry": "2026-10-12T00:15:00.000Z"
+              }
+            }
+          ]
+        ],
+        "outcomes": [
+          {
+            "status": "fulfilled",
+            "value": {
+              "id": 1,
+              "email": "user@example.com",
+              "name": "Unit Test User",
+              "password": "unit-test-stored-hash",
+              "role": "USER",
+              "membershipTier": "STANDARD",
+              "isBlacklisted": false,
+              "resetOtp": "123456",
+              "resetOtpExpiry": "2026-10-11T00:00:00.001Z",
+              "createdAt": "2026-01-01T00:00:00.000Z"
+            }
+          }
+        ]
+      },
+      "prisma.$connect": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "prisma.$disconnect": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "prisma.$transaction": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "bcrypt.hash": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "bcrypt.compare": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "jwt.sign": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "jwt.verify": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "mail.sendPasswordResetOtpEmail": {
+        "arguments": [
+          [
+            {
+              "to": "user@example.com",
+              "userName": "Unit Test User",
+              "otp": "100000",
+              "expiryMinutes": 15
+            }
+          ]
+        ],
+        "outcomes": [
+          {
+            "status": "rejected",
+            "error": "Error: Simulated email delivery failure"
+          }
+        ]
+      },
+      "notification.createNotification": {
+        "arguments": [],
+        "outcomes": []
+      }
+    }
+  },
+  {
+    "id": "WB-RP-01",
+    "mockConfiguration": {
+      "default": "deny unconfigured calls"
+    },
+    "invocations": [
+      {
+        "function": "resetPassword",
+        "input": {
+          "email": "",
+          "otp": "123456",
+          "newPassword": "abcdef"
+        },
+        "actor": null,
+        "mockConfiguration": {
+          "default": "deny unconfigured calls"
+        },
+        "actual": {
+          "statusCode": 400,
+          "payload": {
+            "error": "Vui lòng cung cấp đầy đủ email, mã OTP và mật khẩu mới"
+          }
+        },
+        "calls": {
+          "user.create": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "user.findUnique": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "user.findMany": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "user.update": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "prisma.$connect": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "prisma.$disconnect": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "prisma.$transaction": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "bcrypt.hash": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "bcrypt.compare": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "jwt.sign": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "jwt.verify": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "mail.sendPasswordResetOtpEmail": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "notification.createNotification": {
+            "arguments": [],
+            "outcomes": []
+          }
+        }
+      }
+    ],
+    "runnerStateAtFinishedHook": "pass",
+    "recordedAt": "2026-10-19T13:27:26.047Z",
+    "consoleErrors": [],
+    "calls": {
+      "user.create": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "user.findUnique": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "user.findMany": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "user.update": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "prisma.$connect": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "prisma.$disconnect": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "prisma.$transaction": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "bcrypt.hash": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "bcrypt.compare": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "jwt.sign": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "jwt.verify": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "mail.sendPasswordResetOtpEmail": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "notification.createNotification": {
+        "arguments": [],
+        "outcomes": []
+      }
+    }
+  },
+  {
+    "id": "WB-RP-02",
+    "mockConfiguration": {
+      "default": "deny unconfigured calls"
+    },
+    "invocations": [
+      {
+        "function": "resetPassword",
+        "input": {
+          "email": "user@example.com",
+          "otp": "",
+          "newPassword": "abcdef"
+        },
+        "actor": null,
+        "mockConfiguration": {
+          "default": "deny unconfigured calls"
+        },
+        "actual": {
+          "statusCode": 400,
+          "payload": {
+            "error": "Vui lòng cung cấp đầy đủ email, mã OTP và mật khẩu mới"
+          }
+        },
+        "calls": {
+          "user.create": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "user.findUnique": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "user.findMany": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "user.update": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "prisma.$connect": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "prisma.$disconnect": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "prisma.$transaction": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "bcrypt.hash": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "bcrypt.compare": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "jwt.sign": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "jwt.verify": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "mail.sendPasswordResetOtpEmail": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "notification.createNotification": {
+            "arguments": [],
+            "outcomes": []
+          }
+        }
+      }
+    ],
+    "runnerStateAtFinishedHook": "pass",
+    "recordedAt": "2026-10-19T13:27:26.047Z",
+    "consoleErrors": [],
+    "calls": {
+      "user.create": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "user.findUnique": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "user.findMany": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "user.update": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "prisma.$connect": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "prisma.$disconnect": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "prisma.$transaction": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "bcrypt.hash": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "bcrypt.compare": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "jwt.sign": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "jwt.verify": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "mail.sendPasswordResetOtpEmail": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "notification.createNotification": {
+        "arguments": [],
+        "outcomes": []
+      }
+    }
+  },
+  {
+    "id": "WB-RP-03",
+    "mockConfiguration": {
+      "default": "deny unconfigured calls"
+    },
+    "invocations": [
+      {
+        "function": "resetPassword",
+        "input": {
+          "email": "user@example.com",
+          "otp": "123456",
+          "newPassword": ""
+        },
+        "actor": null,
+        "mockConfiguration": {
+          "default": "deny unconfigured calls"
+        },
+        "actual": {
+          "statusCode": 400,
+          "payload": {
+            "error": "Vui lòng cung cấp đầy đủ email, mã OTP và mật khẩu mới"
+          }
+        },
+        "calls": {
+          "user.create": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "user.findUnique": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "user.findMany": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "user.update": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "prisma.$connect": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "prisma.$disconnect": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "prisma.$transaction": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "bcrypt.hash": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "bcrypt.compare": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "jwt.sign": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "jwt.verify": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "mail.sendPasswordResetOtpEmail": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "notification.createNotification": {
+            "arguments": [],
+            "outcomes": []
+          }
+        }
+      }
+    ],
+    "runnerStateAtFinishedHook": "pass",
+    "recordedAt": "2026-10-19T13:27:26.048Z",
+    "consoleErrors": [],
+    "calls": {
+      "user.create": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "user.findUnique": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "user.findMany": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "user.update": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "prisma.$connect": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "prisma.$disconnect": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "prisma.$transaction": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "bcrypt.hash": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "bcrypt.compare": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "jwt.sign": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "jwt.verify": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "mail.sendPasswordResetOtpEmail": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "notification.createNotification": {
+        "arguments": [],
+        "outcomes": []
+      }
+    }
+  },
+  {
+    "id": "WB-RP-05",
+    "mockConfiguration": {
+      "default": "deny unconfigured calls"
+    },
+    "invocations": [
+      {
+        "function": "resetPassword",
+        "input": {
+          "email": "user@example.com",
+          "otp": "123456",
+          "newPassword": "abcde"
+        },
+        "actor": null,
+        "mockConfiguration": {
+          "default": "deny unconfigured calls"
+        },
+        "actual": {
+          "statusCode": 400,
+          "payload": {
+            "error": "Mật khẩu mới phải có tối thiểu 6 ký tự"
+          }
+        },
+        "calls": {
+          "user.create": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "user.findUnique": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "user.findMany": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "user.update": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "prisma.$connect": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "prisma.$disconnect": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "prisma.$transaction": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "bcrypt.hash": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "bcrypt.compare": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "jwt.sign": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "jwt.verify": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "mail.sendPasswordResetOtpEmail": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "notification.createNotification": {
+            "arguments": [],
+            "outcomes": []
+          }
+        }
+      }
+    ],
+    "runnerStateAtFinishedHook": "pass",
+    "recordedAt": "2026-10-19T13:27:26.048Z",
+    "consoleErrors": [],
+    "calls": {
+      "user.create": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "user.findUnique": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "user.findMany": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "user.update": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "prisma.$connect": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "prisma.$disconnect": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "prisma.$transaction": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "bcrypt.hash": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "bcrypt.compare": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "jwt.sign": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "jwt.verify": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "mail.sendPasswordResetOtpEmail": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "notification.createNotification": {
+        "arguments": [],
+        "outcomes": []
+      }
+    }
+  },
+  {
+    "id": "WB-RP-06",
+    "mockConfiguration": {
+      "default": "deny unconfigured calls",
+      "findUnique": null
+    },
+    "invocations": [
+      {
+        "function": "resetPassword",
+        "input": {
+          "email": "user@example.com",
+          "otp": "123456",
+          "newPassword": "abcdef"
+        },
+        "actor": null,
+        "mockConfiguration": {
+          "default": "deny unconfigured calls",
+          "findUnique": null
+        },
+        "actual": {
+          "statusCode": 404,
+          "payload": {
+            "error": "Người dùng không tồn tại"
+          }
+        },
+        "calls": {
+          "user.create": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "user.findUnique": {
+            "arguments": [
+              [
+                {
+                  "where": {
+                    "email": "user@example.com"
+                  }
+                }
+              ]
+            ],
+            "outcomes": [
+              {
+                "status": "fulfilled",
+                "value": null
+              }
+            ]
+          },
+          "user.findMany": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "user.update": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "prisma.$connect": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "prisma.$disconnect": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "prisma.$transaction": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "bcrypt.hash": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "bcrypt.compare": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "jwt.sign": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "jwt.verify": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "mail.sendPasswordResetOtpEmail": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "notification.createNotification": {
+            "arguments": [],
+            "outcomes": []
+          }
+        }
+      }
+    ],
+    "runnerStateAtFinishedHook": "pass",
+    "recordedAt": "2026-10-19T13:27:26.049Z",
+    "consoleErrors": [],
+    "calls": {
+      "user.create": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "user.findUnique": {
+        "arguments": [
+          [
+            {
+              "where": {
+                "email": "user@example.com"
+              }
+            }
+          ]
+        ],
+        "outcomes": [
+          {
+            "status": "fulfilled",
+            "value": null
+          }
+        ]
+      },
+      "user.findMany": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "user.update": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "prisma.$connect": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "prisma.$disconnect": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "prisma.$transaction": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "bcrypt.hash": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "bcrypt.compare": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "jwt.sign": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "jwt.verify": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "mail.sendPasswordResetOtpEmail": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "notification.createNotification": {
+        "arguments": [],
+        "outcomes": []
+      }
+    }
+  },
+  {
+    "id": "WB-RP-09",
+    "mockConfiguration": {
+      "default": "deny unconfigured calls",
+      "findUnique": {
+        "id": 1,
+        "email": "user@example.com",
+        "name": "Unit Test User",
+        "password": "unit-test-stored-hash",
+        "role": "USER",
+        "membershipTier": "STANDARD",
+        "isBlacklisted": false,
+        "resetOtp": "123456",
+        "resetOtpExpiry": null,
+        "createdAt": "2026-01-01T00:00:00.000Z"
+      }
+    },
+    "invocations": [
+      {
+        "function": "resetPassword",
+        "input": {
+          "email": "user@example.com",
+          "otp": "123456",
+          "newPassword": "abcdef"
+        },
+        "actor": null,
+        "mockConfiguration": {
+          "default": "deny unconfigured calls",
+          "findUnique": {
+            "id": 1,
+            "email": "user@example.com",
+            "name": "Unit Test User",
+            "password": "unit-test-stored-hash",
+            "role": "USER",
+            "membershipTier": "STANDARD",
+            "isBlacklisted": false,
+            "resetOtp": "123456",
+            "resetOtpExpiry": null,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          }
+        },
+        "actual": {
+          "statusCode": 400,
+          "payload": {
+            "error": "Mã OTP đã hết hạn, vui lòng yêu cầu gửi lại mã mới"
+          }
+        },
+        "calls": {
+          "user.create": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "user.findUnique": {
+            "arguments": [
+              [
+                {
+                  "where": {
+                    "email": "user@example.com"
+                  }
+                }
+              ]
+            ],
+            "outcomes": [
+              {
+                "status": "fulfilled",
+                "value": {
+                  "id": 1,
+                  "email": "user@example.com",
+                  "name": "Unit Test User",
+                  "password": "unit-test-stored-hash",
+                  "role": "USER",
+                  "membershipTier": "STANDARD",
+                  "isBlacklisted": false,
+                  "resetOtp": "123456",
+                  "resetOtpExpiry": null,
+                  "createdAt": "2026-01-01T00:00:00.000Z"
+                }
+              }
+            ]
+          },
+          "user.findMany": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "user.update": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "prisma.$connect": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "prisma.$disconnect": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "prisma.$transaction": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "bcrypt.hash": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "bcrypt.compare": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "jwt.sign": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "jwt.verify": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "mail.sendPasswordResetOtpEmail": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "notification.createNotification": {
+            "arguments": [],
+            "outcomes": []
+          }
+        }
+      }
+    ],
+    "runnerStateAtFinishedHook": "pass",
+    "recordedAt": "2026-10-19T13:27:26.050Z",
+    "consoleErrors": [],
+    "calls": {
+      "user.create": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "user.findUnique": {
+        "arguments": [
+          [
+            {
+              "where": {
+                "email": "user@example.com"
+              }
+            }
+          ]
+        ],
+        "outcomes": [
+          {
+            "status": "fulfilled",
+            "value": {
+              "id": 1,
+              "email": "user@example.com",
+              "name": "Unit Test User",
+              "password": "unit-test-stored-hash",
+              "role": "USER",
+              "membershipTier": "STANDARD",
+              "isBlacklisted": false,
+              "resetOtp": "123456",
+              "resetOtpExpiry": null,
+              "createdAt": "2026-01-01T00:00:00.000Z"
+            }
+          }
+        ]
+      },
+      "user.findMany": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "user.update": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "prisma.$connect": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "prisma.$disconnect": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "prisma.$transaction": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "bcrypt.hash": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "bcrypt.compare": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "jwt.sign": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "jwt.verify": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "mail.sendPasswordResetOtpEmail": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "notification.createNotification": {
+        "arguments": [],
+        "outcomes": []
+      }
+    }
+  },
+  {
+    "id": "WB-RP-15",
+    "mockConfiguration": {
+      "default": "deny unconfigured calls",
+      "clock": "2026-10-12T00:00:00.000Z",
+      "findUnique": {
+        "id": 1,
+        "email": "user@example.com",
+        "name": "Unit Test User",
+        "password": "unit-test-hash-output",
+        "role": "USER",
+        "membershipTier": "STANDARD",
+        "isBlacklisted": false,
+        "resetOtp": null,
+        "resetOtpExpiry": null,
+        "createdAt": "2026-01-01T00:00:00.000Z"
+      },
+      "userUpdate": "apply actual update.data to RAM record",
+      "bcryptHash": "unit-test-hash-output",
+      "notification": "resolve"
+    },
+    "invocations": [
+      {
+        "function": "resetPassword",
+        "input": {
+          "email": "user@example.com",
+          "otp": "123456",
+          "newPassword": "abcdef"
+        },
+        "actor": null,
+        "mockConfiguration": {
+          "default": "deny unconfigured calls",
+          "clock": "2026-10-12T00:00:00.000Z",
+          "findUnique": {
+            "id": 1,
+            "email": "user@example.com",
+            "name": "Unit Test User",
+            "password": "unit-test-stored-hash",
+            "role": "USER",
+            "membershipTier": "STANDARD",
+            "isBlacklisted": false,
+            "resetOtp": "123456",
+            "resetOtpExpiry": "2026-10-12T00:00:00.001Z",
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          },
+          "userUpdate": "apply actual update.data to RAM record",
+          "bcryptHash": "unit-test-hash-output",
+          "notification": "resolve"
+        },
+        "actual": {
+          "statusCode": 200,
+          "payload": {
+            "message": "Đặt lại mật khẩu thành công! Bạn có thể đăng nhập bằng mật khẩu mới."
+          }
+        },
+        "calls": {
+          "user.create": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "user.findUnique": {
+            "arguments": [
+              [
+                {
+                  "where": {
+                    "email": "user@example.com"
+                  }
+                }
+              ]
+            ],
+            "outcomes": [
+              {
+                "status": "fulfilled",
+                "value": {
+                  "id": 1,
+                  "email": "user@example.com",
+                  "name": "Unit Test User",
+                  "password": "unit-test-stored-hash",
+                  "role": "USER",
+                  "membershipTier": "STANDARD",
+                  "isBlacklisted": false,
+                  "resetOtp": "123456",
+                  "resetOtpExpiry": "2026-10-12T00:00:00.001Z",
+                  "createdAt": "2026-01-01T00:00:00.000Z"
+                }
+              }
+            ]
+          },
+          "user.findMany": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "user.update": {
+            "arguments": [
+              [
+                {
+                  "where": {
+                    "id": 1
+                  },
+                  "data": {
+                    "password": "unit-test-hash-output",
+                    "resetOtp": null,
+                    "resetOtpExpiry": null
+                  }
+                }
+              ]
+            ],
+            "outcomes": [
+              {
+                "status": "fulfilled",
+                "value": {
+                  "id": 1,
+                  "email": "user@example.com",
+                  "name": "Unit Test User",
+                  "password": "unit-test-hash-output",
+                  "role": "USER",
+                  "membershipTier": "STANDARD",
+                  "isBlacklisted": false,
+                  "resetOtp": null,
+                  "resetOtpExpiry": null,
+                  "createdAt": "2026-01-01T00:00:00.000Z"
+                }
+              }
+            ]
+          },
+          "prisma.$connect": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "prisma.$disconnect": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "prisma.$transaction": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "bcrypt.hash": {
+            "arguments": [
+              [
+                "abcdef",
+                10
+              ]
+            ],
+            "outcomes": [
+              {
+                "status": "fulfilled",
+                "value": "unit-test-hash-output"
+              }
+            ]
+          },
+          "bcrypt.compare": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "jwt.sign": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "jwt.verify": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "mail.sendPasswordResetOtpEmail": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "notification.createNotification": {
+            "arguments": [
+              [
+                {
+                  "userId": 1,
+                  "title": "Đặt lại mật khẩu thành công",
+                  "message": "Mật khẩu tài khoản của bạn đã được đặt lại thành công qua mã xác thực OTP."
+                }
+              ]
+            ],
+            "outcomes": [
+              {
+                "status": "fulfilled",
+                "value": {
+                  "id": 1
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "function": "resetPassword",
+        "input": {
+          "email": "user@example.com",
+          "otp": "123456",
+          "newPassword": "abcdef"
+        },
+        "actor": null,
+        "mockConfiguration": {
+          "default": "deny unconfigured calls",
+          "clock": "2026-10-12T00:00:00.000Z",
+          "findUnique": {
+            "id": 1,
+            "email": "user@example.com",
+            "name": "Unit Test User",
+            "password": "unit-test-hash-output",
+            "role": "USER",
+            "membershipTier": "STANDARD",
+            "isBlacklisted": false,
+            "resetOtp": null,
+            "resetOtpExpiry": null,
+            "createdAt": "2026-01-01T00:00:00.000Z"
+          },
+          "userUpdate": "apply actual update.data to RAM record",
+          "bcryptHash": "unit-test-hash-output",
+          "notification": "resolve"
+        },
+        "actual": {
+          "statusCode": 400,
+          "payload": {
+            "error": "Mã OTP không chính xác"
+          }
+        },
+        "calls": {
+          "user.create": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "user.findUnique": {
+            "arguments": [
+              [
+                {
+                  "where": {
+                    "email": "user@example.com"
+                  }
+                }
+              ]
+            ],
+            "outcomes": [
+              {
+                "status": "fulfilled",
+                "value": {
+                  "id": 1,
+                  "email": "user@example.com",
+                  "name": "Unit Test User",
+                  "password": "unit-test-hash-output",
+                  "role": "USER",
+                  "membershipTier": "STANDARD",
+                  "isBlacklisted": false,
+                  "resetOtp": null,
+                  "resetOtpExpiry": null,
+                  "createdAt": "2026-01-01T00:00:00.000Z"
+                }
+              }
+            ]
+          },
+          "user.findMany": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "user.update": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "prisma.$connect": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "prisma.$disconnect": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "prisma.$transaction": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "bcrypt.hash": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "bcrypt.compare": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "jwt.sign": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "jwt.verify": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "mail.sendPasswordResetOtpEmail": {
+            "arguments": [],
+            "outcomes": []
+          },
+          "notification.createNotification": {
+            "arguments": [],
+            "outcomes": []
+          }
+        }
+      }
+    ],
+    "runnerStateAtFinishedHook": "pass",
+    "recordedAt": "2026-10-19T13:27:26.051Z",
+    "consoleErrors": [],
+    "calls": {
+      "user.create": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "user.findUnique": {
+        "arguments": [
+          [
+            {
+              "where": {
+                "email": "user@example.com"
+              }
+            }
+          ],
+          [
+            {
+              "where": {
+                "email": "user@example.com"
+              }
+            }
+          ]
+        ],
+        "outcomes": [
+          {
+            "status": "fulfilled",
+            "value": {
+              "id": 1,
+              "email": "user@example.com",
+              "name": "Unit Test User",
+              "password": "unit-test-stored-hash",
+              "role": "USER",
+              "membershipTier": "STANDARD",
+              "isBlacklisted": false,
+              "resetOtp": "123456",
+              "resetOtpExpiry": "2026-10-12T00:00:00.001Z",
+              "createdAt": "2026-01-01T00:00:00.000Z"
+            }
+          },
+          {
+            "status": "fulfilled",
+            "value": {
+              "id": 1,
+              "email": "user@example.com",
+              "name": "Unit Test User",
+              "password": "unit-test-hash-output",
+              "role": "USER",
+              "membershipTier": "STANDARD",
+              "isBlacklisted": false,
+              "resetOtp": null,
+              "resetOtpExpiry": null,
+              "createdAt": "2026-01-01T00:00:00.000Z"
+            }
+          }
+        ]
+      },
+      "user.findMany": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "user.update": {
+        "arguments": [
+          [
+            {
+              "where": {
+                "id": 1
+              },
+              "data": {
+                "password": "unit-test-hash-output",
+                "resetOtp": null,
+                "resetOtpExpiry": null
+              }
+            }
+          ]
+        ],
+        "outcomes": [
+          {
+            "status": "fulfilled",
+            "value": {
+              "id": 1,
+              "email": "user@example.com",
+              "name": "Unit Test User",
+              "password": "unit-test-hash-output",
+              "role": "USER",
+              "membershipTier": "STANDARD",
+              "isBlacklisted": false,
+              "resetOtp": null,
+              "resetOtpExpiry": null,
+              "createdAt": "2026-01-01T00:00:00.000Z"
+            }
+          }
+        ]
+      },
+      "prisma.$connect": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "prisma.$disconnect": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "prisma.$transaction": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "bcrypt.hash": {
+        "arguments": [
+          [
+            "abcdef",
+            10
+          ]
+        ],
+        "outcomes": [
+          {
+            "status": "fulfilled",
+            "value": "unit-test-hash-output"
+          }
+        ]
+      },
+      "bcrypt.compare": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "jwt.sign": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "jwt.verify": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "mail.sendPasswordResetOtpEmail": {
+        "arguments": [],
+        "outcomes": []
+      },
+      "notification.createNotification": {
+        "arguments": [
+          [
+            {
+              "userId": 1,
+              "title": "Đặt lại mật khẩu thành công",
+              "message": "Mật khẩu tài khoản của bạn đã được đặt lại thành công qua mã xác thực OTP."
+            }
+          ]
+        ],
+        "outcomes": [
+          {
+            "status": "fulfilled",
+            "value": {
+              "id": 1
+            }
+          }
+        ]
+      }
+    }
+  }
+]

@@ -1,0 +1,14 @@
+{
+  "testModule": "server/tests/unit/payment/paymentController.test.ts",
+  "guardsInstalled": 8,
+  "attemptedCalls": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ]
+}

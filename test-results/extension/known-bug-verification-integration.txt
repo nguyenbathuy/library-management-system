@@ -1,0 +1,866 @@
+
+[1m[46m RUN [49m[22m [36mv4.1.0 [39m[90m/home/a2ilab/Documents/project/library-management-system[39m
+
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.account.api.test.ts[2m > [22mĐăng ký — POST /api/auth/register (AUTH-02, MEM-02, MEM-03)[2m > [22mIT-REG-01 (MEM-03) email đã tồn tại → 400, không tạo thêm tài khoản[32m 183[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.account.api.test.ts[2m > [22mĐăng ký — POST /api/auth/register (AUTH-02, MEM-02, MEM-03)[2m > [22mIT-REG-02 (AUTH-02) email mới → 201; tài khoản có role USER, STANDARD, chưa Blacklist, mật khẩu không lưu dạng rõ[32m 161[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.account.api.test.ts[2m > [22mĐăng ký — POST /api/auth/register (AUTH-02, MEM-02, MEM-03)[2m > [22mIT-REG-03 không thể tự đăng ký quyền ADMIN qua body (role bị bỏ qua)[32m 100[2mms[22m[39m
+ [31m×[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.account.api.test.ts[2m > [22mĐăng ký — POST /api/auth/register (AUTH-02, MEM-02, MEM-03)[2m > [22mIT-REG-04 (FIND-18, MEM-02) đăng ký với email có chữ hoa → đăng nhập được bằng chính email đó[32m 104[2mms[22m[39m
+[31m   → expected 401 to be 200 // Object.is equality[39m
+ [31m×[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.account.api.test.ts[2m > [22mĐăng ký — POST /api/auth/register (AUTH-02, MEM-02, MEM-03)[2m > [22mIT-REG-05 (FIND-18) email chỉ khác chữ hoa/thường với tài khoản có sẵn phải bị coi là trùng (400)[32m 99[2mms[22m[39m
+[31m   → expected 201 to be 400 // Object.is equality[39m
+ [31m×[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.account.api.test.ts[2m > [22mĐăng ký — POST /api/auth/register (AUTH-02, MEM-02, MEM-03)[2m > [22mIT-REG-06 (FIND-19) thiếu mật khẩu phải bị từ chối bằng 4xx, không phải 500[32m 29[2mms[22m[39m
+[31m   → expected 500 to be less than 500[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.account.api.test.ts[2m > [22mĐăng ký — POST /api/auth/register (AUTH-02, MEM-02, MEM-03)[2m > [22mIT-REG-07 thiếu mật khẩu không tạo tài khoản (bất kể mã lỗi)[32m 41[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.account.api.test.ts[2m > [22mĐăng nhập — nhánh đầu vào[2m > [22mIT-LOG-01 thiếu email hoặc mật khẩu → 400, không phát token[32m 33[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.account.api.test.ts[2m > [22mĐăng nhập — nhánh đầu vào[2m > [22mIT-LOG-02 email được trim + chuyển chữ thường khi đăng nhập (tài khoản có sẵn)[32m 91[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.account.api.test.ts[2m > [22mĐăng nhập — nhánh đầu vào[2m > [22mIT-LOG-03 phản hồi đăng nhập không chứa hash mật khẩu[32m 87[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.account.api.test.ts[2m > [22mOTP đăng nhập 2FA — POST /verify-otp, /resend-otp (AUTH-01)[2m > [22mIT-OTP-01 đăng nhập 2FA → không có token; OTP 6 số được lưu, hạn ~10 phút; email OTP được gửi (stub) đúng mã[32m 106[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.account.api.test.ts[2m > [22mOTP đăng nhập 2FA — POST /verify-otp, /resend-otp (AUTH-01)[2m > [22mIT-OTP-02 (AUTH-01) OTP sai → 400, không token, OTP đúng vẫn còn hiệu lực[32m 122[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.account.api.test.ts[2m > [22mOTP đăng nhập 2FA — POST /verify-otp, /resend-otp (AUTH-01)[2m > [22mIT-OTP-03 OTP hết hạn → 400[32m 114[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.account.api.test.ts[2m > [22mOTP đăng nhập 2FA — POST /verify-otp, /resend-otp (AUTH-01)[2m > [22mIT-OTP-04 đầu vào sai: thiếu trường → 400; tempUserId không phải số → 400; người dùng không tồn tại → 404[32m 38[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.account.api.test.ts[2m > [22mOTP đăng nhập 2FA — POST /verify-otp, /resend-otp (AUTH-01)[2m > [22mIT-OTP-05 người dùng chưa từng yêu cầu OTP (loginOtp null) không thể xác thực bằng OTP bất kỳ[32m 42[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.account.api.test.ts[2m > [22mOTP đăng nhập 2FA — POST /verify-otp, /resend-otp (AUTH-01)[2m > [22mIT-OTP-06 gửi lại OTP → mã mới thay mã cũ (mã cũ không còn dùng được), có email stub[32m 131[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.account.api.test.ts[2m > [22mOTP đăng nhập 2FA — POST /verify-otp, /resend-otp (AUTH-01)[2m > [22mIT-OTP-07 gửi lại OTP: thiếu tempUserId → 400; không phải số → 400; không tồn tại → 404[32m 38[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.account.api.test.ts[2m > [22mBật/tắt 2FA, hồ sơ, danh sách thành viên[2m > [22mIT-ACC-01 toggle-2fa: không có body → đảo trạng thái; enabled=true/false → đặt đúng; không token → 401[32m 77[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.account.api.test.ts[2m > [22mBật/tắt 2FA, hồ sơ, danh sách thành viên[2m > [22mIT-ACC-02 /me trả hồ sơ của chính mình, không có hash mật khẩu / OTP[32m 29[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.account.api.test.ts[2m > [22mBật/tắt 2FA, hồ sơ, danh sách thành viên[2m > [22mIT-ACC-03 token của tài khoản đã bị xóa → /me trả 404[32m 50[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.account.api.test.ts[2m > [22mBật/tắt 2FA, hồ sơ, danh sách thành viên[2m > [22mIT-ACC-04 (MEM-01) /users (ADMIN) trả đủ thành viên theo id, không lộ mật khẩu/OTP[32m 28[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.account.api.test.ts[2m > [22mDanh sách đen — PATCH /api/auth/users/:id/blacklist (MEM-04)[2m > [22mIT-BL-01 (MEM-04) không có body → đảo trạng thái hai chiều, lưu DB[32m 48[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.account.api.test.ts[2m > [22mDanh sách đen — PATCH /api/auth/users/:id/blacklist (MEM-04)[2m > [22mIT-BL-02 isBlacklisted boolean được đặt đúng, không đảo; giá trị không phải boolean bị coi như đảo[32m 51[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.account.api.test.ts[2m > [22mDanh sách đen — PATCH /api/auth/users/:id/blacklist (MEM-04)[2m > [22mIT-BL-03 (MEM-04) bị blacklist → mượn sách bị chặn 403; gỡ blacklist → mượn lại được[32m 94[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.account.api.test.ts[2m > [22mDanh sách đen — PATCH /api/auth/users/:id/blacklist (MEM-04)[2m > [22mIT-BL-04 Admin không thể tự đưa mình vào danh sách đen; người dùng không tồn tại → 404[32m 85[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.account.api.test.ts[2m > [22mDanh sách đen — PATCH /api/auth/users/:id/blacklist (MEM-04)[2m > [22mIT-BL-05 USER → 403; không token → 401[32m 35[2mms[22m[39m
+ [31m×[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.account.api.test.ts[2m > [22mDanh sách đen — PATCH /api/auth/users/:id/blacklist (MEM-04)[2m > [22mIT-BL-06 (FIND-10) id không phải số phải trả 4xx, không phải 500[32m 31[2mms[22m[39m
+[31m   → expected 500 to be less than 500[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.account.api.test.ts[2m > [22mQuên / đặt lại mật khẩu bằng OTP (AUTH-06)[2m > [22mIT-PWD-01 (AUTH-06) email tồn tại → OTP 6 số lưu DB (hạn ~15 phút), mail OTP (stub) gửi đúng mã; email không phân biệt hoa/thường[32m 38[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.account.api.test.ts[2m > [22mQuên / đặt lại mật khẩu bằng OTP (AUTH-06)[2m > [22mIT-PWD-02 thiếu/không phải chuỗi email → 400, không gửi mail[32m 28[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.account.api.test.ts[2m > [22mQuên / đặt lại mật khẩu bằng OTP (AUTH-06)[2m > [22mIT-PWD-03 (AUTH-06) OTP đúng → đặt lại được: đăng nhập bằng mật khẩu mới, mật khẩu cũ bị từ chối, OTP bị xóa, có thông báo[32m 241[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.account.api.test.ts[2m > [22mQuên / đặt lại mật khẩu bằng OTP (AUTH-06)[2m > [22mIT-PWD-04 (AUTH-06) OTP sai → 400, mật khẩu không đổi, OTP đúng vẫn dùng được[32m 186[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.account.api.test.ts[2m > [22mQuên / đặt lại mật khẩu bằng OTP (AUTH-06)[2m > [22mIT-PWD-05 OTP đã dùng không dùng lại được; OTP hết hạn → 400[32m 145[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.account.api.test.ts[2m > [22mQuên / đặt lại mật khẩu bằng OTP (AUTH-06)[2m > [22mIT-PWD-06 đầu vào sai: thiếu trường → 400; mật khẩu mới 5 ký tự (biên) → 400; 6 ký tự → được; email không tồn tại → 404[32m 125[2mms[22m[39m
+ [31m×[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.account.api.test.ts[2m > [22mQuên / đặt lại mật khẩu bằng OTP (AUTH-06)[2m > [22mIT-PWD-07 (FIND-20) email không tồn tại và email có tồn tại phải nhận cùng một mã trạng thái[32m 47[2mms[22m[39m
+[31m   → expected 404 to be 200 // Object.is equality[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.account.api.test.ts[2m > [22mĐổi mật khẩu — nhánh kiểm tra (AUTH-05)[2m > [22mIT-CPW-01 thiếu mật khẩu hiện tại hoặc mới → 400; không token → 401[32m 30[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.account.api.test.ts[2m > [22mĐổi mật khẩu — nhánh kiểm tra (AUTH-05)[2m > [22mIT-CPW-02 mật khẩu mới 5 ký tự (biên dưới) → 400; đúng 6 ký tự → 200[32m 226[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.account.api.test.ts[2m > [22mĐổi mật khẩu — nhánh kiểm tra (AUTH-05)[2m > [22mIT-CPW-03 mật khẩu mới trùng mật khẩu hiện tại → 400, không đổi, không tạo thông báo[32m 97[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.account.api.test.ts[2m > [22mĐổi mật khẩu — nhánh kiểm tra (AUTH-05)[2m > [22mIT-CPW-04 (NOTI-01) đổi thành công tạo đúng 1 thông báo "Đổi mật khẩu thành công" cho người đổi[32m 167[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.book.api.test.ts[2m > [22mGET /api/books — công khai[2m > [22mIT-BOOK-01 không cần token; trả copies/available/status đúng theo bản sao đang mượn[32m 137[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.book.api.test.ts[2m > [22mGET /api/books — công khai[2m > [22mIT-BOOK-02 mọi bản đang mượn → status "Borrowed", available 0[32m 97[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.book.api.test.ts[2m > [22mPOST /api/books — thêm sách (BOOK-04, BOOK-05, BOOK-06)[2m > [22mIT-BOOK-03 không token → 401; USER → 403; DB không đổi[32m 77[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.book.api.test.ts[2m > [22mPOST /api/books — thêm sách (BOOK-04, BOOK-05, BOOK-06)[2m > [22mIT-BOOK-04 (BOOK-04) thêm sách 2 bản → 201; DB có 1 đầu sách, 2 bản sao AVAILABLE với 2 barcode khác nhau[32m 57[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.book.api.test.ts[2m > [22mPOST /api/books — thêm sách (BOOK-04, BOOK-05, BOOK-06)[2m > [22mIT-BOOK-05 trường tùy chọn (NXB, năm, số trang, ngôn ngữ, ảnh bìa, e-book) được lưu[32m 96[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.book.api.test.ts[2m > [22mPOST /api/books — thêm sách (BOOK-04, BOOK-05, BOOK-06)[2m > [22mIT-BOOK-06 (BOOK-05) thiếu title → 400, không tạo sách[32m 69[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.book.api.test.ts[2m > [22mPOST /api/books — thêm sách (BOOK-04, BOOK-05, BOOK-06)[2m > [22mIT-BOOK-06 (BOOK-05) thiếu author → 400, không tạo sách[32m 32[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.book.api.test.ts[2m > [22mPOST /api/books — thêm sách (BOOK-04, BOOK-05, BOOK-06)[2m > [22mIT-BOOK-06 (BOOK-05) thiếu isbn → 400, không tạo sách[32m 34[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.book.api.test.ts[2m > [22mPOST /api/books — thêm sách (BOOK-04, BOOK-05, BOOK-06)[2m > [22mIT-BOOK-06 (BOOK-05) thiếu category → 400, không tạo sách[32m 28[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.book.api.test.ts[2m > [22mPOST /api/books — thêm sách (BOOK-04, BOOK-05, BOOK-06)[2m > [22mIT-BOOK-06 (BOOK-05) copies âm → 400, không tạo sách[32m 34[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.book.api.test.ts[2m > [22mPOST /api/books — thêm sách (BOOK-04, BOOK-05, BOOK-06)[2m > [22mIT-BOOK-06 (BOOK-05) available > copies → 400, không tạo sách[32m 28[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.book.api.test.ts[2m > [22mPOST /api/books — thêm sách (BOOK-04, BOOK-05, BOOK-06)[2m > [22mIT-BOOK-06 (BOOK-05) available âm → 400, không tạo sách[32m 28[2mms[22m[39m
+ [31m×[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.book.api.test.ts[2m > [22mPOST /api/books — thêm sách (BOOK-04, BOOK-05, BOOK-06)[2m > [22mIT-BOOK-07 (BOOK-05, FIND-08) copies = 0 phải bị từ chối, không tạo sách[32m 59[2mms[22m[39m
+[31m   → expected 201 to be 400 // Object.is equality[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.book.api.test.ts[2m > [22mPOST /api/books — thêm sách (BOOK-04, BOOK-05, BOOK-06)[2m > [22mIT-BOOK-08 (BOOK-06) thêm lại cùng ISBN → 200 isMerged, vẫn 1 đầu sách, cộng thêm bản sao với barcode không trùng[32m 104[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.book.api.test.ts[2m > [22mPOST /api/books — thêm sách (BOOK-04, BOOK-05, BOOK-06)[2m > [22mIT-BOOK-09 cùng tiêu đề + tác giả nhưng ISBN khác cũng được gộp vào đầu sách cũ (Smart Merge, ghi nhận hành vi hiện tại)[32m 97[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.book.api.test.ts[2m > [22mPOST /api/books — thêm sách (BOOK-04, BOOK-05, BOOK-06)[2m > [22mIT-BOOK-10 hai đầu sách khác nhau có 6 chữ số cuối ISBN trùng nhau vẫn có barcode duy nhất (không lỗi UNIQUE)[32m 108[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.book.api.test.ts[2m > [22mPUT /api/books/:id — sửa sách (BOOK-07)[2m > [22mIT-BOOK-11 (BOOK-07) đổi tên/mô tả và tăng 2 → 3: thông tin lưu, có 1 barcode mới, barcode cũ giữ nguyên[32m 105[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.book.api.test.ts[2m > [22mPUT /api/books/:id — sửa sách (BOOK-07)[2m > [22mIT-BOOK-12 đổi tác giả/thể loại/NXB: tạo bản ghi mới nếu chưa có và gán lại[32m 135[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.book.api.test.ts[2m > [22mPUT /api/books/:id — sửa sách (BOOK-07)[2m > [22mIT-BOOK-13 USER → 403; không token → 401; id không tồn tại → 404; id không phải số → 400[32m 101[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.book.api.test.ts[2m > [22mPUT /api/books/:id — sửa sách (BOOK-07)[2m > [22mIT-BOOK-14 đổi ISBN trùng sách khác → 400 "ISBN đã tồn tại", dữ liệu sách không đổi[32m 100[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.book.api.test.ts[2m > [22mPUT /api/books/:id — sửa sách (BOOK-07)[2m > [22mIT-BOOK-15 giảm số lượng (2 → 1) không xóa bản sao nào (giảm chưa được hỗ trợ, ghi nhận hành vi hiện tại)[32m 103[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.book.api.test.ts[2m > [22mDELETE /api/books/:id — xóa sách (BOOK-10)[2m > [22mIT-BOOK-16 (BOOK-10) sách chưa phát sinh phiếu mượn → xóa khỏi danh mục: Book và BookItem biến mất[32m 102[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.book.api.test.ts[2m > [22mDELETE /api/books/:id — xóa sách (BOOK-10)[2m > [22mIT-BOOK-17 xóa sách xóa luôn các yêu cầu đặt trước của sách đó[32m 88[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.book.api.test.ts[2m > [22mDELETE /api/books/:id — xóa sách (BOOK-10)[2m > [22mIT-BOOK-18 có bản đang được mượn → 400, sách + bản sao + phiếu mượn còn nguyên[32m 69[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.book.api.test.ts[2m > [22mDELETE /api/books/:id — xóa sách (BOOK-10)[2m > [22mIT-BOOK-19 USER → 403; không token → 401; id không phải số → 400; id không tồn tại → 404[32m 83[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.book.api.test.ts[2m > [22mNhập Excel — /api/books/import-template, /api/books/import (EXCEL-01..04)[2m > [22mIT-EXC-01 (EXCEL-01) tải file mẫu (không cần token, cả hai đường dẫn) → .xlsx mở được, có cột hướng dẫn[32m 77[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.book.api.test.ts[2m > [22mNhập Excel — /api/books/import-template, /api/books/import (EXCEL-01..04)[2m > [22mIT-EXC-02 (EXCEL-02) nhập 1 dòng mới, số lượng 2 → thành công; DB có sách với 2 bản; AuditLog IMPORT_EXCEL[32m 68[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.book.api.test.ts[2m > [22mNhập Excel — /api/books/import-template, /api/books/import (EXCEL-01..04)[2m > [22mIT-EXC-03 (EXCEL-03) dòng thiếu tiêu đề + dòng trùng ISBN đã có + dòng hợp lệ → chỉ dòng hợp lệ được tạo, dòng lỗi kèm lý do[32m 118[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.book.api.test.ts[2m > [22mNhập Excel — /api/books/import-template, /api/books/import (EXCEL-01..04)[2m > [22mIT-EXC-04 hai dòng cùng ISBN trong một file → chỉ dòng đầu được tạo[32m 109[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.book.api.test.ts[2m > [22mNhập Excel — /api/books/import-template, /api/books/import (EXCEL-01..04)[2m > [22mIT-EXC-05 USER → 403; không token → 401; không đính kèm file → 400; file không có dòng dữ liệu → 400[32m 76[2mms[22m[39m
+ [31m×[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.book.api.test.ts[2m > [22mNhập Excel — /api/books/import-template, /api/books/import (EXCEL-01..04)[2m > [22mIT-EXC-06 (EXCEL-04, FIND-15) file không phải .xlsx/.xls (.txt) phải bị từ chối bằng 4xx, không phải 500[32m 29[2mms[22m[39m
+[31m   → expected 500 to be less than 500[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.book.api.test.ts[2m > [22mNhập Excel — /api/books/import-template, /api/books/import (EXCEL-01..04)[2m > [22mIT-EXC-07 (EXCEL-04) file .txt không bao giờ tạo sách (bất kể mã lỗi)[32m 32[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.book.api.test.ts[2m > [22mTải e-book — POST /api/books/upload-ebook (BOOK-08)[2m > [22mIT-EBK-01 (BOOK-08) Admin tải PDF → 200, trả ebookUrl; file được lưu trên đĩa với tên duy nhất[32m 30[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.book.api.test.ts[2m > [22mTải e-book — POST /api/books/upload-ebook (BOOK-08)[2m > [22mIT-EBK-02 Admin tải EPUB → 200[32m 28[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.book.api.test.ts[2m > [22mTải e-book — POST /api/books/upload-ebook (BOOK-08)[2m > [22mIT-EBK-03 không token → 401; Admin không đính kèm file → 400[32m 28[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.book.api.test.ts[2m > [22mTải e-book — POST /api/books/upload-ebook (BOOK-08)[2m > [22mIT-EBK-04 USER tải e-book → 403[32m 28[2mms[22m[39m
+ [31m×[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.book.api.test.ts[2m > [22mTải e-book — POST /api/books/upload-ebook (BOOK-08)[2m > [22mIT-EBK-05 (FIND-16) USER bị từ chối thì file không được ghi vào đĩa[32m 28[2mms[22m[39m
+[31m   → expected [ 'ebook-1792416527362-16235.pdf' ] to deeply equal [][39m
+ [31m×[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.book.api.test.ts[2m > [22mTải e-book — POST /api/books/upload-ebook (BOOK-08)[2m > [22mIT-EBK-06 (BOOK-08, FIND-15) định dạng không phải .pdf/.epub phải bị từ chối bằng 4xx, không phải 500[32m 37[2mms[22m[39m
+[31m   → expected 500 to be less than 500[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.book.api.test.ts[2m > [22mTải e-book — POST /api/books/upload-ebook (BOOK-08)[2m > [22mIT-EBK-07 file định dạng sai không bao giờ được lưu lên đĩa[32m 28[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.book.api.test.ts[2m > [22mGET /api/books/recommendations (BOOK-03)[2m > [22mIT-REC-01 (BOOK-03) khách / tài khoản mới chưa có lịch sử → TRENDING, sách được mượn nhiều xếp trước, nhãn "Thịnh hành"[32m 68[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.book.api.test.ts[2m > [22mGET /api/books/recommendations (BOOK-03)[2m > [22mIT-REC-02 (BOOK-03) người có lịch sử mượn → PERSONALIZED: sách cùng thể loại/tác giả xếp trước, loại sách đã mượn, nhãn "Phù hợp với bạn"[32m 118[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.book.api.test.ts[2m > [22mGET /api/books/recommendations (BOOK-03)[2m > [22mIT-REC-03 (BOOK-03) cùng một danh mục sách, người có lịch sử và người mới nhận danh sách KHÁC nhau[32m 160[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.book.api.test.ts[2m > [22mGET /api/books/recommendations (BOOK-03)[2m > [22mIT-REC-04 danh sách gợi ý tối đa 10 sách[32m 205[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mMượn sách — POST /api/loans/borrow-by-barcode[2m > [22mIT-BOR-01 (BOR-01) thủ thư quét barcode độc giả + sách → 200, Loan ACTIVE, BookItem BORROWED, khả dụng 3 → 2[32m 159[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mMượn sách — POST /api/loans/borrow-by-barcode[2m > [22mIT-BOR-02 thiếu barcode → 400, không tạo phiếu[32m 92[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mMượn sách — POST /api/loans/borrow-by-barcode[2m > [22mIT-BOR-03 barcode không tồn tại → 404[32m 76[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mMượn sách — POST /api/loans/borrow-by-barcode[2m > [22mIT-BOR-04 mã độc giả không tồn tại → 404[32m 72[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mMượn sách — POST /api/loans/borrow-by-barcode[2m > [22mIT-BOR-05 độc giả (USER) tự gọi API mượn → 403[32m 71[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mMượn sách — POST /api/loans/borrow-by-barcode[2m > [22mIT-BOR-06 (BOR-06) quét cuốn đang BORROWED → 400, không tạo phiếu thứ hai[32m 100[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mMượn sách — POST /api/loans/borrow-by-barcode[2m > [22mIT-BOR-07 độc giả bị Blacklist → 403[32m 106[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mMượn sách — POST /api/loans/borrow-by-barcode[2m > [22mIT-BOR-08 độc giả có phiếu quá hạn (dueDate dời về quá khứ) → 400[32m 101[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mMượn sách — POST /api/loans/borrow-by-barcode[2m > [22mIT-BOR-09 STANDARD → dueDate lưu trong DB = ngày mượn + 14 ngày[32m 98[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mMượn sách — POST /api/loans/borrow-by-barcode[2m > [22mIT-BOR-10 STANDARD đã mượn 5 cuốn → cuốn thứ 6 bị chặn 400 (hạn mức)[32m 202[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mMượn sách — POST /api/loans/borrow-by-barcode[2m > [22mIT-BOR-11 không gửi token → 401[32m 95[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mMượn sách — POST /api/loans/borrow-by-barcode[2m > [22mIT-BOR-12 còn nợ phạt chưa nộp (phiếu đã trả) → không được mượn mới[32m 92[2mms[22m[39m
+ [31m×[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mMượn sách — POST /api/loans/borrow-by-barcode[2m > [22mIT-BOR-13 mượn thành công → ghi 1 dòng AuditLog (DEF-004)[32m 102[2mms[22m[39m
+[31m   → expected +0 to be 1 // Object.is equality[39m
+ [31m×[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mMượn sách — POST /api/loans/borrow-by-barcode[2m > [22mIT-BOR-14 độc giả PREMIUM → dueDate = ngày mượn + 30 ngày (DEF-005)[32m 114[2mms[22m[39m
+[31m   → expected 14 to be 30 // Object.is equality[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mTrả sách — POST /api/loans/return-by-barcode[2m > [22mIT-RET-01 (RET-01) trả đúng hạn → Loan COMPLETED, phạt 0, BookItem AVAILABLE, khả dụng phục hồi[32m 126[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mTrả sách — POST /api/loans/return-by-barcode[2m > [22mIT-RET-02 trả trễ 3 ngày → phạt 15.000 đ được lưu, sách về AVAILABLE[32m 137[2mms[22m[39m
+ [31m×[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mTrả sách — POST /api/loans/return-by-barcode[2m > [22mIT-RET-03 trả trễ chưa nộp phạt → Loan PENDING_FINE_PAYMENT (DEF-006)[32m 123[2mms[22m[39m
+[31m   → expected 'OVERDUE' to be 'PENDING_FINE_PAYMENT' // Object.is equality[39m
+ [31m×[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mTrả sách — POST /api/loans/return-by-barcode[2m > [22mIT-RET-04 trễ 1 ngày 1 giờ → phạt theo ceil = 2 ngày = 10.000 đ (FIND-01)[32m 122[2mms[22m[39m
+[31m   → expected 5000 to be 10000 // Object.is equality[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mTrả sách — POST /api/loans/return-by-barcode[2m > [22mIT-RET-05 quét trả cuốn đang AVAILABLE (không có phiếu mở) → 400[32m 86[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mTrả sách — POST /api/loans/return-by-barcode[2m > [22mIT-RET-06 barcode không tồn tại → 404[32m 73[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mTrả sách — POST /api/loans/return-by-barcode[2m > [22mIT-RET-07 độc giả (USER) gọi API trả → 403, phiếu vẫn ACTIVE[32m 104[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mTrả sách — POST /api/loans/return-by-barcode[2m > [22mIT-RET-08 trả sách đang có người đặt trước (WAITING) → đặt trước chuyển NOTIFIED + thông báo[32m 166[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mTrả sách — POST /api/loans/return-by-barcode[2m > [22mIT-RET-09 sau khi trả trễ còn nợ phạt → bị chặn mượn mới (400)[32m 134[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mTrả sách — POST /api/loans/return-by-barcode[2m > [22mIT-RET-10 (RET-10) bấm trả lần 2 → 400; trả theo loanId phiếu COMPLETED → "đã hoàn tất"[32m 127[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mTrả sách — POST /api/loans/return-by-barcode[2m > [22mIT-RET-11 báo mất 120.000 đ → Loan LOST_PENDING_PAYMENT, BookItem LOST, báo mất lần 2 → 400[32m 129[2mms[22m[39m
+ [31m×[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mTrả sách — POST /api/loans/return-by-barcode[2m > [22mIT-RET-12 có luồng báo hỏng sách trong API phiếu mượn (DEF-007)[32m 91[2mms[22m[39m
+[31m   → expected false to be true // Object.is equality[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mGia hạn — request-renew / approve-renew / reject-renew[2m > [22mIT-EXT-01 (EXT-01) độc giả gửi gia hạn → PENDING; thủ thư duyệt → APPROVED, dueDate lùi về sau[32m 125[2mms[22m[39m
+ [31m×[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mGia hạn — request-renew / approve-renew / reject-renew[2m > [22mIT-EXT-02 duyệt gia hạn → dueDate + 14 ngày (DEF-008)[32m 149[2mms[22m[39m
+[31m   → expected 7 to be 14 // Object.is equality[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mGia hạn — request-renew / approve-renew / reject-renew[2m > [22mIT-EXT-03 gửi gia hạn lần nữa khi đang PENDING → 400[32m 132[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mGia hạn — request-renew / approve-renew / reject-renew[2m > [22mIT-EXT-04 phiếu đã quá hạn → không cho gửi gia hạn (400)[32m 104[2mms[22m[39m
+ [31m×[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mGia hạn — request-renew / approve-renew / reject-renew[2m > [22mIT-EXT-05 đã gia hạn 1 lần (APPROVED) → yêu cầu gia hạn lần 2 bị chặn (DEF-009)[32m 152[2mms[22m[39m
+[31m   → expected 200 to be 400 // Object.is equality[39m
+ [31m×[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mGia hạn — request-renew / approve-renew / reject-renew[2m > [22mIT-EXT-06 từ chối kèm lý do → lý do được lưu/gửi tới độc giả (DEF-010)[32m 154[2mms[22m[39m
+[31m   → expected false to be true // Object.is equality[39m
+ [31m×[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mGia hạn — request-renew / approve-renew / reject-renew[2m > [22mIT-EXT-07 độc giả còn nợ phạt → thủ thư không duyệt được gia hạn (DEF-011)[32m 161[2mms[22m[39m
+[31m   → expected 200 to be 400 // Object.is equality[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mGia hạn — request-renew / approve-renew / reject-renew[2m > [22mIT-EXT-08 đầu sách đang có độc giả khác đặt trước → không cho gia hạn (400)[32m 130[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mGia hạn — request-renew / approve-renew / reject-renew[2m > [22mIT-EXT-09 độc giả (USER) tự duyệt gia hạn → 403[32m 105[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mTra cứu phiếu mượn — GET /api/loans/all, /barcode/:barcode[2m > [22mIT-SRCH-01 thủ thư xem toàn bộ phiếu → 200, đủ số phiếu, có trạng thái hiển thị[32m 130[2mms[22m[39m
+ [31m×[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mTra cứu phiếu mượn — GET /api/loans/all, /barcode/:barcode[2m > [22mIT-SRCH-02 tìm phiếu theo mã phiếu → chỉ trả về đúng phiếu đó (DEF-012)[32m 105[2mms[22m[39m
+[31m   → expected [ 35, 34 ] to deeply equal [ 35 ][39m
+ [31m×[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mTra cứu phiếu mượn — GET /api/loans/all, /barcode/:barcode[2m > [22mIT-SRCH-03 tra cứu barcode trả kèm lịch sử mượn của cuốn sách (DEF-013)[32m 108[2mms[22m[39m
+[31m   → expected { bookItem: { id: 121, …(3) }, …(2) } to have property "history"[39m
+ [31m×[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mTra cứu phiếu mượn — GET /api/loans/all, /barcode/:barcode[2m > [22mIT-SRCH-04 lọc phiếu theo trạng thái + phân trang (DEF-014)[32m 108[2mms[22m[39m
+[31m   → expected [ { id: 39, userId: 81, …(19) }, …(1) ] to have a length of 1 but got 2[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.reservation.api.test.ts[2m > [22mTạo đặt trước — POST /api/reservations[2m > [22mIT-RES-01 (RES-01) sách hết bản → 201, Reservation WAITING trong DB, độc giả nhận thông báo, vị trí hàng đợi 1[32m 174[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.reservation.api.test.ts[2m > [22mTạo đặt trước — POST /api/reservations[2m > [22mIT-RES-02 hai độc giả đặt cùng sách → vị trí hàng đợi 1 và 2[32m 177[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.reservation.api.test.ts[2m > [22mTạo đặt trước — POST /api/reservations[2m > [22mIT-RES-03 (RES-02) sách còn bản AVAILABLE → 400, không tạo đặt trước, không thông báo[32m 141[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.reservation.api.test.ts[2m > [22mTạo đặt trước — POST /api/reservations[2m > [22mIT-RES-04 (RES-03) đặt trùng cùng đầu sách → 400, chỉ còn đúng 1 yêu cầu[32m 134[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.reservation.api.test.ts[2m > [22mTạo đặt trước — POST /api/reservations[2m > [22mIT-RES-05 sau khi hủy, được đặt lại (yêu cầu CANCELLED không chặn)[32m 186[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.reservation.api.test.ts[2m > [22mTạo đặt trước — POST /api/reservations[2m > [22mIT-RES-06 độc giả đang mượn chính cuốn sách đó → 400[32m 131[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.reservation.api.test.ts[2m > [22mTạo đặt trước — POST /api/reservations[2m > [22mIT-RES-07 sách không tồn tại → 404; thiếu bookId → 400; không token → 401[32m 114[2mms[22m[39m
+ [31m×[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.reservation.api.test.ts[2m > [22mTạo đặt trước — POST /api/reservations[2m > [22mIT-RES-08 (FIND-10) bookId = "abc" phải trả 4xx, không phải 500[32m 125[2mms[22m[39m
+[31m   → expected 500 to be less than 500[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.reservation.api.test.ts[2m > [22mDanh sách đặt trước[2m > [22mIT-RES-09 /my chỉ trả yêu cầu của chính người gọi; /all chỉ ADMIN, lọc theo trạng thái[32m 174[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.reservation.api.test.ts[2m > [22mDanh sách đặt trước[2m > [22mIT-RES-10 không token → 401 ở /my và /all[32m 132[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.reservation.api.test.ts[2m > [22mAdmin xử lý — PATCH /api/reservations/:id/status (RES-04)[2m > [22mIT-RES-11 (RES-04) WAITING → NOTIFIED: lưu DB và độc giả nhận thông báo "đã có sẵn"[32m 171[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.reservation.api.test.ts[2m > [22mAdmin xử lý — PATCH /api/reservations/:id/status (RES-04)[2m > [22mIT-RES-12 (RES-04) NOTIFIED → FULFILLED: trạng thái lưu, không thêm thông báo[32m 200[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.reservation.api.test.ts[2m > [22mAdmin xử lý — PATCH /api/reservations/:id/status (RES-04)[2m > [22mIT-RES-13 USER → 403, trạng thái không đổi[32m 148[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.reservation.api.test.ts[2m > [22mAdmin xử lý — PATCH /api/reservations/:id/status (RES-04)[2m > [22mIT-RES-14 status undefined không hợp lệ → 400, không đổi[32m 148[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.reservation.api.test.ts[2m > [22mAdmin xử lý — PATCH /api/reservations/:id/status (RES-04)[2m > [22mIT-RES-14 status DONE không hợp lệ → 400, không đổi[32m 153[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.reservation.api.test.ts[2m > [22mAdmin xử lý — PATCH /api/reservations/:id/status (RES-04)[2m > [22mIT-RES-14 status waiting không hợp lệ → 400, không đổi[32m 153[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.reservation.api.test.ts[2m > [22mAdmin xử lý — PATCH /api/reservations/:id/status (RES-04)[2m > [22mIT-RES-15 id không tồn tại → 404[32m 159[2mms[22m[39m
+ [31m×[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.reservation.api.test.ts[2m > [22mAdmin xử lý — PATCH /api/reservations/:id/status (RES-04)[2m > [22mIT-RES-16 (FIND-06) FULFILLED → WAITING (đi ngược) phải bị chặn, trạng thái DB vẫn FULFILLED[32m 190[2mms[22m[39m
+[31m   → expected 200 to be 400 // Object.is equality[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.reservation.api.test.ts[2m > [22mHủy đặt trước — DELETE /api/reservations/:id (RES-05)[2m > [22mIT-RES-17 (RES-05) độc giả hủy yêu cầu của mình → CANCELLED[32m 154[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.reservation.api.test.ts[2m > [22mHủy đặt trước — DELETE /api/reservations/:id (RES-05)[2m > [22mIT-RES-18 (RES-05) độc giả khác hủy yêu cầu không phải của mình → 403, vẫn WAITING[32m 146[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.reservation.api.test.ts[2m > [22mHủy đặt trước — DELETE /api/reservations/:id (RES-05)[2m > [22mIT-RES-19 (RES-05) Admin hủy yêu cầu của độc giả khác → CANCELLED[32m 167[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.reservation.api.test.ts[2m > [22mHủy đặt trước — DELETE /api/reservations/:id (RES-05)[2m > [22mIT-RES-20 không token → 401; id không tồn tại → 404[32m 174[2mms[22m[39m
+ [31m×[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.reservation.api.test.ts[2m > [22mHủy đặt trước — DELETE /api/reservations/:id (RES-05)[2m > [22mIT-RES-21 (FIND-07) hủy yêu cầu đã FULFILLED phải bị chặn, DB vẫn FULFILLED[32m 175[2mms[22m[39m
+[31m   → expected 200 to be 400 // Object.is equality[39m
+ [31m×[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.reservation.api.test.ts[2m > [22mHủy đặt trước — DELETE /api/reservations/:id (RES-05)[2m > [22mIT-RES-22 (FIND-10) DELETE /reservations/abc phải trả 4xx, không phải 500[32m 150[2mms[22m[39m
+[31m   → expected 500 to be less than 500[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.lists.api.test.ts[2m > [22mPOST /api/loans/borrow — mượn theo bookId / bookItemId[2m > [22mIT-LST-01 mượn theo bookId → 200, một bản chuyển BORROWED, Loan ACTIVE hạn +14 ngày, có thông báo, khả dụng 3 → 2[32m 156[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.lists.api.test.ts[2m > [22mPOST /api/loans/borrow — mượn theo bookId / bookItemId[2m > [22mIT-LST-02 mượn theo bookItemId cụ thể → đúng bản đó được mượn[32m 113[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.lists.api.test.ts[2m > [22mPOST /api/loans/borrow — mượn theo bookId / bookItemId[2m > [22mIT-LST-03 (BOR-06) bản đã được mượn hoặc sách hết bản → 400, không tạo phiếu[32m 125[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.lists.api.test.ts[2m > [22mPOST /api/loans/borrow — mượn theo bookId / bookItemId[2m > [22mIT-LST-04 thiếu cả bookId và bookItemId → 400; không token → 401[32m 85[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.lists.api.test.ts[2m > [22mPOST /api/loans/borrow — mượn theo bookId / bookItemId[2m > [22mIT-LST-05 (BOR-10) độc giả Blacklist → 403; có phiếu quá hạn → 400; đều không tạo phiếu[32m 107[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.lists.api.test.ts[2m > [22mPOST /api/loans/borrow — mượn theo bookId / bookItemId[2m > [22mIT-LST-06 hạn mức STANDARD 5 cuốn: mượn cuốn thứ 5 được, cuốn thứ 6 bị 400[32m 189[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.lists.api.test.ts[2m > [22mPOST /api/loans/borrow — mượn theo bookId / bookItemId[2m > [22mIT-LST-07 hạn mức PREMIUM là 10 cuốn (cuốn thứ 6 vẫn được mượn)[32m 223[2mms[22m[39m
+ [31m×[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.lists.api.test.ts[2m > [22mPOST /api/loans/borrow — mượn theo bookId / bookItemId[2m > [22mIT-LST-08 (DEF-005) độc giả PREMIUM mượn → hạn trả +30 ngày[32m 125[2mms[22m[39m
+[31m   → expected 14 to be 30 // Object.is equality[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.lists.api.test.ts[2m > [22mGET /api/loans/my và /api/loans/all[2m > [22mIT-LST-09 /my chỉ trả phiếu của người gọi, mới nhất trước, kèm thông tin sách[32m 165[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.lists.api.test.ts[2m > [22mGET /api/loans/my và /api/loans/all[2m > [22mIT-LST-10 /my phản ánh trạng thái hiển thị: quá hạn → Overdue kèm phạt tính theo ngày; đã trả → Returned[32m 105[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.lists.api.test.ts[2m > [22mGET /api/loans/my và /api/loans/all[2m > [22mIT-LST-11 /all chỉ ADMIN; trả phiếu của mọi độc giả; USER → 403; không token → 401[32m 125[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.lists.api.test.ts[2m > [22mGET /api/loans/my và /api/loans/all[2m > [22mIT-LST-12 /my không token → 401[32m 77[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.lists.api.test.ts[2m > [22mGET /api/loans/barcode/:barcode — tra cứu mã vạch[2m > [22mIT-LST-13 bản chưa mượn → activeLoan null; đang mượn → trả phiếu và người mượn[32m 96[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.lists.api.test.ts[2m > [22mGET /api/loans/barcode/:barcode — tra cứu mã vạch[2m > [22mIT-LST-14 mã vạch không tồn tại → 404; không token → 401[32m 84[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.lists.api.test.ts[2m > [22mPOST /api/loans/reminders/trigger — quét nhắc hạn (mail bị stub)[2m > [22mIT-LST-15 USER → 403; không token → 401; không gửi mail[32m 74[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.lists.api.test.ts[2m > [22mPOST /api/loans/reminders/trigger — quét nhắc hạn (mail bị stub)[2m > [22mIT-LST-16 (MAIL-01) phiếu quá hạn → DB chuyển OVERDUE + phạt 5.000/ngày, có thông báo; phiếu sắp hạn → thông báo; phiếu còn lâu → bỏ qua[32m 159[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.lists.api.test.ts[2m > [22mPOST /api/loans/reminders/trigger — quét nhắc hạn (mail bị stub)[2m > [22mIT-LST-17 phiếu đã trả không bị quét; DB không có phiếu → báo cáo toàn số 0[32m 102[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.lists.api.test.ts[2m > [22mPOST /api/loans/reminders/trigger — quét nhắc hạn (mail bị stub)[2m > [22mIT-LST-18 quét hai lần liên tiếp: phạt không bị cộng dồn (vẫn 5.000 × số ngày trễ)[32m 135[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.lists.api.test.ts[2m > [22mPOST /api/loans/return — trả sách theo mã phiếu[2m > [22mIT-LST-19 (RET-01) trả đúng hạn → COMPLETED, bản sao AVAILABLE, thông báo; USER → 403; thiếu/không tồn tại loanId → 400/404[32m 130[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.lists.api.test.ts[2m > [22mPOST /api/loans/return — trả sách theo mã phiếu[2m > [22mIT-LST-20 trả trễ 3 ngày → phiếu giữ OVERDUE với phạt 15.000; người đặt trước nhận thông báo và yêu cầu chuyển NOTIFIED[32m 171[2mms[22m[39m
+ [31m×[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.lists.api.test.ts[2m > [22mPOST /api/loans/return — trả sách theo mã phiếu[2m > [22mIT-LST-21 (FIND-21) trả lại phiếu đã có returnDate không được làm bản sao đang được người khác mượn thành AVAILABLE[32m 177[2mms[22m[39m
+[31m   → expected 'AVAILABLE' to be 'BORROWED' // Object.is equality[39m
+ [31m×[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.lists.api.test.ts[2m > [22mDuyệt gia hạn khi chưa có yêu cầu[2m > [22mIT-LST-22 (FIND-22) duyệt gia hạn cho phiếu chưa có yêu cầu PENDING phải bị chặn, hạn trả không đổi[32m 124[2mms[22m[39m
+[31m   → expected 200 to be 400 // Object.is equality[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.analytics.api.test.ts[2m > [22mXác thực[2m > [22mIT-ANA-01 GET /analytics/stats không token → 401[32m 130[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.analytics.api.test.ts[2m > [22mXác thực[2m > [22mIT-ANA-01 GET /analytics/borrow-trends không token → 401[32m 89[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.analytics.api.test.ts[2m > [22mXác thực[2m > [22mIT-ANA-01 GET /analytics/top-books không token → 401[32m 87[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.analytics.api.test.ts[2m > [22mXác thực[2m > [22mIT-ANA-01 GET /analytics/recent-activity không token → 401[32m 97[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.analytics.api.test.ts[2m > [22mGET /api/analytics/stats (DASH-01)[2m > [22mIT-ANA-02 số liệu khớp dữ liệu dựng: 2 đầu sách, 3 phiếu chưa trả (1 quá hạn), 2 người đang mượn[32m 154[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.analytics.api.test.ts[2m > [22mGET /api/analytics/stats (DASH-01)[2m > [22mIT-ANA-03 người đã trả hết sách không tính là "độc giả đang mượn"; DB trống → toàn số 0[32m 170[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.analytics.api.test.ts[2m > [22mGET /api/analytics/stats (DASH-01)[2m > [22mIT-ANA-04 phiếu quá hạn đã trả không tính vào "quá hạn"[32m 63[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.analytics.api.test.ts[2m > [22mGET /api/analytics/borrow-trends[2m > [22mIT-ANA-05 trả đủ 12 tháng; đếm theo tháng mượn; chỉ tính đúng năm được hỏi[32m 146[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.analytics.api.test.ts[2m > [22mGET /api/analytics/borrow-trends[2m > [22mIT-ANA-06 không có year / year không hợp lệ → dùng năm hiện tại[32m 119[2mms[22m[39m
+ [31m×[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.analytics.api.test.ts[2m > [22mGET /api/analytics/borrow-trends[2m > [22mIT-ANA-07 (FIND-14) phiếu mượn ngày 31/12 phải được tính vào tháng 12 của năm đó[32m 111[2mms[22m[39m
+[31m   → expected +0 to be 1 // Object.is equality[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.analytics.api.test.ts[2m > [22mGET /api/analytics/top-books[2m > [22mIT-ANA-08 xếp giảm dần theo lượt mượn (tính cả phiếu đã trả), kèm tác giả/thể loại[32m 149[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.analytics.api.test.ts[2m > [22mGET /api/analytics/top-books[2m > [22mIT-ANA-09 limit giới hạn số kết quả; limit không hợp lệ/0 → mặc định 5[32m 160[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.analytics.api.test.ts[2m > [22mGET /api/analytics/recent-activity[2m > [22mIT-ANA-10 phiếu mới nhất trước; chưa trả = "borrowed", đã trả = "returned"; tên người/sách đúng[32m 121[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.analytics.api.test.ts[2m > [22mGET /api/analytics/recent-activity[2m > [22mIT-ANA-11 limit giới hạn số hoạt động (mặc định 10)[32m 235[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.payment.api.test.ts[2m > [22mPOST /api/payments/create-url[2m > [22mIT-PAY-01 chủ phiếu → 200, số tiền = phạt trong DB, link chứa loanId, amount, method[32m 147[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.payment.api.test.ts[2m > [22mPOST /api/payments/create-url[2m > [22mIT-PAY-02 Admin tạo được link cho phiếu của độc giả; người khác → 403; không token → 401[32m 114[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.payment.api.test.ts[2m > [22mPOST /api/payments/create-url[2m > [22mIT-PAY-03 thiếu loanId → 400; phiếu không tồn tại → 404[32m 106[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.payment.api.test.ts[2m > [22mPOST /api/payments/create-url[2m > [22mIT-PAY-04 phiếu đã thanh toán → 400[32m 111[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.payment.api.test.ts[2m > [22mGET /api/payments/details/:loanId[2m > [22mIT-PAY-05 trả thông tin thanh toán của phiếu (số tiền, đã trả, sách, hạn trả, trạng thái)[32m 105[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.payment.api.test.ts[2m > [22mGET /api/payments/details/:loanId[2m > [22mIT-PAY-06 loanId không phải số / bằng 0 → 400; không tồn tại → 404[32m 111[2mms[22m[39m
+ [31m×[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.payment.api.test.ts[2m > [22mGET /api/payments/details/:loanId[2m > [22mIT-PAY-07 (FIND-11) người chưa đăng nhập không được đọc email của người mượn[32m 115[2mms[22m[39m
+[31m   → expected 'reader@it.local' to be undefined[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.payment.api.test.ts[2m > [22mPOST|GET /api/payments/callback (PAY-01, PAY-02)[2m > [22mIT-PAY-08 (PAY-02) xác nhận thành công → Loan đã trả + COMPLETED, lưu phương thức/mã GD, AuditLog, thông báo[32m 141[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.payment.api.test.ts[2m > [22mPOST|GET /api/payments/callback (PAY-01, PAY-02)[2m > [22mIT-PAY-09 (PAY-01) bấm Hủy (status ≠ SUCCESS) → 400, KHÔNG đánh dấu đã trả, không AuditLog/thông báo[32m 127[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.payment.api.test.ts[2m > [22mPOST|GET /api/payments/callback (PAY-01, PAY-02)[2m > [22mIT-PAY-10 callback qua GET (query string) cũng xử lý được như POST[32m 141[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.payment.api.test.ts[2m > [22mPOST|GET /api/payments/callback (PAY-01, PAY-02)[2m > [22mIT-PAY-11 thiếu/sai loanId → 400; phiếu không tồn tại → 404; không thay đổi dữ liệu[32m 128[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.payment.api.test.ts[2m > [22mPOST|GET /api/payments/callback (PAY-01, PAY-02)[2m > [22mIT-PAY-12 sau khi đã thanh toán, tạo link mới bị từ chối (400)[32m 136[2mms[22m[39m
+ [31m×[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.payment.api.test.ts[2m > [22mPOST|GET /api/payments/callback (PAY-01, PAY-02)[2m > [22mIT-PAY-13 (FIND-12) callback không có token không được đóng phiếu (phải 401/403, DB không đổi)[32m 146[2mms[22m[39m
+[31m   → expected [ 401, 403 ] to include 200[39m
+ [31m×[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.payment.api.test.ts[2m > [22mPOST|GET /api/payments/callback (PAY-01, PAY-02)[2m > [22mIT-PAY-14 (FIND-13) callback lần 2 cho phiếu đã trả không được ghi thêm AuditLog/thông báo[32m 189[2mms[22m[39m
+[31m   → expected 2 to be 1 // Object.is equality[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.api.test.ts[2m > [22mĐăng nhập[2m > [22mIT-AUTH-01 (AUTH-01) admin đăng nhập đúng (2FA tắt) → token dùng được cho /me với role ADMIN[32m 171[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.api.test.ts[2m > [22mĐăng nhập[2m > [22mIT-AUTH-02 (AUTH-02) sai mật khẩu → 401, không có token[32m 88[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.api.test.ts[2m > [22mĐăng nhập[2m > [22mIT-AUTH-03 email không tồn tại → 401 cùng thông điệp với sai mật khẩu (không lộ tài khoản)[32m 91[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.api.test.ts[2m > [22mĐăng nhập[2m > [22mIT-AUTH-07 bật 2FA → login chỉ trả requireOtp; verify-otp đúng mã trong DB → token; dùng lại OTP → 400[32m 123[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.api.test.ts[2m > [22mPhân quyền[2m > [22mIT-AUTH-04 (AUTH-04) USER gọi API quản trị danh sách thành viên → 403[32m 30[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.api.test.ts[2m > [22mPhân quyền[2m > [22mIT-SRCH-07 (SRCH-07) USER tra cứu toàn bộ phiếu mượn / khóa thành viên → 403[32m 29[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.api.test.ts[2m > [22mPhân quyền[2m > [22mIT-AUTH-06 không có token → 401; token bị sửa chữ ký → 403[32m 29[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.api.test.ts[2m > [22mĐổi mật khẩu[2m > [22mIT-AUTH-05 (AUTH-05) đổi mật khẩu → đăng nhập bằng mật khẩu mới được, mật khẩu cũ bị từ chối[32m 282[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.api.test.ts[2m > [22mĐổi mật khẩu[2m > [22mIT-AUTH-08 sai mật khẩu hiện tại → 400/401, mật khẩu cũ vẫn dùng được[32m 156[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.api.test.ts[2m > [22mTạo thành viên — POST /api/auth/register[2m > [22mIT-MEM-01 tạo thành viên hợp lệ → 201, đăng nhập được, mật khẩu được băm[32m 164[2mms[22m[39m
+ [31m×[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.api.test.ts[2m > [22mTạo thành viên — POST /api/auth/register[2m > [22mIT-MEM-02 email thiếu "@" → bị từ chối 400, không tạo tài khoản (DEF-001)[32m 100[2mms[22m[39m
+[31m   → expected 201 to be 400 // Object.is equality[39m
+ [31m×[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.api.test.ts[2m > [22mTạo thành viên — POST /api/auth/register[2m > [22mIT-MEM-05 chọn hạng LECTURER → bản ghi trong DB có membershipTier LECTURER (DEF-002)[32m 99[2mms[22m[39m
+[31m   → expected 'STANDARD' to be 'LECTURER' // Object.is equality[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.notification.api.test.ts[2m > [22mGET /api/notifications (NOTI-01)[2m > [22mIT-NOT-01 không token → 401 ở mọi endpoint thông báo[32m 110[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.notification.api.test.ts[2m > [22mGET /api/notifications (NOTI-01)[2m > [22mIT-NOT-02 (NOTI-01) chỉ trả thông báo của chính mình, mới nhất trước, kèm số chưa đọc đúng[32m 62[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.notification.api.test.ts[2m > [22mGET /api/notifications (NOTI-01)[2m > [22mIT-NOT-03 tối đa 50 thông báo gần nhất; số chưa đọc vẫn đếm đủ[32m 48[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.notification.api.test.ts[2m > [22mGET /api/notifications (NOTI-01)[2m > [22mIT-NOT-04 (NOTI-01) sự kiện đặt trước tạo thông báo cho đúng người, chưa đọc[32m 75[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.notification.api.test.ts[2m > [22mĐánh dấu đã đọc (NOTI-02)[2m > [22mIT-NOT-05 đánh dấu một thông báo của mình → isRead = true, số chưa đọc giảm[32m 97[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.notification.api.test.ts[2m > [22mĐánh dấu đã đọc (NOTI-02)[2m > [22mIT-NOT-06 đánh dấu thông báo của người khác / không tồn tại → 404, dữ liệu không đổi[32m 46[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.notification.api.test.ts[2m > [22mĐánh dấu đã đọc (NOTI-02)[2m > [22mIT-NOT-07 (NOTI-02) đánh dấu tất cả đã đọc: chỉ ảnh hưởng thông báo của mình[32m 77[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.notification.api.test.ts[2m > [22mXóa thông báo (NOTI-02)[2m > [22mIT-NOT-08 xóa một thông báo của mình → biến mất khỏi danh sách và DB[32m 62[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.notification.api.test.ts[2m > [22mXóa thông báo (NOTI-02)[2m > [22mIT-NOT-09 xóa thông báo của người khác / không tồn tại → 404, không xóa[32m 46[2mms[22m[39m
+ [32m✓[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.notification.api.test.ts[2m > [22mXóa thông báo (NOTI-02)[2m > [22mIT-NOT-10 (NOTI-02) xóa tất cả: chỉ xóa của mình, "clear-all" không bị hiểu nhầm là :id[32m 78[2mms[22m[39m
+ [31m×[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.notification.api.test.ts[2m > [22mĐầu vào bất thường[2m > [22mIT-NOT-11 (FIND-10) PATCH /notifications/abc/read phải trả 4xx, không phải 500[32m 44[2mms[22m[39m
+[31m   → expected 500 to be less than 500[39m
+ [31m×[39m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.notification.api.test.ts[2m > [22mĐầu vào bất thường[2m > [22mIT-NOT-11 (FIND-10) DELETE /notifications/abc phải trả 4xx, không phải 500[32m 28[2mms[22m[39m
+[31m   → expected 500 to be less than 500[39m
+
+[31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 36 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.analytics.api.test.ts[2m > [22mGET /api/analytics/borrow-trends[2m > [22mIT-ANA-07 (FIND-14) phiếu mượn ngày 31/12 phải được tính vào tháng 12 của năm đó
+[31m[1mAssertionError[22m: expected +0 to be 1 // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 1[39m
+[31m+ 0[39m
+
+[36m [2m❯[22m server/tests/integration/knownbug-verify.analytics.api.test.ts:[2m104:32[22m[39m
+    [90m102|[39m     [35mawait[39m [34mmk[39m([32m'2026-12-31T03:00:00Z'[39m[33m,[39m [34m0[39m)[33m;[39m
+    [90m103|[39m     const res = await get('/api/analytics/borrow-trends?year=2026', ad…
+    [90m104|[39m     [34mexpect[39m(res[33m.[39mbody[[34m11[39m][33m.[39mcount)[33m.[39m[34mtoBe[39m([34m1[39m)[33m;[39m
+    [90m   |[39m                                [31m^[39m
+    [90m105|[39m   })[33m;[39m
+    [90m106|[39m })[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/36]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.account.api.test.ts[2m > [22mĐăng ký — POST /api/auth/register (AUTH-02, MEM-02, MEM-03)[2m > [22mIT-REG-04 (FIND-18, MEM-02) đăng ký với email có chữ hoa → đăng nhập được bằng chính email đó
+[31m[1mAssertionError[22m: expected 401 to be 200 // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 200[39m
+[31m+ 401[39m
+
+[36m [2m❯[22m server/tests/integration/knownbug-verify.auth.account.api.test.ts:[2m70:68[22m[39m
+    [90m 68|[39m   test('IT-REG-04 (FIND-18, MEM-02) đăng ký với email có chữ hoa → đăn…
+    [90m 69|[39m     expect((await register({ email: 'Nguoi.Moi@It.Local', password: 'A…
+    [90m 70|[39m     expect((await login('Nguoi.Moi@It.Local', 'Abc@1234')).status).toB…
+    [90m   |[39m                                                                    [31m^[39m
+    [90m 71|[39m   })[33m;[39m
+    [90m 72|[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/36]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.account.api.test.ts[2m > [22mĐăng ký — POST /api/auth/register (AUTH-02, MEM-02, MEM-03)[2m > [22mIT-REG-05 (FIND-18) email chỉ khác chữ hoa/thường với tài khoản có sẵn phải bị coi là trùng (400)
+[31m[1mAssertionError[22m: expected 201 to be 400 // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 400[39m
+[31m+ 201[39m
+
+[36m [2m❯[22m server/tests/integration/knownbug-verify.auth.account.api.test.ts:[2m75:24[22m[39m
+    [90m 73|[39m   test('IT-REG-05 (FIND-18) email chỉ khác chữ hoa/thường với tài khoả…
+    [90m 74|[39m     const res = await register({ email: 'READER@IT.LOCAL', password: '…
+    [90m 75|[39m     [34mexpect[39m(res[33m.[39mstatus)[33m.[39m[34mtoBe[39m([34m400[39m)[33m;[39m
+    [90m   |[39m                        [31m^[39m
+    [90m 76|[39m   })[33m;[39m
+    [90m 77|[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/36]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.account.api.test.ts[2m > [22mĐăng ký — POST /api/auth/register (AUTH-02, MEM-02, MEM-03)[2m > [22mIT-REG-06 (FIND-19) thiếu mật khẩu phải bị từ chối bằng 4xx, không phải 500
+[31m[1mAssertionError[22m: expected 500 to be less than 500[39m
+[36m [2m❯[22m server/tests/integration/knownbug-verify.auth.account.api.test.ts:[2m82:24[22m[39m
+    [90m 80|[39m     const res = await register({ email: 'nopass@it.local', name: 'Khôn…
+    [90m 81|[39m     [34mexpect[39m(res[33m.[39mstatus)[33m.[39m[34mtoBeGreaterThanOrEqual[39m([34m400[39m)[33m;[39m
+    [90m 82|[39m     [34mexpect[39m(res[33m.[39mstatus)[33m.[39m[34mtoBeLessThan[39m([34m500[39m)[33m;[39m
+    [90m   |[39m                        [31m^[39m
+    [90m 83|[39m   })[33m;[39m
+    [90m 84|[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/36]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.account.api.test.ts[2m > [22mDanh sách đen — PATCH /api/auth/users/:id/blacklist (MEM-04)[2m > [22mIT-BL-06 (FIND-10) id không phải số phải trả 4xx, không phải 500
+[31m[1mAssertionError[22m: expected 500 to be less than 500[39m
+[36m [2m❯[22m server/tests/integration/knownbug-verify.auth.account.api.test.ts:[2m264:24[22m[39m
+    [90m262|[39m     [35mconst[39m res [33m=[39m [35mawait[39m [34mtoggle[39m([32m'abc'[39m)[33m;[39m
+    [90m263|[39m     [34mexpect[39m(res[33m.[39mstatus)[33m.[39m[34mtoBeGreaterThanOrEqual[39m([34m400[39m)[33m;[39m
+    [90m264|[39m     [34mexpect[39m(res[33m.[39mstatus)[33m.[39m[34mtoBeLessThan[39m([34m500[39m)[33m;[39m
+    [90m   |[39m                        [31m^[39m
+    [90m265|[39m   })[33m;[39m
+    [90m266|[39m })[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/36]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.account.api.test.ts[2m > [22mQuên / đặt lại mật khẩu bằng OTP (AUTH-06)[2m > [22mIT-PWD-07 (FIND-20) email không tồn tại và email có tồn tại phải nhận cùng một mã trạng thái
+[31m[1mAssertionError[22m: expected 404 to be 200 // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 200[39m
+[31m+ 404[39m
+
+[36m [2m❯[22m server/tests/integration/knownbug-verify.auth.account.api.test.ts:[2m336:28[22m[39m
+    [90m334|[39m     [35mconst[39m known [33m=[39m [35mawait[39m [34mforgot[39m([32m'reader@it.local'[39m)[33m;[39m
+    [90m335|[39m     [35mconst[39m unknown [33m=[39m [35mawait[39m [34mforgot[39m([32m'nobody@it.local'[39m)[33m;[39m
+    [90m336|[39m     [34mexpect[39m(unknown[33m.[39mstatus)[33m.[39m[34mtoBe[39m(known[33m.[39mstatus)[33m;[39m
+    [90m   |[39m                            [31m^[39m
+    [90m337|[39m   })[33m;[39m
+    [90m338|[39m })[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/36]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.api.test.ts[2m > [22mTạo thành viên — POST /api/auth/register[2m > [22mIT-MEM-02 email thiếu "@" → bị từ chối 400, không tạo tài khoản (DEF-001)
+[31m[1mAssertionError[22m: expected 201 to be 400 // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 400[39m
+[31m+ 201[39m
+
+[36m [2m❯[22m server/tests/integration/knownbug-verify.auth.api.test.ts:[2m124:24[22m[39m
+    [90m122|[39m     const res = await request(app).post('/api/auth/register').set(bear…
+    [90m123|[39m       .send({ email: 'emailkhonghople', password: 'Abc@1234', name: 'S…
+    [90m124|[39m     [34mexpect[39m(res[33m.[39mstatus)[33m.[39m[34mtoBe[39m([34m400[39m)[33m;[39m
+    [90m   |[39m                        [31m^[39m
+    [90m125|[39m     expect(await prisma.user.count({ where: { email: 'emailkhonghople'…
+    [90m126|[39m   })[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/36]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.auth.api.test.ts[2m > [22mTạo thành viên — POST /api/auth/register[2m > [22mIT-MEM-05 chọn hạng LECTURER → bản ghi trong DB có membershipTier LECTURER (DEF-002)
+[31m[1mAssertionError[22m: expected 'STANDARD' to be 'LECTURER' // Object.is equality[39m
+
+Expected: [32m"LECTURER"[39m
+Received: [31m"STANDARD"[39m
+
+[36m [2m❯[22m server/tests/integration/knownbug-verify.auth.api.test.ts:[2m132:109[22m[39m
+    [90m130|[39m     [35mawait[39m [34mrequest[39m(app)[33m.[39m[34mpost[39m([32m'/api/auth/register'[39m)[33m.[39m[35mset[39m([34mbearer[39m(admin))
+    [90m131|[39m       .send({ email: 'lecturer@it.local', password: 'Abc@1234', name: …
+    [90m132|[39m     expect((await prisma.user.findUniqueOrThrow({ where: { email: 'lec…
+    [90m   |[39m                                                                                                             [31m^[39m
+    [90m133|[39m   })[33m;[39m
+    [90m134|[39m })[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/36]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.book.api.test.ts[2m > [22mPOST /api/books — thêm sách (BOOK-04, BOOK-05, BOOK-06)[2m > [22mIT-BOOK-07 (BOOK-05, FIND-08) copies = 0 phải bị từ chối, không tạo sách
+[31m[1mAssertionError[22m: expected 201 to be 400 // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 400[39m
+[31m+ 201[39m
+
+[36m [2m❯[22m server/tests/integration/knownbug-verify.book.api.test.ts:[2m136:24[22m[39m
+    [90m134|[39m   test('IT-BOOK-07 (BOOK-05, FIND-08) copies = 0 phải bị từ chối, khôn…
+    [90m135|[39m     [35mconst[39m res [33m=[39m [35mawait[39m [34mpost[39m([34mbody[39m({ copies[33m:[39m [34m0[39m }))[33m;[39m
+    [90m136|[39m     [34mexpect[39m(res[33m.[39mstatus)[33m.[39m[34mtoBe[39m([34m400[39m)[33m;[39m
+    [90m   |[39m                        [31m^[39m
+    [90m137|[39m     [34mexpect[39m([35mawait[39m prisma[33m.[39mbook[33m.[39m[34mcount[39m())[33m.[39m[34mtoBe[39m([34m0[39m)[33m;[39m
+    [90m138|[39m   })[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/36]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.book.api.test.ts[2m > [22mNhập Excel — /api/books/import-template, /api/books/import (EXCEL-01..04)[2m > [22mIT-EXC-06 (EXCEL-04, FIND-15) file không phải .xlsx/.xls (.txt) phải bị từ chối bằng 4xx, không phải 500
+[31m[1mAssertionError[22m: expected 500 to be less than 500[39m
+[36m [2m❯[22m server/tests/integration/knownbug-verify.book.api.test.ts:[2m321:24[22m[39m
+    [90m319|[39m     const res = await importFile(Buffer.from('không phải excel'), 'ghi…
+    [90m320|[39m     [34mexpect[39m(res[33m.[39mstatus)[33m.[39m[34mtoBeGreaterThanOrEqual[39m([34m400[39m)[33m;[39m
+    [90m321|[39m     [34mexpect[39m(res[33m.[39mstatus)[33m.[39m[34mtoBeLessThan[39m([34m500[39m)[33m;[39m
+    [90m   |[39m                        [31m^[39m
+    [90m322|[39m     [34mexpect[39m([35mawait[39m prisma[33m.[39mbook[33m.[39m[34mcount[39m())[33m.[39m[34mtoBe[39m([34m0[39m)[33m;[39m
+    [90m323|[39m   })[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/36]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.book.api.test.ts[2m > [22mTải e-book — POST /api/books/upload-ebook (BOOK-08)[2m > [22mIT-EBK-05 (FIND-16) USER bị từ chối thì file không được ghi vào đĩa
+[31m[1mAssertionError[22m: expected [ 'ebook-1792416527362-16235.pdf' ] to deeply equal [][39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- [][39m
+[31m+ [[39m
+[31m+   "ebook-1792416527362-16235.pdf",[39m
+[31m+ ][39m
+
+[36m [2m❯[22m server/tests/integration/knownbug-verify.book.api.test.ts:[2m362:62[22m[39m
+    [90m360|[39m   test('IT-EBK-05 (FIND-16) USER bị từ chối thì file không được ghi và…
+    [90m361|[39m     [35mawait[39m [34mupload[39m(pdf[33m,[39m [32m'sach.pdf'[39m[33m,[39m [32m'application/pdf'[39m[33m,[39m reader)[33m;[39m
+    [90m362|[39m     expect(ebookFiles().filter((f) => !ebooksBefore.has(f))).toEqual([…
+    [90m   |[39m                                                              [31m^[39m
+    [90m363|[39m   })[33m;[39m
+    [90m364|[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/36]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.book.api.test.ts[2m > [22mTải e-book — POST /api/books/upload-ebook (BOOK-08)[2m > [22mIT-EBK-06 (BOOK-08, FIND-15) định dạng không phải .pdf/.epub phải bị từ chối bằng 4xx, không phải 500
+[31m[1mAssertionError[22m: expected 500 to be less than 500[39m
+[36m [2m❯[22m server/tests/integration/knownbug-verify.book.api.test.ts:[2m369:24[22m[39m
+    [90m367|[39m     const res = await upload(Buffer.from('MZ'), 'virus.exe', 'applicat…
+    [90m368|[39m     [34mexpect[39m(res[33m.[39mstatus)[33m.[39m[34mtoBeGreaterThanOrEqual[39m([34m400[39m)[33m;[39m
+    [90m369|[39m     [34mexpect[39m(res[33m.[39mstatus)[33m.[39m[34mtoBeLessThan[39m([34m500[39m)[33m;[39m
+    [90m   |[39m                        [31m^[39m
+    [90m370|[39m   })[33m;[39m
+    [90m371|[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/36]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mMượn sách — POST /api/loans/borrow-by-barcode[2m > [22mIT-BOR-13 mượn thành công → ghi 1 dòng AuditLog (DEF-004)
+[31m[1mAssertionError[22m: expected +0 to be 1 // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 1[39m
+[31m+ 0[39m
+
+[36m [2m❯[22m server/tests/integration/knownbug-verify.loans.api.test.ts:[2m131:43[22m[39m
+    [90m129|[39m   test('IT-BOR-13 mượn thành công → ghi 1 dòng AuditLog (DEF-004)', as…
+    [90m130|[39m     [35mawait[39m [34mborrow[39m([32m'ISBN-IT-01-1'[39m[33m,[39m reader[33m.[39mid)[33m;[39m
+    [90m131|[39m     [34mexpect[39m([35mawait[39m prisma[33m.[39mauditLog[33m.[39m[34mcount[39m())[33m.[39m[34mtoBe[39m([34m1[39m)[33m;[39m
+    [90m   |[39m                                           [31m^[39m
+    [90m132|[39m   })[33m;[39m
+    [90m133|[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/36]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mMượn sách — POST /api/loans/borrow-by-barcode[2m > [22mIT-BOR-14 độc giả PREMIUM → dueDate = ngày mượn + 30 ngày (DEF-005)
+[31m[1mAssertionError[22m: expected 14 to be 30 // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 30[39m
+[31m+ 14[39m
+
+[36m [2m❯[22m server/tests/integration/knownbug-verify.loans.api.test.ts:[2m139:56[22m[39m
+    [90m137|[39m     [35mawait[39m [34mborrow[39m([32m'ISBN-IT-01-1'[39m[33m,[39m reader[33m.[39mid)[33m;[39m
+    [90m138|[39m     [35mconst[39m loan [33m=[39m [35mawait[39m prisma[33m.[39mloan[33m.[39m[34mfindFirstOrThrow[39m()[33m;[39m
+    [90m139|[39m     [34mexpect[39m([34mdaysBetween[39m(loan[33m.[39mborrowDate[33m,[39m loan[33m.[39mdueDate))[33m.[39m[34mtoBe[39m([34m30[39m)[33m;[39m
+    [90m   |[39m                                                        [31m^[39m
+    [90m140|[39m   })[33m;[39m
+    [90m141|[39m })[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/36]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mTrả sách — POST /api/loans/return-by-barcode[2m > [22mIT-RET-03 trả trễ chưa nộp phạt → Loan PENDING_FINE_PAYMENT (DEF-006)
+[31m[1mAssertionError[22m: expected 'OVERDUE' to be 'PENDING_FINE_PAYMENT' // Object.is equality[39m
+
+Expected: [32m"PENDING_FINE_PAYMENT"[39m
+Received: [31m"OVERDUE"[39m
+
+[36m [2m❯[22m server/tests/integration/knownbug-verify.loans.api.test.ts:[2m170:86[22m[39m
+    [90m168|[39m     const loan = await createLoan(reader.id, book.items[0].id, { dueDa…
+    [90m169|[39m     [35mawait[39m [34mgiveBack[39m([32m'ISBN-IT-01-1'[39m)[33m;[39m
+    [90m170|[39m     expect((await prisma.loan.findUniqueOrThrow({ where: { id: loan.id…
+    [90m   |[39m                                                                                      [31m^[39m
+    [90m171|[39m   })[33m;[39m
+    [90m172|[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/36]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mTrả sách — POST /api/loans/return-by-barcode[2m > [22mIT-RET-04 trễ 1 ngày 1 giờ → phạt theo ceil = 2 ngày = 10.000 đ (FIND-01)
+[31m[1mAssertionError[22m: expected 5000 to be 10000 // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 10000[39m
+[31m+ 5000[39m
+
+[36m [2m❯[22m server/tests/integration/knownbug-verify.loans.api.test.ts:[2m177:90[22m[39m
+    [90m175|[39m     const loan = await createLoan(reader.id, book.items[0].id, { dueDa…
+    [90m176|[39m     [35mawait[39m [34mgiveBack[39m([32m'ISBN-IT-01-1'[39m)[33m;[39m
+    [90m177|[39m     expect((await prisma.loan.findUniqueOrThrow({ where: { id: loan.id…
+    [90m   |[39m                                                                                          [31m^[39m
+    [90m178|[39m   })[33m;[39m
+    [90m179|[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/36]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mTrả sách — POST /api/loans/return-by-barcode[2m > [22mIT-RET-12 có luồng báo hỏng sách trong API phiếu mượn (DEF-007)
+[31m[1mAssertionError[22m: expected false to be true // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- true[39m
+[31m+ false[39m
+
+[36m [2m❯[22m server/tests/integration/knownbug-verify.loans.api.test.ts:[2m233:56[22m[39m
+    [90m231|[39m     const paths = (loanRoutes as unknown as { stack: Array<{ route?: {…
+    [90m232|[39m       [33m.[39m[34mmap[39m((layer) [33m=>[39m layer[33m.[39mroute[33m?.[39mpath [33m??[39m [32m''[39m)[33m;[39m
+    [90m233|[39m     [34mexpect[39m(paths[33m.[39m[34msome[39m((path) [33m=>[39m [36m/damage/i[39m[33m.[39m[34mtest[39m(path)))[33m.[39m[34mtoBe[39m([35mtrue[39m)[33m;[39m
+    [90m   |[39m                                                        [31m^[39m
+    [90m234|[39m   })[33m;[39m
+    [90m235|[39m })[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/36]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mGia hạn — request-renew / approve-renew / reject-renew[2m > [22mIT-EXT-02 duyệt gia hạn → dueDate + 14 ngày (DEF-008)
+[31m[1mAssertionError[22m: expected 7 to be 14 // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 14[39m
+[31m+ 7[39m
+
+[36m [2m❯[22m server/tests/integration/knownbug-verify.loans.api.test.ts:[2m259:54[22m[39m
+    [90m257|[39m     [35mawait[39m [34mapprove[39m(loan[33m.[39mid)[33m;[39m
+    [90m258|[39m     const saved = await prisma.loan.findUniqueOrThrow({ where: { id: l…
+    [90m259|[39m     [34mexpect[39m([34mdaysBetween[39m(loan[33m.[39mdueDate[33m,[39m saved[33m.[39mdueDate))[33m.[39m[34mtoBe[39m([34m14[39m)[33m;[39m
+    [90m   |[39m                                                      [31m^[39m
+    [90m260|[39m   })[33m;[39m
+    [90m261|[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/36]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mGia hạn — request-renew / approve-renew / reject-renew[2m > [22mIT-EXT-05 đã gia hạn 1 lần (APPROVED) → yêu cầu gia hạn lần 2 bị chặn (DEF-009)
+[31m[1mAssertionError[22m: expected 200 to be 400 // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 400[39m
+[31m+ 200[39m
+
+[36m [2m❯[22m server/tests/integration/knownbug-verify.loans.api.test.ts:[2m279:41[22m[39m
+    [90m277|[39m     [35mawait[39m [34mask[39m(loan[33m.[39mid)[33m;[39m
+    [90m278|[39m     [35mawait[39m [34mapprove[39m(loan[33m.[39mid)[33m;[39m
+    [90m279|[39m     [34mexpect[39m(([35mawait[39m [34mask[39m(loan[33m.[39mid))[33m.[39mstatus)[33m.[39m[34mtoBe[39m([34m400[39m)[33m;[39m
+    [90m   |[39m                                         [31m^[39m
+    [90m280|[39m   })[33m;[39m
+    [90m281|[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/36]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mGia hạn — request-renew / approve-renew / reject-renew[2m > [22mIT-EXT-06 từ chối kèm lý do → lý do được lưu/gửi tới độc giả (DEF-010)
+[31m[1mAssertionError[22m: expected false to be true // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- true[39m
+[31m+ false[39m
+
+[36m [2m❯[22m server/tests/integration/knownbug-verify.loans.api.test.ts:[2m290:82[22m[39m
+    [90m288|[39m     expect((await prisma.loan.findUniqueOrThrow({ where: { id: loan.id…
+    [90m289|[39m     const notes = await prisma.notification.findMany({ where: { userId…
+    [90m290|[39m     expect(notes.some((note) => note.message.includes('Đã có người đặt…
+    [90m   |[39m                                                                                  [31m^[39m
+    [90m291|[39m   })[33m;[39m
+    [90m292|[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/36]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mGia hạn — request-renew / approve-renew / reject-renew[2m > [22mIT-EXT-07 độc giả còn nợ phạt → thủ thư không duyệt được gia hạn (DEF-011)
+[31m[1mAssertionError[22m: expected 200 to be 400 // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 400[39m
+[31m+ 200[39m
+
+[36m [2m❯[22m server/tests/integration/knownbug-verify.loans.api.test.ts:[2m299:45[22m[39m
+    [90m297|[39m     [35mconst[39m other [33m=[39m [35mawait[39m [34mcreateBook[39m([32m'ISBN-IT-02'[39m[33m,[39m [34m1[39m)[33m;[39m
+    [90m298|[39m     await createLoan(reader.id, other.items[0].id, { returnDate: new D…
+    [90m299|[39m     [34mexpect[39m(([35mawait[39m [34mapprove[39m(loan[33m.[39mid))[33m.[39mstatus)[33m.[39m[34mtoBe[39m([34m400[39m)[33m;[39m
+    [90m   |[39m                                             [31m^[39m
+    [90m300|[39m   })[33m;[39m
+    [90m301|[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/36]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mTra cứu phiếu mượn — GET /api/loans/all, /barcode/:barcode[2m > [22mIT-SRCH-02 tìm phiếu theo mã phiếu → chỉ trả về đúng phiếu đó (DEF-012)
+[31m[1mAssertionError[22m: expected [ 35, 34 ] to deeply equal [ 35 ][39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[2m  [[22m
+[2m    35,[22m
+[31m+   34,[39m
+[2m  ][22m
+
+[36m [2m❯[22m server/tests/integration/knownbug-verify.loans.api.test.ts:[2m336:61[22m[39m
+    [90m334|[39m     [35mconst[39m { open } [33m=[39m [35mawait[39m [34mseedHistory[39m()[33m;[39m
+    [90m335|[39m     const res = await request(app).get(`/api/loans/all?search=${open.i…
+    [90m336|[39m     expect(res.body.map((loan: { id: number }) => loan.id)).toEqual([o…
+    [90m   |[39m                                                             [31m^[39m
+    [90m337|[39m   })[33m;[39m
+    [90m338|[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/36]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mTra cứu phiếu mượn — GET /api/loans/all, /barcode/:barcode[2m > [22mIT-SRCH-03 tra cứu barcode trả kèm lịch sử mượn của cuốn sách (DEF-013)
+[31m[1mAssertionError[22m: expected { bookItem: { id: 121, …(3) }, …(2) } to have property "history"[39m
+[36m [2m❯[22m server/tests/integration/knownbug-verify.loans.api.test.ts:[2m344:22[22m[39m
+    [90m342|[39m     const res = await request(app).get('/api/loans/barcode/ISBN-IT-01-…
+    [90m343|[39m     [34mexpect[39m(res[33m.[39mstatus)[33m.[39m[34mtoBe[39m([34m200[39m)[33m;[39m
+    [90m344|[39m     [34mexpect[39m(res[33m.[39mbody)[33m.[39m[34mtoHaveProperty[39m([32m'history'[39m)[33m;[39m
+    [90m   |[39m                      [31m^[39m
+    [90m345|[39m     expect(res.body.history.map((loan: { id: number }) => loan.id)).to…
+    [90m346|[39m   })[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/36]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.api.test.ts[2m > [22mTra cứu phiếu mượn — GET /api/loans/all, /barcode/:barcode[2m > [22mIT-SRCH-04 lọc phiếu theo trạng thái + phân trang (DEF-014)
+[31m[1mAssertionError[22m: expected [ { id: 39, userId: 81, …(19) }, …(1) ] to have a length of 1 but got 2[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 1[39m
+[31m+ 2[39m
+
+[36m [2m❯[22m server/tests/integration/knownbug-verify.loans.api.test.ts:[2m352:22[22m[39m
+    [90m350|[39m     [35mawait[39m [34mseedHistory[39m()[33m;[39m
+    [90m351|[39m     const res = await request(app).get('/api/loans/all?status=COMPLETE…
+    [90m352|[39m     [34mexpect[39m(res[33m.[39mbody)[33m.[39m[34mtoHaveLength[39m([34m1[39m)[33m;[39m
+    [90m   |[39m                      [31m^[39m
+    [90m353|[39m     [34mexpect[39m(res[33m.[39mbody[[34m0[39m][33m.[39mrawStatus)[33m.[39m[34mtoBe[39m([32m'COMPLETED'[39m)[33m;[39m
+    [90m354|[39m   })[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/36]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.lists.api.test.ts[2m > [22mPOST /api/loans/borrow — mượn theo bookId / bookItemId[2m > [22mIT-LST-08 (DEF-005) độc giả PREMIUM mượn → hạn trả +30 ngày
+[31m[1mAssertionError[22m: expected 14 to be 30 // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 30[39m
+[31m+ 14[39m
+
+[36m [2m❯[22m server/tests/integration/knownbug-verify.loans.lists.api.test.ts:[2m105:56[22m[39m
+    [90m103|[39m     expect((await borrow({ bookId: book.id }, premium)).status).toBe(2…
+    [90m104|[39m     const loan = await prisma.loan.findFirstOrThrow({ where: { userId:…
+    [90m105|[39m     [34mexpect[39m([34mdaysBetween[39m(loan[33m.[39mborrowDate[33m,[39m loan[33m.[39mdueDate))[33m.[39m[34mtoBe[39m([34m30[39m)[33m;[39m
+    [90m   |[39m                                                        [31m^[39m
+    [90m106|[39m   })[33m;[39m
+    [90m107|[39m })[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/36]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.lists.api.test.ts[2m > [22mPOST /api/loans/return — trả sách theo mã phiếu[2m > [22mIT-LST-21 (FIND-21) trả lại phiếu đã có returnDate không được làm bản sao đang được người khác mượn thành AVAILABLE
+[31m[1mAssertionError[22m: expected 'AVAILABLE' to be 'BORROWED' // Object.is equality[39m
+
+Expected: [32m"BORROWED"[39m
+Received: [31m"AVAILABLE"[39m
+
+[36m [2m❯[22m server/tests/integration/knownbug-verify.loans.lists.api.test.ts:[2m241:99[22m[39m
+    [90m239|[39m     expect((await borrow({ bookItemId: book.items[0].id }, other)).sta…
+    [90m240|[39m     [35mawait[39m [34mgiveBackById[39m(first[33m.[39mid)[33m;[39m [90m// trả lại phiếu cũ[39m
+    [90m241|[39m     expect((await prisma.bookItem.findUniqueOrThrow({ where: { id: boo…
+    [90m   |[39m                                                                                                   [31m^[39m
+    [90m242|[39m   })[33m;[39m
+    [90m243|[39m })[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/36]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.loans.lists.api.test.ts[2m > [22mDuyệt gia hạn khi chưa có yêu cầu[2m > [22mIT-LST-22 (FIND-22) duyệt gia hạn cho phiếu chưa có yêu cầu PENDING phải bị chặn, hạn trả không đổi
+[31m[1mAssertionError[22m: expected 200 to be 400 // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 400[39m
+[31m+ 200[39m
+
+[36m [2m❯[22m server/tests/integration/knownbug-verify.loans.lists.api.test.ts:[2m250:24[22m[39m
+    [90m248|[39m     [35mconst[39m loan [33m=[39m [35mawait[39m [34mcreateLoan[39m(reader[33m.[39mid[33m,[39m book[33m.[39mitems[[34m0[39m][33m.[39mid)[33m;[39m
+    [90m249|[39m     const res = await request(app).post(`/api/loans/${loan.id}/approve…
+    [90m250|[39m     [34mexpect[39m(res[33m.[39mstatus)[33m.[39m[34mtoBe[39m([34m400[39m)[33m;[39m
+    [90m   |[39m                        [31m^[39m
+    [90m251|[39m     expect((await prisma.loan.findUniqueOrThrow({ where: { id: loan.id…
+    [90m252|[39m   })[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/36]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.notification.api.test.ts[2m > [22mĐầu vào bất thường[2m > [22mIT-NOT-11 (FIND-10) PATCH /notifications/abc/read phải trả 4xx, không phải 500
+[41m[1m FAIL [22m[49m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.notification.api.test.ts[2m > [22mĐầu vào bất thường[2m > [22mIT-NOT-11 (FIND-10) DELETE /notifications/abc phải trả 4xx, không phải 500
+[31m[1mAssertionError[22m: expected 500 to be less than 500[39m
+[36m [2m❯[22m server/tests/integration/knownbug-verify.notification.api.test.ts:[2m142:24[22m[39m
+    [90m140|[39m     [35mconst[39m res [33m=[39m [35mawait[39m [34msend[39m()[33m;[39m
+    [90m141|[39m     [34mexpect[39m(res[33m.[39mstatus)[33m.[39m[34mtoBeGreaterThanOrEqual[39m([34m400[39m)[33m;[39m
+    [90m142|[39m     [34mexpect[39m(res[33m.[39mstatus)[33m.[39m[34mtoBeLessThan[39m([34m500[39m)[33m;[39m
+    [90m   |[39m                        [31m^[39m
+    [90m143|[39m   })[33m;[39m
+    [90m144|[39m })[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[28/36]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.payment.api.test.ts[2m > [22mGET /api/payments/details/:loanId[2m > [22mIT-PAY-07 (FIND-11) người chưa đăng nhập không được đọc email của người mượn
+[31m[1mAssertionError[22m: expected 'reader@it.local' to be undefined[39m
+
+[32m- Expected:[39m
+undefined
+
+[31m+ Received:[39m
+"reader@it.local"
+
+[36m [2m❯[22m server/tests/integration/knownbug-verify.payment.api.test.ts:[2m100:36[22m[39m
+    [90m 98|[39m   test('IT-PAY-07 (FIND-11) người chưa đăng nhập không được đọc email …
+    [90m 99|[39m     const res = await request(app).get(`/api/payments/details/${loanId…
+    [90m100|[39m     [34mexpect[39m(res[33m.[39mbody[33m.[39mborrowerEmail)[33m.[39m[34mtoBeUndefined[39m()[33m;[39m
+    [90m   |[39m                                    [31m^[39m
+    [90m101|[39m   })[33m;[39m
+    [90m102|[39m })[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[29/36]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.payment.api.test.ts[2m > [22mPOST|GET /api/payments/callback (PAY-01, PAY-02)[2m > [22mIT-PAY-13 (FIND-12) callback không có token không được đóng phiếu (phải 401/403, DB không đổi)
+[31m[1mAssertionError[22m: expected [ 401, 403 ] to include 200[39m
+[36m [2m❯[22m server/tests/integration/knownbug-verify.payment.api.test.ts:[2m152:24[22m[39m
+    [90m150|[39m   test('IT-PAY-13 (FIND-12) callback không có token không được đóng ph…
+    [90m151|[39m     [35mconst[39m res [33m=[39m [35mawait[39m [34mcallback[39m({ status[33m:[39m [32m'SUCCESS'[39m })[33m;[39m
+    [90m152|[39m     [34mexpect[39m([[34m401[39m[33m,[39m [34m403[39m])[33m.[39m[34mtoContain[39m(res[33m.[39mstatus)[33m;[39m
+    [90m   |[39m                        [31m^[39m
+    [90m153|[39m     [34mexpect[39m(([35mawait[39m [34mloanInDb[39m())[33m.[39misFinePaid)[33m.[39m[34mtoBe[39m([35mfalse[39m)[33m;[39m
+    [90m154|[39m   })[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[30/36]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.payment.api.test.ts[2m > [22mPOST|GET /api/payments/callback (PAY-01, PAY-02)[2m > [22mIT-PAY-14 (FIND-13) callback lần 2 cho phiếu đã trả không được ghi thêm AuditLog/thông báo
+[31m[1mAssertionError[22m: expected 2 to be 1 // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 1[39m
+[31m+ 2[39m
+
+[36m [2m❯[22m server/tests/integration/knownbug-verify.payment.api.test.ts:[2m160:80[22m[39m
+    [90m158|[39m     [35mawait[39m [34mcallback[39m({ status[33m:[39m [32m'SUCCESS'[39m[33m,[39m txnRef[33m:[39m [32m'TXN-A'[39m }[33m,[39m reader)[33m;[39m
+    [90m159|[39m     [35mawait[39m [34mcallback[39m({ status[33m:[39m [32m'SUCCESS'[39m[33m,[39m txnRef[33m:[39m [32m'TXN-B'[39m }[33m,[39m reader)[33m;[39m
+    [90m160|[39m     expect(await prisma.auditLog.count({ where: { action: 'FINE_PAYMEN…
+    [90m   |[39m                                                                                [31m^[39m
+    [90m161|[39m     expect(await prisma.notification.count({ where: { userId: reader.i…
+    [90m162|[39m   })[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[31/36]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.reservation.api.test.ts[2m > [22mTạo đặt trước — POST /api/reservations[2m > [22mIT-RES-08 (FIND-10) bookId = "abc" phải trả 4xx, không phải 500
+[31m[1mAssertionError[22m: expected 500 to be less than 500[39m
+[36m [2m❯[22m server/tests/integration/knownbug-verify.reservation.api.test.ts:[2m104:24[22m[39m
+    [90m102|[39m     [35mconst[39m res [33m=[39m [35mawait[39m [34mreserve[39m([32m'abc'[39m)[33m;[39m
+    [90m103|[39m     [34mexpect[39m(res[33m.[39mstatus)[33m.[39m[34mtoBeGreaterThanOrEqual[39m([34m400[39m)[33m;[39m
+    [90m104|[39m     [34mexpect[39m(res[33m.[39mstatus)[33m.[39m[34mtoBeLessThan[39m([34m500[39m)[33m;[39m
+    [90m   |[39m                        [31m^[39m
+    [90m105|[39m   })[33m;[39m
+    [90m106|[39m })[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[32/36]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.reservation.api.test.ts[2m > [22mAdmin xử lý — PATCH /api/reservations/:id/status (RES-04)[2m > [22mIT-RES-16 (FIND-06) FULFILLED → WAITING (đi ngược) phải bị chặn, trạng thái DB vẫn FULFILLED
+[31m[1mAssertionError[22m: expected 200 to be 400 // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 400[39m
+[31m+ 200[39m
+
+[36m [2m❯[22m server/tests/integration/knownbug-verify.reservation.api.test.ts:[2m174:24[22m[39m
+    [90m172|[39m     [35mawait[39m [34mpatch[39m([32m'FULFILLED'[39m)[33m;[39m
+    [90m173|[39m     [35mconst[39m res [33m=[39m [35mawait[39m [34mpatch[39m([32m'WAITING'[39m)[33m;[39m
+    [90m174|[39m     [34mexpect[39m(res[33m.[39mstatus)[33m.[39m[34mtoBe[39m([34m400[39m)[33m;[39m
+    [90m   |[39m                        [31m^[39m
+    [90m175|[39m     expect((await prisma.reservation.findUniqueOrThrow({ where: { id: …
+    [90m176|[39m   })[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[33/36]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.reservation.api.test.ts[2m > [22mHủy đặt trước — DELETE /api/reservations/:id (RES-05)[2m > [22mIT-RES-21 (FIND-07) hủy yêu cầu đã FULFILLED phải bị chặn, DB vẫn FULFILLED
+[31m[1mAssertionError[22m: expected 200 to be 400 // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- 400[39m
+[31m+ 200[39m
+
+[36m [2m❯[22m server/tests/integration/knownbug-verify.reservation.api.test.ts:[2m215:24[22m[39m
+    [90m213|[39m     await request(app).patch(`/api/reservations/${reservationId}/statu…
+    [90m214|[39m     [35mconst[39m res [33m=[39m [35mawait[39m [34mcancel[39m(reader)[33m;[39m
+    [90m215|[39m     [34mexpect[39m(res[33m.[39mstatus)[33m.[39m[34mtoBe[39m([34m400[39m)[33m;[39m
+    [90m   |[39m                        [31m^[39m
+    [90m216|[39m     [34mexpect[39m([35mawait[39m [34mstatusInDb[39m())[33m.[39m[34mtoBe[39m([32m'FULFILLED'[39m)[33m;[39m
+    [90m217|[39m   })[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[34/36]⎯[22m[39m
+
+[41m[1m FAIL [22m[49m [30m[46m library-integration [49m[39m server/tests/integration/knownbug-verify.reservation.api.test.ts[2m > [22mHủy đặt trước — DELETE /api/reservations/:id (RES-05)[2m > [22mIT-RES-22 (FIND-10) DELETE /reservations/abc phải trả 4xx, không phải 500
+[31m[1mAssertionError[22m: expected 500 to be less than 500[39m
+[36m [2m❯[22m server/tests/integration/knownbug-verify.reservation.api.test.ts:[2m223:24[22m[39m
+    [90m221|[39m     [35mconst[39m res [33m=[39m [35mawait[39m [34mcancel[39m(reader[33m,[39m [32m'abc'[39m)[33m;[39m
+    [90m222|[39m     [34mexpect[39m(res[33m.[39mstatus)[33m.[39m[34mtoBeGreaterThanOrEqual[39m([34m400[39m)[33m;[39m
+    [90m223|[39m     [34mexpect[39m(res[33m.[39mstatus)[33m.[39m[34mtoBeLessThan[39m([34m500[39m)[33m;[39m
+    [90m   |[39m                        [31m^[39m
+    [90m224|[39m   })[33m;[39m
+    [90m225|[39m })[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[35/36]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m9 failed[39m[22m[90m (9)[39m
+[2m      Tests [22m [1m[31m36 failed[39m[22m[2m | [22m[1m[32m182 passed[39m[22m[90m (218)[39m
+[2m   Start at [22m 20:28:40
+[2m   Duration [22m 27.28s[2m (transform 219ms, setup 112ms, import 2.35s, tests 23.68s, environment 1ms)[22m
+
+
+[verify-known-bugs] vitest exit code with test.fails disabled: 1

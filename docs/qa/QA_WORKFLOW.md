@@ -19,8 +19,11 @@ Manual v2 dùng tài liệu có sẵn `docs/qa/input/Kiểm thử phần mềm.d
 
 - [Root package.json](../../package.json) khai báo Vitest **4.1.0**, `@vitest/coverage-v8` **4.1.0** và Vite **6.3.5**. Hai test packages cùng phiên bản; npm override `vite: "$vite"` giữ Vite theo khai báo root. Khi đổi dependency, kiểm tra peer/version/lockfile và ảnh hưởng tooling, không nâng runtime packages để tiện viết test.
 - Backend source là TS/CommonJS; Vitest nạp trực tiếp TS trong môi trường `node`. [Test tsconfig](../../server/tsconfig.tests.json) riêng dùng ESNext/Bundler/noEmit. Vitest transpile không thay thế type-check. Không đổi production package type/tsconfig chỉ để vượt lỗi loader.
-- Runner tại [vitest.backend.config.ts](../../vitest.backend.config.ts): forks, một worker, không chạy file song song, isolate, retry=0. `LMS_WB_SCOPE=authentication` chỉ chạy `server/tests/unit/auth/**/*.test.ts`; `LMS_WB_SCOPE=member` chỉ chạy `server/tests/unit/member/**/*.test.ts`; mặc định `all` chạy cả hai. Book/Excel và UI trong kế hoạch chưa được include.
-- jsdom/Testing Library/Jest/Supertest chưa được thêm như direct test dependencies trong cấu hình hiện tại. Kiểm tra lại manifest khi có nhiệm vụ cần chúng; các phiên bản đề xuất trong kế hoạch chưa phải đã cài.
+- Runner unit tại [vitest.backend.config.ts](../../vitest.backend.config.ts): forks, một worker, không chạy file song song, isolate, retry=0, `TZ=Asia/Ho_Chi_Minh`. `LMS_WB_SCOPE`: `all` (mặc định; từ 19/10/2026: auth + member + loan + các module controller/service/job + property thuần; coverage `server/src/{controllers,middleware,services,utils,jobs}`), `modules` (chỉ inventory/reservation/payment/notification/analytics/book/mail/jobs), `whitebox` (auth + member; coverage 3 file như baseline Chương 4, tức nghĩa cũ của `all`), `authentication`, `member`, `loan`, `property`. Ngưỡng coverage (statements 90, branches 85, functions 90, lines 90) chỉ áp dụng khi chạy scope `all` với `--coverage`; các scope hẹp có mẫu số riêng và không đặt ngưỡng. Mẫu số scope `all` thay đổi qua các lượt (thêm `jobs/**` từ 19/10/2026): không so trực tiếp số liệu khác lượt.
+- Runner tích hợp tại [vitest.integration.config.ts](../../vitest.integration.config.ts): supertest → `server/tests/helpers/app.ts` (8 router thật, không `listen`/cron) → Prisma thật → SQLite tạm. Gồm `server/tests/integration/` và fuzz API `server/tests/property/api/`. Evidence qua `LMS_IT_RUN_DIR`. Setup `server/tests/setup/integrationDb.ts` stub mailService và ghi các lời gọi mail vào `globalThis.__mailCalls` (đọc từ test; không import file setup trực tiếp vì sẽ chạy lại setup). Ngưỡng coverage tích hợp: statements 75, branches 65, functions 85, lines 75 (mailService bị stub nên 0% là bình thường).
+- E2E tại [playwright.config.ts](../../playwright.config.ts): Chromium, `workers: 1`, `retries: 0`; backend thật khởi động bằng `e2e/support/start-server.mjs` trên `e2e/.tmp/e2e.db`. Reporter và `snap()` ghi cứng vào `test-results/e2e/`: trước khi chạy lại để lấy evidence mới, sao lưu thư mục này, chạy xong chuyển kết quả sang thư mục run riêng rồi khôi phục bản cũ (xem lượt 19/10/2026 ở [CHANGELOG](CHANGELOG.md)). Mutation: [stryker.config.mjs](../../stryker.config.mjs) (`loanRules.ts`, `authController.ts`) và [stryker.extension.config.mjs](../../stryker.extension.config.mjs) (controller/job bổ sung, báo cáo riêng ở `test-results/mutation-ext/`). Stryker chỉ chạy unit nên các mutant ở tham số Prisma (`where`/`include`) và chuỗi thông báo thường sống sót; đó là giới hạn của mock, không phải lỗi test.
+- Phân tích tĩnh: [eslint.config.mjs](../../eslint.config.mjs) (ESLint + typescript-eslint, `no-undef` do TypeScript đảm nhiệm) và [tsconfig.frontend.json](../../tsconfig.frontend.json) (strict, chỉ type-check). Mã kiểm thử (`server/tests`, `e2e`, file config) phải sạch lint; mã sản phẩm hiện có cảnh báo/lỗi đã ghi nhận trong evidence và **không** được sửa để vượt lint khi nhiệm vụ chỉ giao test.
+- Direct test/quality dependencies (root, exact): supertest, @types/supertest, fast-check, @playwright/test, @stryker-mutator/core, @stryker-mutator/vitest-runner, eslint, @eslint/js, typescript-eslint, globals. jsdom/Testing Library/Jest vẫn chưa được cài.
 
 Chạy từ **repository root**, sau khi đã review isolation và có nhiệm vụ cần execution:
 
@@ -31,9 +34,13 @@ npm run test:coverage
 LMS_WB_SCOPE=member npm run test:coverage
 LMS_WB_SCOPE=authentication npm run test:coverage
 ./server/node_modules/.bin/tsc --project server/tsconfig.tests.json --noEmit
+npm run typecheck            # tsc: server/src + server/tests + e2e (phải exit 0)
+npm run typecheck:frontend   # tsc strict cho src/ (hiện có lỗi đã ghi nhận, không chặn CI)
+npm run lint                 # ESLint toàn repo; lint:report ghi JSON vào test-results/static-analysis/
+npm run test:mutation:ext    # Stryker cho controller/job bổ sung
 ```
 
-`npm test` trong `server/` vẫn là placeholder trả lỗi, không phải runner trên. Dùng Node đúng môi trường đã thiết lập trong README; phiên bản execution phải lấy từ metadata thực. Không cài lại dependency, tạo Prisma Client, khởi động app hoặc seed để chạy unit đã cách ly.
+`npm test` trong `server/` chuyển tiếp về root (`npm --prefix .. test`). Root `npm test` = unit + integration; thêm `npm run test:integration[:coverage]`, `test:property`, `test:e2e`, `test:mutation`. Dùng Node đúng môi trường đã thiết lập trong README; phiên bản execution phải lấy từ metadata thực. Không cài lại dependency, tạo Prisma Client, khởi động app hoặc seed để chạy unit đã cách ly.
 
 Để lưu run riêng, đặt `LMS_WB_RUN_DIR` tới **thư mục mới**. Ví dụ Bash tạo tên theo UTC; kiểm tra tên chưa dùng nếu chạy lại:
 
@@ -54,7 +61,16 @@ Default hiện tại là `artifacts/qa/whitebox/<scope>/latest/`, trong đó `<s
 7. Không gọi Prisma thật/$connect/$disconnect/$transaction trong unit Authentication hiện tại. Khi test Book/Excel có transaction callback, mock phải thực thi callback với tx mock để chạy logic source; ghi rõ chưa chứng minh SQL rollback/unique/FK/concurrency.
 8. Với module mới có filesystem/upload side effect, mock/cách ly trước import theo source thực tế; không suy isolation của Authentication đã bảo vệ module khác.
 
-Schema hiện hardcode `file:./dev.db`; `DATABASE_URL` khác không chuyển datasource. Integration dùng DB disposable chỉ khi nằm trong nhiệm vụ được giao, có override được xác minh trước kết nối và fixture/setup riêng được cho phép. Không dùng DB chính rồi rollback. So sánh hash source/schema/DB trước/sau hỗ trợ kiểm tra bảo toàn, nhưng hash không đổi không chứng minh không có read/access; kết hợp gate/guards và kiểm tra runtime phù hợp. Nếu app khác đang ghi DB, lưu/đối chiếu nguyên nhân thay đổi, không tự restore dữ liệu.
+Schema hiện hardcode `file:./dev.db`; `DATABASE_URL` khác không chuyển datasource. Integration/E2E hiện cách ly bằng `datasourceUrl` truyền vào lớp con `PrismaClient` (setup `server/tests/setup/integrationDb.ts`, preload `e2e/support/server-preload.cjs`), DB tạo từ schema bằng `prisma db push` trên bản sao schema trỏ tới file tạm; gate `PRAGMA database_list` và so hash `dev.db` trước/sau. Integration dùng DB disposable chỉ khi nằm trong nhiệm vụ được giao, có override được xác minh trước kết nối và fixture/setup riêng được cho phép. Không dùng DB chính rồi rollback. So sánh hash source/schema/DB trước/sau hỗ trợ kiểm tra bảo toàn, nhưng hash không đổi không chứng minh không có read/access; kết hợp gate/guards và kiểm tra runtime phù hợp. Nếu app khác đang ghi DB, lưu/đối chiếu nguyên nhân thay đổi, không tự restore dữ liệu.
+
+## 3b. Quy ước test module controller (từ 19/10/2026)
+
+- Unit controller dùng [unitHarness.ts](../../server/tests/helpers/unitHarness.ts) (`callHandler`, `resetMocks`); mock Prisma/dịch vụ bằng `vi.hoisted` + `vi.mock` **trước** import controller, gate `beforeAll` kiểm tra đúng số client mock. Mock chưa arrange phải throw (`resetMocks`).
+- ID: `UT-<MODULE>-nn` (unit), `IT-<MODULE>-nn` (tích hợp), `E2E-<MÃ>-nn`. Ca ánh xạ ca thủ công ghi mã trong ngoặc (ví dụ `(RES-05)`); đầu file test ghi mục tiêu, kỹ thuật, ranh giới và liên kết.
+- Lỗi phát hiện mới đánh mã `FIND-nn` (danh sách và ca liên quan ở [SUMMARY_EXTENSION](../../test-results/SUMMARY_EXTENSION.md)); ca viết theo đặc tả đúng, đánh dấu `test.fails`/`test.fails.each`/`test.fail` kèm chú thích, và chứng minh lý do bằng `verify-known-bugs.mjs` (script xử lý cả `test.fails.each`). Khi căn cứ chỉ là chú thích mã nguồn hoặc nguyên tắc bảo mật, ghi rõ trong header ca và để nhóm xác nhận.
+- Hành vi chưa có yêu cầu rõ ghi bằng ca đặc tả hành vi hiện tại, tiêu đề có "ghi nhận hành vi hiện tại", và liệt kê ở mục *pending requirement* của tổng kết; không dùng chúng để khẳng định nghiệp vụ.
+- Hook Vitest `afterAll(({}, suite) => …)` ở `server/tests/setup/isolation.ts` phải giữ tham số đầu dạng destructuring đối tượng (`FixtureParseError` nếu đổi); giữ dòng `eslint-disable no-empty-pattern` thay vì đổi chữ ký.
+- Sau mỗi thay đổi chỉ nhằm sửa lint/format trong code test, chạy lại test liên quan trước khi kết luận.
 
 ## 4. Test ID, oracle và kết quả
 
